@@ -1,0 +1,91 @@
+<% content_for :title, t('volunteer.title') %>
+
+<div class="container-ultrawide">
+  <div class="hero-section-volunteer">
+    <h1 class="heading-1"><%= t('volunteer.page_title') %></h1>
+    <% if user_signed_in? %>
+      <div class="action-group">
+        <%= link_to t('volunteer.my_applications'), my_applications_volunteer_opportunities_path, class: "btn btn-secondary" %>
+        <%= link_to t('volunteer.my_opportunities'), my_opportunities_volunteer_opportunities_path, class: "btn btn-secondary" %>
+        <%= link_to t('volunteer.post_opportunity'), new_volunteer_opportunity_path, class: "btn btn-tertiary-gradient" %>
+      </div>
+    <% end %>
+  </div>
+  
+  <div class="bento-grid-layout">
+    <!-- Filters Sidebar -->
+    <div class="filter-sidebar">
+      <div class="card-stunning sticky-top">
+        <h3 class="text-title"><%= t('volunteer.find_opportunities') %></h3>
+        
+        <%= form_with url: volunteer_opportunities_path, method: :get, local: true, class: "form-elegant" do |form| %>
+          <!-- Search -->
+          <div class="input-group">
+            <%= form.label :search, t('volunteer.search_label'), class: "form-label" %>
+            <%= form.text_field :search, placeholder: t('volunteer.search_placeholder'), 
+                               value: params[:search], 
+                               class: "input-glass" %>
+          </div>
+          
+          <!-- Category -->
+          <div class="input-group">
+            <%= form.label :category, t('volunteer.category_label'), class: "form-label" %>
+            <%= form.select :category, 
+                           options_for_select([[t('volunteer.all_categories'), ""]], params[:category]),
+                           {}, 
+                           { class: "select-glass" } %>
+          </div>
+          
+          <!-- Time Commitment -->
+          <div class="input-group">
+            <%= form.label :time_commitment, t('volunteer.time_commitment_label'), class: "form-label" %>
+            <%= form.select :time_commitment, 
+                           options_for_select([[t('volunteer.any_time'), ""]], params[:time_commitment]),
+                           {}, 
+                           { class: "select-glass" } %>
+          </div>
+          
+          <!-- Location -->
+          <div class="input-group">
+            <%= form.label :location, t('volunteer.location_label'), class: "form-label" %>
+            <%= form.text_field :location, placeholder: t('volunteer.location_placeholder'), 
+                               value: params[:location], 
+                               class: "input-glass" %>
+          </div>
+          
+          <!-- Special Filters -->
+          <div class="checkbox-group-elegant">
+            <div class="checkbox-item">
+              <%= check_box_tag :remote, 'true', params[:remote] == 'true', class: "checkbox-modern" %>
+              <%= label_tag :remote, t('volunteer.remote_opportunities'), class: "checkbox-label" %>
+            </div>
+            <div class="checkbox-item">
+              <%= check_box_tag :urgent, 'true', params[:urgent] == 'true', class: "checkbox-modern" %>
+              <%= label_tag :urgent, t('volunteer.urgent_need'), class: "checkbox-label" %>
+            </div>
+            <div class="checkbox-item">
+              <%= check_box_tag :featured, 'true', params[:featured] == 'true', class: "checkbox-modern" %>
+              <%= label_tag :featured, t('volunteer.featured_opportunities'), class: "checkbox-label" %>
+            </div>
+          </div>
+          
+          <%= form.submit t('volunteer.search_button'), class: "btn btn-tertiary-gradient w-full" %>
+          <%= link_to t('volunteer.clear_filters'), volunteer_opportunities_path, class: "btn btn-glass-secondary w-full mt-2" %>
+        <% end %>
+      </div>
+    </div>
+    
+    <!-- Opportunities List -->
+    <div class="volunteer-grid">
+      <div class="empty-state">
+        <div class="empty-state-content">
+          <div class="empty-icon"></div>
+          <div class="empty-message"><%= t('volunteer.no_opportunities_found') %></div>
+          <% if user_signed_in? %>
+            <%= link_to t('volunteer.post_first_opportunity'), new_volunteer_opportunity_path, class: "btn btn-tertiary-gradient" %>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

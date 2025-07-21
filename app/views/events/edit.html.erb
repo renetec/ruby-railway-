@@ -1,0 +1,99 @@
+<% content_for :title, "Edit Event" %>
+
+<div class="max-w-4xl mx-auto px-4 py-8">
+  <h1 class="text-3xl font-bold text-gray-900 mb-8">Edit Event</h1>
+  
+  <div class="bg-white rounded-lg shadow-lg p-6">
+    <%= form_with model: @event, local: true, multipart: true, class: "space-y-6" do |form| %>
+      <% if @event.errors.any? %>
+        <div class="bg-red-50 border border-red-200 rounded-md p-4">
+          <div class="text-red-800 font-semibold mb-2">
+            <%= pluralize(@event.errors.count, "error") %> prohibited this event from being saved:
+          </div>
+          <ul class="text-red-700 text-sm list-disc list-inside">
+            <% @event.errors.full_messages.each do |message| %>
+              <li><%= message %></li>
+            <% end %>
+          </ul>
+        </div>
+      <% end %>
+      
+      <div>
+        <%= form.label :title, class: "block text-sm font-medium text-gray-700 mb-2" %>
+        <%= form.text_field :title, class: "w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" %>
+      </div>
+      
+      <div class="grid md:grid-cols-2 gap-6">
+        <div>
+          <%= form.label :category, class: "block text-sm font-medium text-gray-700 mb-2" %>
+          <%= form.select :category, 
+                         options_for_select(Event.categories.keys.map { |cat| [cat.humanize, cat] }, @event.category),
+                         { prompt: "Select a category" },
+                         { class: "w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" } %>
+        </div>
+        <div>
+          <%= form.label :status, class: "block text-sm font-medium text-gray-700 mb-2" %>
+          <%= form.select :status, 
+                         options_for_select([["Draft", "draft"], ["Published", "published"]], @event.status),
+                         {},
+                         { class: "w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" } %>
+        </div>
+      </div>
+      
+      <div>
+        <%= form.label :description, class: "block text-sm font-medium text-gray-700 mb-2" %>
+        <%= form.text_area :description, rows: 6, class: "w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" %>
+      </div>
+      
+      <div class="grid md:grid-cols-2 gap-6">
+        <div>
+          <%= form.label :date, "Date & Time", class: "block text-sm font-medium text-gray-700 mb-2" %>
+          <%= form.datetime_local_field :date, 
+                                       value: @event.date&.strftime("%Y-%m-%dT%H:%M"),
+                                       class: "w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" %>
+        </div>
+        <div>
+          <%= form.label :location, class: "block text-sm font-medium text-gray-700 mb-2" %>
+          <%= form.text_field :location, class: "w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" %>
+        </div>
+      </div>
+      
+      <div class="grid md:grid-cols-2 gap-6">
+        <div>
+          <%= form.label :capacity, "Maximum Attendees", class: "block text-sm font-medium text-gray-700 mb-2" %>
+          <%= form.number_field :capacity, min: 1, class: "w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" %>
+          <p class="text-sm text-gray-500 mt-1">Leave blank for unlimited capacity</p>
+        </div>
+        <div>
+          <%= form.label :price, "Price ($)", class: "block text-sm font-medium text-gray-700 mb-2" %>
+          <%= form.number_field :price, min: 0, step: 0.01, class: "w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" %>
+          <p class="text-sm text-gray-500 mt-1">Leave blank or 0 for free events</p>
+        </div>
+      </div>
+      
+      <% if @event.images.attached? %>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-2">Current Images</label>
+          <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
+            <% @event.images.each do |image| %>
+              <div class="relative">
+                <%= image_tag image, alt: @event.title, class: "w-full h-16 object-cover rounded" %>
+              </div>
+            <% end %>
+          </div>
+        </div>
+      <% end %>
+      
+      <div>
+        <%= form.label :images, "Add New Images", class: "block text-sm font-medium text-gray-700 mb-2" %>
+        <%= form.file_field :images, multiple: true, accept: "image/*", class: "w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" %>
+        <p class="text-sm text-gray-500 mt-1">You can select multiple images to add</p>
+      </div>
+      
+      <div class="flex space-x-4">
+        <%= form.submit "Update Event", class: "bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded" %>
+        <%= link_to "Cancel", event_path(@event), class: "bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-6 rounded" %>
+      </div>
+    <% end %>
+  </div>
+</div>

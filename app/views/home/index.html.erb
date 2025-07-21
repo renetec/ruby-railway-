@@ -1,0 +1,22 @@
+<!-- Simple Hero Section -->
+<div class="py-8">
+  <div class="max-w-2xl mx-auto px-4 text-center">
+    <h1 class="text-3xl font-bold mb-4">
+      <%= t('home.index.connect') %> <%= t('home.index.together') %>
+    </h1>
+    
+    <p class="text-lg mb-6">
+      <%= t('home.index.description') %>
+    </p>
+    
+    <div class="space-y-4">
+      <% unless user_signed_in? %>
+        <%= link_to t('home.index.start_journey'), new_user_registration_path, class: "inline-block bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700" %>
+        <%= link_to t('home.index.explore_community'), posts_path, class: "inline-block bg-gray-200 text-gray-800 px-6 py-2 rounded hover:bg-gray-300 ml-4" %>
+      <% else %>
+        <%= link_to t('home.index.continue_exploring'), posts_path, class: "inline-block bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700" %>
+        <%= link_to t('home.index.share_story'), new_post_path, class: "inline-block bg-gray-200 text-gray-800 px-6 py-2 rounded hover:bg-gray-300 ml-4" %>
+      <% end %>
+    </div>
+  </div>
+</div>

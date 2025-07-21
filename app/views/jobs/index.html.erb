@@ -1,0 +1,189 @@
+<% content_for :title, t('jobs.title') %>
+
+<div class="container-ultrawide">
+  <div class="hero-section-jobs">
+    <h1 class="heading-1"><%= t('jobs.page_title') %></h1>
+    <% if user_signed_in? %>
+      <div class="action-group">
+        <%= link_to t('jobs.my_applications'), my_applications_jobs_path, class: "btn btn-secondary" %>
+        <%= link_to t('jobs.my_posts'), my_jobs_jobs_path, class: "btn btn-secondary" %>
+        <%= link_to t('jobs.post_job'), new_job_path, class: "btn btn-primary-gradient" %>
+      </div>
+    <% end %>
+  </div>
+  
+  <div class="bento-grid-layout">
+    <!-- Filters Sidebar -->
+    <div class="filter-sidebar">
+      <div class="card-stunning sticky-top">
+        <h3 class="text-title"><%= t('jobs.filter_title') %></h3>
+        
+        <%= form_with url: jobs_path, method: :get, local: true, class: "form-elegant" do |form| %>
+          <!-- Search -->
+          <div class="input-group">
+            <%= form.label :search, t('jobs.search_label'), class: "form-label" %>
+            <%= form.text_field :search, placeholder: t('jobs.search_placeholder'), 
+                               value: params[:search], 
+                               class: "input-glass" %>
+          </div>
+          
+          <!-- Job Type -->
+          <div class="input-group">
+            <%= form.label :job_type, t('jobs.job_type_label'), class: "form-label" %>
+            <%= form.select :job_type, 
+                           options_for_select([[t('jobs.all_types'), ""]] + @job_types.map { |type| [type.humanize, type] }, params[:job_type]),
+                           {}, 
+                           { class: "select-glass" } %>
+          </div>
+          
+          <!-- Experience Level -->
+          <div class="input-group">
+            <%= form.label :experience_level, t('jobs.experience_label'), class: "form-label" %>
+            <%= form.select :experience_level, 
+                           options_for_select([[t('jobs.all_levels'), ""]] + @experience_levels.map { |level| [level.humanize, level] }, params[:experience_level]),
+                           {}, 
+                           { class: "select-glass" } %>
+          </div>
+          
+          <!-- Location -->
+          <div class="input-group">
+            <%= form.label :location, t('jobs.location_label'), class: "form-label" %>
+            <%= form.select :location, 
+                           options_for_select([[t('jobs.all_locations'), ""]] + @locations.map { |loc| [loc, loc] }, params[:location]),
+                           {}, 
+                           { class: "select-glass" } %>
+          </div>
+          
+          <!-- Special Filters -->
+          <div class="checkbox-group-elegant">
+            <div class="checkbox-item">
+              <%= check_box_tag :remote, 'true', params[:remote] == 'true', class: "checkbox-modern" %>
+              <%= label_tag :remote, t('jobs.remote_friendly'), class: "checkbox-label" %>
+            </div>
+            <div class="checkbox-item">
+              <%= check_box_tag :with_salary, 'true', params[:with_salary] == 'true', class: "checkbox-modern" %>
+              <%= label_tag :with_salary, t('jobs.salary_disclosed'), class: "checkbox-label" %>
+            </div>
+            <div class="checkbox-item">
+              <%= check_box_tag :urgent, 'true', params[:urgent] == 'true', class: "checkbox-modern" %>
+              <%= label_tag :urgent, t('jobs.urgent_hiring'), class: "checkbox-label" %>
+            </div>
+            <div class="checkbox-item">
+              <%= check_box_tag :featured, 'true', params[:featured] == 'true', class: "checkbox-modern" %>
+              <%= label_tag :featured, t('jobs.featured_jobs'), class: "checkbox-label" %>
+            </div>
+          </div>
+          
+          <%= form.submit t('jobs.search_button'), class: "btn btn-primary-gradient w-full" %>
+          <%= link_to t('jobs.clear_filters'), jobs_path, class: "btn btn-glass-secondary w-full mt-2" %>
+        <% end %>
+      </div>
+    </div>
+    
+    <!-- Jobs List -->
+    <div class="jobs-grid">
+      <% if @jobs.any? %>
+        <div class="jobs-list">
+          <% @jobs.each do |job| %>
+            <div class="card-stunning job-card-modern">
+              <div class="job-header">
+                <div class="job-main-info">
+                  <div class="company-logo-section">
+                    <% if job.business.logo.attached? %>
+                      <%= image_tag job.business.logo, alt: job.business.name, class: "company-logo" %>
+                    <% else %>
+                      <div class="company-avatar">
+                        <span class="avatar-initial"><%= job.business.name.first.upcase %></span>
+                      </div>
+                    <% end %>
+                    <div class="job-title-company">
+                      <h3 class="job-title">
+                        <%= link_to job.title, job_path(job), class: "job-link" %>
+                      </h3>
+                      <div class="company-name">
+                        <%= link_to job.business.name, business_path(job.business), class: "company-link" %>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div class="job-tags">
+                    <span class="tag tag-primary">
+                      <%= job.job_type.humanize %>
+                    </span>
+                    <span class="tag tag-neutral">
+                      <%= job.experience_level.humanize %>
+                    </span>
+                    <% if job.remote? %>
+                      <span class="tag tag-success">
+                        <%= t('jobs.remote_ok') %>
+                      </span>
+                    <% end %>
+                    <% if job.urgent? %>
+                      <span class="tag tag-urgent">
+                        <%= t('jobs.urgent') %>
+                      </span>
+                    <% end %>
+                    <% if job.featured? %>
+                      <span class="tag tag-featured">
+                        <%= t('jobs.featured') %>
+                      </span>
+                    <% end %>
+                  </div>
+                </div>
+                
+                <div class="job-meta">
+                  <% if job.salary_min.present? %>
+                    <div class="salary-range">
+                      $<%= number_with_delimiter(job.salary_min) %> - $<%= number_with_delimiter(job.salary_max) %>
+                    </div>
+                  <% end %>
+                  <div class="posted-time">
+                    <%= t('jobs.posted_ago', time: time_ago_in_words(job.created_at)) %>
+                  </div>
+                </div>
+              </div>
+              
+              <p class="job-description">
+                <%= truncate(job.description, length: 200) %>
+              </p>
+              
+              <div class="job-footer">
+                <div class="job-info-pills">
+                  <span class="info-pill"><%= job.location %></span>
+                  <% if job.application_deadline.present? %>
+                    <span class="info-pill"><%= t('jobs.apply_by', date: job.application_deadline.strftime("%b %d")) %></span>
+                  <% end %>
+                  <span class="info-pill"><%= pluralize(job.applications_count, t('jobs.application')) %></span>
+                </div>
+                
+                <div class="job-actions">
+                  <%= link_to t('jobs.view_details'), job_path(job), class: "btn btn-secondary-glass" %>
+                  <% if user_signed_in? && job.can_apply? %>
+                    <%= link_to t('jobs.quick_apply'), apply_job_path(job), method: :post,
+                               data: { confirm: t('jobs.confirm_apply', title: job.title) },
+                               class: "btn btn-primary-gradient" %>
+                  <% end %>
+                </div>
+              </div>
+            </div>
+          <% end %>
+        </div>
+        
+        <!-- Pagination -->
+        <div class="pagination-modern">
+          <%= paginate @jobs if respond_to?(:paginate) %>
+        </div>
+      <% else %>
+        <div class="empty-state">
+          <div class="empty-state-content">
+            <div class="empty-icon"></div>
+            <div class="empty-message"><%= t('jobs.no_jobs_found') %></div>
+            <% if user_signed_in? %>
+              <%= link_to t('jobs.post_first_job'), new_job_path, class: "btn btn-primary-gradient" %>
+            <% end %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,232 @@
+fr:
+  # Navigation
+  navigation:
+    home: "Accueil"
+    news: "Actualités"
+    events: "Événements"
+    forum: "Forum"
+    market: "Marché"
+    business: "Entreprises"
+    jobs: "Emplois"
+    volunteer: "Bénévolat"
+    sign_in: "Se connecter"
+    sign_up: "S'inscrire"
+    profile: "Profil"
+    sign_out: "Se déconnecter"
+
+  # General
+  general:
+    welcome_back: "Bon retour !"
+    loading: "Chargement..."
+    save: "Enregistrer"
+    cancel: "Annuler"
+    delete: "Supprimer"
+    edit: "Modifier"
+    create: "Créer"
+    update: "Mettre à jour"
+    search: "Rechercher"
+    filter: "Filtrer"
+    back: "Retour"
+    next: "Suivant"
+    previous: "Précédent"
+    yes: "Oui"
+    no: "Non"
+    or: "ou"
+    and: "et"
+    read_more: "Lire la suite"
+    learn_more: "En savoir plus"
+    get_started: "Commencer"
+    explore: "Explorer"
+
+  # Home Page
+  home:
+    hero:
+      building_communities: "Construction de communautés incroyables"
+      connect_together: "Se connecter ensemble"
+      tagline: "Où les voisins deviennent amis, les idées deviennent réalité, et chaque voix crée un impact durable dans notre communauté numérique vibrante."
+      start_journey: "Commencez votre voyage"
+      explore_community: "Explorer la communauté"
+      discover_events: "Découvrir les événements"
+      join_discussions: "Rejoindre les discussions"
+    
+    services:
+      title: "Services communautaires"
+      subtitle: "Tout ce dont vous avez besoin pour vous connecter, partager et grandir ensemble"
+      news:
+        title: "Actualités & Histoires"
+        description: "Restez informé avec les dernières nouvelles et histoires de votre communauté locale."
+      events:
+        title: "Événements locaux"
+        description: "Découvrez et participez à des événements passionnants près de chez vous."
+      forum:
+        title: "Discussions communautaires"
+        description: "Participez à des conversations significatives avec vos voisins."
+      marketplace:
+        title: "Marché local"
+        description: "Achetez, vendez et échangez avec les membres de votre communauté."
+    
+    stats:
+      title: "Notre communauté en chiffres"
+      members: "Membres actifs"
+      posts: "Articles partagés"
+      events: "Événements organisés"
+      discussions: "Discussions en cours"
+    
+    community_feed:
+      title: "Activité de la communauté"
+      subtitle: "Découvrez ce qui se passe dans votre quartier"
+      recent_posts: "Articles récents"
+      upcoming_events: "Événements à venir"
+      active_discussions: "Discussions actives"
+      no_recent_activity: "Aucune activité récente"
+      
+    final_cta:
+      title: "Prêt à vous joindre à nous ?"
+      subtitle: "Devenez partie intégrante de cette communauté dynamique dès aujourd'hui"
+      join_now: "Rejoignez-nous maintenant"
+
+  # Events
+  events:
+    title: "Événements"
+    amazing_events: "Événements incroyables"
+    subtitle: "Découvrez des événements à venir incroyables, connectez-vous avec votre communauté et créez des souvenirs inoubliables ensemble."
+    create_new: "Créer un nouvel événement"
+    filter_events: "Filtrer les événements"
+    view_details: "Voir les détails"
+    view_full_details: "Voir tous les détails"
+    close: "Fermer"
+    
+    filters:
+      all_events: "Tous les événements"
+      upcoming: "À venir"
+      this_week: "Cette semaine"
+      this_month: "Ce mois"
+      past: "Passés"
+      all_categories: "Toutes les catégories"
+    
+    categories:
+      community: "Communauté"
+      business: "Affaires"
+      education: "Éducation"
+      entertainment: "Divertissement"
+      sports: "Sports"
+      health: "Santé"
+      technology: "Technologie"
+      culture: "Culture"
+      volunteer: "Bénévolat"
+      other: "Autre"
+    
+    details:
+      event_details: "Détails de l'événement"
+      date_time: "Date et heure"
+      location: "Lieu"
+      location_tbd: "Lieu à déterminer"
+      capacity: "Capacité"
+      price: "Prix"
+      free: "Gratuit"
+      event_host: "Organisateur de l'événement"
+      description: "Description"
+      recent_attendees: "Participants récents"
+      more: "de plus"
+      attending: "participants"
+      
+    rsvp:
+      title: "Statut RSVP"
+      attending: "Vous participez à cet événement !"
+      status: "Statut RSVP"
+      rsvp_to_event: "RSVP à l'événement"
+      cancel_rsvp: "Annuler RSVP"
+      event_full: "Événement complet"
+      no_spots: "Aucune place restante"
+      sign_in_to_rsvp: "Connectez-vous pour RSVP"
+      
+    status:
+      upcoming: "À venir"
+      past_event: "Événement passé"
+      
+    management:
+      title: "Gestion de l'événement"
+      edit_event: "Modifier l'événement"
+      delete_event: "Supprimer l'événement"
+      delete_confirm: "Êtes-vous sûr de vouloir supprimer cet événement ? Cette action ne peut pas être annulée."
+      
+    empty:
+      title: "Aucun événement trouvé"
+      subtitle_filtered: "Essayez d'ajuster vos filtres ou parcourez tous les événements."
+      subtitle_empty: "Soyez le premier à organiser un rassemblement communautaire incroyable."
+      create_first: "Créer le premier événement"
+
+  # Posts/News
+  posts:
+    title: "Actualités et histoires"
+    latest_stories: "Dernières histoires"
+    subtitle: "Restez informé avec les dernières nouvelles, histoires et annonces de votre communauté vibrante."
+    create_new: "Créer une nouvelle histoire"
+    search_stories: "Rechercher des histoires incroyables..."
+    
+    categories:
+      all_categories: "Toutes les catégories"
+      community: "Communauté"
+      business: "Affaires"
+      education: "Éducation"
+      entertainment: "Divertissement"
+      sports: "Sports"
+      health: "Santé"
+      technology: "Technologie"
+      culture: "Culture"
+      volunteer: "Bénévolat"
+      other: "Autre"
+      
+    details:
+      community_story: "Histoire de la communauté"
+      featured: "En vedette"
+      featured_story: "Histoire en vedette"
+      written_by: "Écrit par"
+      ago: "il y a"
+      read_full_article: "Lire l'article complet"
+      
+    empty:
+      title: "Aucune histoire trouvée"
+      subtitle_filtered: "Essayez d'ajuster vos critères de recherche ou parcourez toutes les histoires."
+      subtitle_empty: "Soyez le premier à partager une histoire incroyable avec la communauté."
+      create_first: "Créer la première histoire"
+
+  # Footer
+  footer:
+    tagline: "Votre communauté locale, connectée et engagée."
+    navigation: "Navigation"
+    services: "Services"
+    contact: "Contact"
+    copyright: "Tous droits réservés. Plateforme communautaire locale."
+    made_with: "Créé avec"
+    for_community: "pour la communauté"
+    back_to_top: "Retour en haut"
+    
+  # Time formats
+  time:
+    ago: "il y a %{time}"
+    formats:
+      default: "%d %B %Y"
+      long: "%d %B %Y à %H:%M"
+      short: "%d/%m/%Y"
+
+  # Notifications
+  notifications:
+    success: "Opération réussie !"
+    error: "Une erreur s'est produite."
+    warning: "Attention !"
+    info: "Information"
+
+  # Language switcher
+  language:
+    french: "Français"
+    english: "English"
+    switch_to: "Passer à %{language}"
+
+  # Theme toggle
+  theme:
+    toggle: "Basculer le thème"
+    dark_mode: "Mode sombre"
+    light_mode: "Mode clair"
+    switch_to_dark: "Passer au mode sombre"
+    switch_to_light: "Passer au mode clair"

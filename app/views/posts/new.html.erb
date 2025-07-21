@@ -1,0 +1,68 @@
+<% content_for :title, t('posts.create_title') %>
+
+<div class="container-wide">
+  <div class="page-header">
+    <h1 class="heading-1"><%= t('posts.create_new_post') %></h1>
+  </div>
+  
+  <div class="card-stunning form-container">
+    <%= form_with model: @post, local: true, multipart: true, class: "form-elegant" do |form| %>
+      <% if @post.errors.any? %>
+        <div class="alert alert-error">
+          <div class="alert-title">
+            <%= t('posts.errors_prevented_save', count: @post.errors.count) %>
+          </div>
+          <ul class="alert-list">
+            <% @post.errors.full_messages.each do |message| %>
+              <li><%= message %></li>
+            <% end %>
+          </ul>
+        </div>
+      <% end %>
+      
+      <div class="input-group">
+        <%= form.label :title, t('posts.title_label'), class: "form-label" %>
+        <%= form.text_field :title, class: "input-glass" %>
+      </div>
+      
+      <div class="input-group">
+        <%= form.label :category, t('posts.category_label'), class: "form-label" %>
+        <%= form.select :category, 
+                       options_for_select(Post::CATEGORIES.map { |cat| [cat.humanize, cat] }),
+                       { prompt: t('posts.select_category') },
+                       { class: "select-glass" } %>
+      </div>
+      
+      <div class="input-group">
+        <%= form.label :content, t('posts.content_label'), class: "form-label" %>
+        <%= form.text_area :content, rows: 10, class: "textarea-glass" %>
+      </div>
+      
+      <div class="input-group">
+        <%= form.label :images, t('posts.images_label'), class: "form-label" %>
+        <%= form.file_field :images, multiple: true, accept: "image/*", class: "file-input-glass" %>
+        <p class="form-helper-text"><%= t('posts.multiple_images_hint') %></p>
+      </div>
+      
+      <div class="input-group">
+        <%= form.label :status, t('posts.status_label'), class: "form-label" %>
+        <%= form.select :status, 
+                       options_for_select([[t('posts.draft'), "draft"], [t('posts.published'), "published"]]),
+                       {},
+                       { class: "select-glass" } %>
+      </div>
+      
+      <% if current_user&.moderator? %>
+        <div class="checkbox-item">
+          <%= form.check_box :featured, class: "checkbox-modern" %>
+          <%= form.label :featured, t('posts.featured_post'), class: "checkbox-label" %>
+        </div>
+      <% end %>
+      
+      <div class="form-actions">
+        <%= form.submit t('posts.create_button'), class: "btn btn-primary-gradient" %>
+        <%= link_to t('posts.cancel'), posts_path, class: "btn btn-glass-secondary" %>
+      </div>
+    <% end %>
+  </div>
+</div>
