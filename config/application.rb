@@ -1,6 +1,24 @@
 require_relative "boot"
 
-require "rails/all"
+require "rails"
+# Skip ActiveRecord temporarily for Railway deployment
+%w(
+  active_model/railtie
+  active_job/railtie
+  action_controller/railtie
+  action_mailer/railtie
+  action_mailbox/engine
+  action_text/engine
+  action_view/railtie
+  action_cable/engine
+  rails/test_unit/railtie
+  sprockets/railtie
+).each do |railtie|
+  begin
+    require railtie
+  rescue LoadError
+  end
+end
 
 # Require the gems listed in Gemfile, including any gems
 # you've limited to :test, :development, or :production.

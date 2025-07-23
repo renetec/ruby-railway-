@@ -4,7 +4,7 @@
     "builder": "NIXPACKS"
   },
   "deploy": {
-    "startCommand": "bin/rails server -b :: -p $PORT",
+    "startCommand": "DISABLE_DATABASE_ENVIRONMENT_CHECK=1 bin/rails server -b :: -p $PORT",
     "healthcheckPath": "/",
     "healthcheckTimeout": 600
   }
