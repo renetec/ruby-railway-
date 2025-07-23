@@ -1,0 +1,191 @@
+<div class="min-h-screen relative overflow-hidden flex items-center justify-center">
+  <!-- Modern Background -->
+  <div class="absolute inset-0 bg-gradient-to-br from-primary-bg via-secondary-bg to-primary-bg"></div>
+  
+  <!-- Animated Background Elements -->
+  <div class="absolute inset-0 overflow-hidden">
+    <div class="absolute -top-40 -right-40 w-80 h-80 bg-emerald-green opacity-10 rounded-full blur-3xl animate-pulse"></div>
+    <div class="absolute -bottom-40 -left-40 w-80 h-80 bg-vibrant-purple opacity-10 rounded-full blur-3xl animate-pulse delay-1000"></div>
+    <div class="absolute top-1/2 left-1/2 w-40 h-40 bg-electric-blue opacity-5 rounded-full blur-2xl animate-pulse delay-500"></div>
+  </div>
+
+  <div class="relative z-10 w-full max-w-md mx-auto px-6">
+    <!-- Logo/Title -->
+    <div class="text-center mb-8">
+      <div class="mb-6">
+        <%= link_to root_path, class: "inline-block hover:scale-105 transition-transform duration-300" do %>
+          <%= image_tag "pacomien-logo.jpg", 
+              alt: "Pacomien Logo", 
+              class: "w-32 h-20 mx-auto rounded-2xl shadow-2xl object-contain",
+              role: "img" %>
+        <% end %>
+      </div>
+      <h1 class="font-display text-5xl font-black mb-4" style="color: #111827;">
+        <%= t('devise.registrations.sign_up') %>
+      </h1>
+      <p class="text-lg" style="color: #6b7280;">
+        <%= t('devise.registrations.sign_up_subtitle') %>
+      </p>
+    </div>
+
+    <!-- Sign Up Card -->
+    <div class="card-stunning p-8">
+      <%= form_for(resource, as: resource_name, url: registration_path(resource_name), local: true, html: { class: "registration-form" }) do |f| %>
+        <!-- Error Messages -->
+        <% if resource.errors.any? %>
+          <div class="mb-6 p-4 bg-red-500/10 border border-red-500/30 rounded-xl">
+            <div class="flex items-center mb-2">
+              <svg class="w-5 h-5 text-red-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+              </svg>
+              <h3 class="font-semibold text-red-500">Errors detected:</h3>
+            </div>
+            <ul class="text-sm text-red-400 space-y-1">
+              <% resource.errors.full_messages.each do |message| %>
+                <li>• <%= message %></li>
+              <% end %>
+            </ul>
+          </div>
+        <% end %>
+
+        <div class="space-y-6">
+          <!-- Name Field -->
+          <div>
+            <%= f.label :name, "👤 #{t('devise.registrations.full_name_label')}", class: "block text-sm font-bold mb-3", style: "color: #111827;" %>
+            <div class="relative">
+              <%= f.text_field :name, 
+                              placeholder: "<%= t('devise.registrations.full_name_placeholder') %>",
+                              class: "w-full px-4 py-4 pl-12 bg-white border-2 border-gray-200 rounded-xl text-gray-900 placeholder-gray-500 focus:outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-500/20 transition-all font-medium shadow-sm hover:shadow-md" %>
+              <svg class="w-6 h-6 text-blue-500 absolute left-3 top-1/2 -translate-y-1/2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+              </svg>
+            </div>
+            <p class="text-xs mt-2" style="color: #6b7280;"><%= t('devise.registrations.full_name_help') %></p>
+          </div>
+
+          <!-- Email Field -->
+          <div>
+            <%= f.label :email, "📧 #{t('devise.sessions.email_label')}", class: "block text-sm font-bold mb-3", style: "color: #111827;" %>
+            <div class="relative">
+              <%= f.email_field :email, 
+                              autofocus: true, 
+                              autocomplete: "email",
+                              placeholder: "<%= t('devise.registrations.email_placeholder') %>",
+                              class: "w-full px-4 py-4 pl-12 bg-white border-2 border-gray-200 rounded-xl text-gray-900 placeholder-gray-500 focus:outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-500/20 transition-all font-medium shadow-sm hover:shadow-md" %>
+              <svg class="w-6 h-6 text-blue-500 absolute left-3 top-1/2 -translate-y-1/2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+              </svg>
+            </div>
+            <p class="text-xs mt-2" style="color: #6b7280;"><%= t('devise.registrations.email_help') %></p>
+          </div>
+
+          <!-- Password Field -->
+          <div>
+            <%= f.label :password, "🔑 #{t('devise.sessions.password_label')}", class: "block text-sm font-bold mb-3", style: "color: #111827;" %>
+            <div class="relative">
+              <%= f.password_field :password, 
+                                 autocomplete: "new-password",
+                                 placeholder: "••••••••",
+                                 class: "w-full px-4 py-4 pl-12 bg-white border-2 border-gray-200 rounded-xl text-gray-900 placeholder-gray-500 focus:outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-500/20 transition-all font-medium shadow-sm hover:shadow-md" %>
+              <svg class="w-6 h-6 text-blue-500 absolute left-3 top-1/2 -translate-y-1/2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+              </svg>
+            </div>
+            <% if @minimum_password_length %>
+              <p class="text-xs mt-2" style="color: #6b7280;">
+                <svg class="w-4 h-4 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+                <%= t('devise.registrations.password_help', count: @minimum_password_length) %>
+              </p>
+            <% end %>
+          </div>
+
+          <!-- Password Confirmation Field -->
+          <div>
+            <%= f.label :password_confirmation, "🔐 #{t('devise.registrations.confirm_password')}", class: "block text-sm font-bold mb-3", style: "color: #111827;" %>
+            <div class="relative">
+              <%= f.password_field :password_confirmation, 
+                                 autocomplete: "new-password",
+                                 placeholder: "••••••••",
+                                 class: "w-full px-4 py-4 pl-12 bg-white border-2 border-gray-200 rounded-xl text-gray-900 placeholder-gray-500 focus:outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-500/20 transition-all font-medium shadow-sm hover:shadow-md" %>
+              <svg class="w-6 h-6 text-blue-500 absolute left-3 top-1/2 -translate-y-1/2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
+              </svg>
+            </div>
+          </div>
+
+          <!-- Avatar Selection -->
+          <div>
+            <label class="block text-sm font-bold mb-3" style="color: #111827;">🎨 <%= t('devise.registrations.choose_avatar') %></label>
+            <div class="grid grid-cols-8 gap-2 mb-4">
+              <% [
+                { name: 'Cat', emoji: '🐱', color: '#FF6B6B' },
+                { name: 'Dog', emoji: '🐶', color: '#4ECDC4' },
+                { name: 'Panda', emoji: '🐼', color: '#45B7D1' },
+                { name: 'Fox', emoji: '🦊', color: '#FFA726' },
+                { name: 'Happy', emoji: '😊', color: '#FFD700' },
+                { name: 'Cool', emoji: '😎', color: '#1976D2' },
+                { name: 'Star Eyes', emoji: '🤩', color: '#8E24AA' },
+                { name: 'Tree', emoji: '🌳', color: '#4CAF50' }
+              ].each_with_index do |preset, index| %>
+                <label class="cursor-pointer">
+                  <%= f.radio_button :avatar_preset, "#{preset[:name].downcase.gsub(' ', '_')}_#{preset[:emoji]}", 
+                                    id: "avatar_#{index}",
+                                    class: "sr-only peer",
+                                    checked: index == 0 %>
+                  <div class="w-10 h-10 rounded-full flex items-center justify-center text-lg font-bold text-white transition-all transform hover:scale-110 peer-checked:ring-4 peer-checked:ring-blue-500/30 peer-checked:scale-110"
+                       style="background: <%= preset[:color] %>"
+                       title="<%= preset[:name] %>">
+                    <%= preset[:emoji] %>
+                  </div>
+                </label>
+              <% end %>
+            </div>
+            <p class="text-xs" style="color: #6b7280;"><%= t('devise.registrations.avatar_help') %></p>
+          </div>
+
+          <!-- Submit Button -->
+          <div class="pt-4">
+            <%= f.submit "🚀 #{t('devise.registrations.create_account_button')}", 
+                       class: "w-full py-4 px-6 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-black text-xl rounded-xl shadow-2xl transform hover:scale-105 hover:shadow-3xl transition-all duration-300 cursor-pointer border-2 border-white/20 hover:border-white/40",
+                       style: "color: white !important; background: linear-gradient(90deg, #2563eb 0%, #9333ea 100%) !important;" %>
+          </div>
+        </div>
+      <% end %>
+
+      <!-- Divider -->
+      <div class="relative my-8">
+        <div class="absolute inset-0 flex items-center">
+          <div class="w-full border-t border-glass-border"></div>
+        </div>
+        <div class="relative flex justify-center text-sm">
+          <span class="px-4 bg-white" style="color: #6b7280;"><%= t('devise.registrations.already_member') %></span>
+        </div>
+      </div>
+
+      <!-- Login Link -->
+      <div class="text-center">
+        <%= link_to new_session_path(resource_name), 
+                   class: "inline-flex items-center justify-center w-full py-4 px-6 bg-white border-2 border-gray-200 rounded-xl font-bold text-gray-900 hover:border-purple-500 hover:text-purple-600 transition-all duration-200 group shadow-sm hover:shadow-md" do %>
+          <svg class="w-5 h-5 mr-2 transform group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"></path>
+          </svg>
+          <%= t('devise.registrations.sign_in_link') %>
+        <% end %>
+      </div>
+    </div>
+
+    <!-- Footer Links -->
+    <div class="mt-8 text-center">
+      <%= link_to root_path, 
+                 class: "inline-flex items-center font-semibold group",
+                 style: "color: #6b7280;" do %>
+        <svg class="w-5 h-5 mr-2 transform group-hover:-translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+        </svg>
+        ← <%= t('devise.sessions.back_home') %>
+      <% end %>
+    </div>
+  </div>
+</div>
