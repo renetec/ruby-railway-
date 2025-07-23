@@ -6,7 +6,7 @@
   },
   "deploy": {
     "startCommand": "bin/rails server -b :: -p $PORT",
-    "healthcheckPath": "/",
+    "healthcheckPath": "/health",
     "healthcheckTimeout": 600
   }
 }
