@@ -17,7 +17,4 @@ test:
 
 production:
   <<: *default
-  database: pacomien_production
-  username: <%= ENV['DATABASE_USERNAME'] || 'root' %>
-  password: <%= ENV['DATABASE_PASSWORD'] || 'password' %>
-  host: <%= ENV['DATABASE_HOST'] || 'localhost' %>
+  url: <%= ENV['DATABASE_URL'] %>

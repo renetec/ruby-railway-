@@ -129,9 +129,6 @@ Rails.application.routes.draw do
 
     # Search
     get '/search', to: 'search#index'
-    
-    # Health check
-    get '/health', to: 'application#health'
   end
   
   # Redirect root to default locale
