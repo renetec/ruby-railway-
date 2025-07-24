@@ -1,0 +1,325 @@
+<% content_for :title, @job.title %>
+
+<div class="min-h-screen bg-gradient-elegant">
+  <div class="container-elegant">
+    <div class="grid lg:grid-cols-3 gap-12">
+      <!-- Main Content -->
+      <div class="lg:col-span-2 space-y-8">
+        <!-- Job Header -->
+        <div class="card-stunning">
+          <div class="flex items-start justify-between mb-8">
+            <div class="flex items-start">
+              <% if @job.business.logo.attached? %>
+                <div class="avatar-lg mr-6">
+                  <%= image_tag @job.business.logo, alt: @job.business.name, class: "w-full h-full object-cover" %>
+                </div>
+              <% else %>
+                <div class="avatar-lg bg-primary-500 mr-6 flex items-center justify-center">
+                  <span class="text-white font-bold text-2xl"><%= @job.business.name.first.upcase %></span>
+                </div>
+              <% end %>
+              <div class="flex-1">
+                <h1 class="heading-page text-primary-800 mb-3"><%= @job.title %></h1>
+                <div class="text-xl text-secondary-600 mb-4">
+                  <%= link_to @job.business.name, business_path(@job.business), 
+                             class: "hover:text-accent-600 transition-colors font-semibold" %>
+                </div>
+                <div class="flex flex-wrap gap-2 mb-4">
+                  <span class="badge-primary">
+                    <%= t("jobs.job_types.#{@job.job_type}", default: @job.job_type.humanize) %>
+                  </span>
+                  <span class="badge-secondary">
+                    <%= t("jobs.experience_levels.#{@job.experience_level}", default: @job.experience_level.humanize) %>
+                  </span>
+                  <% if @job.remote? %>
+                    <span class="badge-success">
+                      <%= t('jobs.remote_ok', default: 'Remote OK') %>
+                    </span>
+                  <% end %>
+                  <% if @job.urgent? %>
+                    <span class="badge-error">
+                      <%= t('jobs.urgent_hiring', default: 'Urgent Hiring') %>
+                    </span>
+                  <% end %>
+                  <% if @job.featured? %>
+                    <span class="badge-warning">
+                      <%= t('jobs.featured', default: 'Featured') %>
+                    </span>
+                  <% end %>
+                </div>
+              </div>
+            </div>
+            
+            <% if user_signed_in? && (@job.business.user == current_user || current_user.moderator?) %>
+              <div class="flex space-x-3">
+                <%= link_to t('common.edit', default: 'Edit'), edit_job_path(@job), 
+                           class: "btn-secondary-sm" %>
+                <%= link_to t('common.delete', default: 'Delete'), job_path(@job), 
+                           method: :delete, 
+                           data: { confirm: t('jobs.confirm_delete', default: 'Are you sure?') }, 
+                           class: "btn-danger-sm" %>
+              </div>
+            <% end %>
+          </div>
+          
+          <% if @job.salary_min.present? %>
+            <div class="salary-display mb-6">
+              $<%= number_with_delimiter(@job.salary_min) %> - $<%= number_with_delimiter(@job.salary_max) %> 
+              <span class="salary-period"><%= t('jobs.per_year', default: 'per year') %></span>
+            </div>
+          <% end %>
+          
+          <div class="info-grid-2">
+            <div class="info-item">
+              <div class="info-icon"></div>
+              <div>
+                <span class="info-label"><%= t('jobs.location', default: 'Location') %>:</span>
+                <span class="info-value"><%= @job.location %></span>
+              </div>
+            </div>
+            <div class="info-item">
+              <div class="info-icon">📅</div>
+              <div>
+                <span class="info-label"><%= t('jobs.posted', default: 'Posted') %>:</span>
+                <span class="info-value"><%= @job.created_at.strftime("%B %d, %Y") %></span>
+              </div>
+            </div>
+            <% if @job.application_deadline.present? %>
+              <div class="info-item">
+                <div class="info-icon"></div>
+                <div>
+                  <span class="info-label"><%= t('jobs.deadline', default: 'Deadline') %>:</span>
+                  <span class="info-value"><%= @job.application_deadline.strftime("%B %d, %Y") %></span>
+                </div>
+              </div>
+            <% end %>
+            <div class="info-item">
+              <div class="info-icon"></div>
+              <div>
+                <span class="info-label"><%= t('jobs.applications', default: 'Applications') %>:</span>
+                <span class="info-value"><%= pluralize(@job.applications_count, t('jobs.application', default: 'application')) %></span>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Job Description -->
+        <div class="card-glass">
+          <h3 class="section-title"><%= t('jobs.description', default: 'Job Description') %></h3>
+          <div class="prose prose-lg max-w-none text-secondary-700">
+            <%= simple_format(@job.description) %>
+          </div>
+        </div>
+        
+        <!-- Requirements -->
+        <% if @job.requirements.present? %>
+          <div class="card-glass">
+            <h3 class="section-title"><%= t('jobs.requirements', default: 'Requirements') %></h3>
+            <div class="prose prose-lg max-w-none text-secondary-700">
+              <%= simple_format(@job.requirements) %>
+            </div>
+          </div>
+        <% end %>
+        
+        <!-- Benefits -->
+        <% if @job.benefits.present? %>
+          <div class="card-glass">
+            <h3 class="section-title"><%= t('jobs.benefits_perks', default: 'Benefits & Perks') %></h3>
+            <div class="prose prose-lg max-w-none text-secondary-700">
+              <%= simple_format(@job.benefits) %>
+            </div>
+          </div>
+        <% end %>
+        
+        <!-- Related Jobs -->
+        <% if @related_jobs.any? %>
+          <div class="card-glass">
+            <h3 class="section-title"><%= t('jobs.similar_jobs', default: 'Similar Jobs') %></h3>
+            <div class="space-y-6">
+              <% @related_jobs.each do |job| %>
+                <div class="job-card-mini">
+                  <div class="flex items-start justify-between">
+                    <div class="flex-1">
+                      <h4 class="font-semibold text-lg mb-2">
+                        <%= link_to job.title, job_path(job), 
+                                   class: "text-primary-800 hover:text-accent-600 transition-colors" %>
+                      </h4>
+                      <div class="text-secondary-600 font-medium mb-2"><%= job.business.name %></div>
+                      <div class="flex items-center space-x-4 text-sm text-secondary-500">
+                        <span><%= t("jobs.job_types.#{job.job_type}", default: job.job_type.humanize) %></span>
+                        <span>•</span>
+                        <span><%= job.location %></span>
+                      </div>
+                    </div>
+                    <% if job.salary_min.present? %>
+                      <div class="text-accent-600 font-bold text-lg">
+                        $<%= number_with_delimiter(job.salary_min) %>+
+                      </div>
+                    <% end %>
+                  </div>
+                </div>
+              <% end %>
+            </div>
+          </div>
+        <% end %>
+      </div>
+      
+      <!-- Sidebar -->
+      <div class="lg:col-span-1 space-y-8">
+        <!-- Application Section -->
+        <div class="card-stunning">
+          <% if user_signed_in? %>
+            <% if @application %>
+              <div class="text-center">
+                <div class="application-status-success mb-4">
+                  <svg class="w-12 h-12 mx-auto mb-2" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                  </svg>
+                  <div class="font-semibold text-lg">
+                    <%= t('jobs.application_submitted', default: 'Application Submitted') %>
+                  </div>
+                </div>
+                <div class="text-secondary-600 text-sm mb-4">
+                  <%= t('jobs.submitted_on', date: @application.created_at.strftime("%B %d, %Y"),
+                        default: "Application submitted on #{@application.created_at.strftime('%B %d, %Y')}") %>
+                </div>
+                <div class="application-status">
+                  <span class="status-label"><%= t('jobs.status', default: 'Status') %>:</span>
+                  <span class="status-value"><%= t("jobs.statuses.#{@application.status}", default: @application.status.humanize) %></span>
+                </div>
+              </div>
+            <% elsif @job.can_apply? %>
+              <div class="text-center">
+                <h3 class="text-xl font-semibold text-primary-700 mb-6">
+                  <%= t('jobs.apply_for_job', default: 'Apply for this job') %>
+                </h3>
+                <%= link_to apply_job_path(@job), method: :post,
+                           data: { confirm: t('jobs.confirm_apply', job: @job.title, default: "Submit your application for #{@job.title}?") },
+                           class: "btn-success w-full text-lg py-4 mb-4" do %>
+                  <svg class="w-5 h-5 mr-2 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                  <%= t('jobs.submit_application', default: 'Submit Application') %>
+                <% end %>
+                <p class="text-sm text-secondary-500">
+                  <%= t('jobs.quick_apply_note', default: 'Quick apply with your profile information') %>
+                </p>
+              </div>
+            <% elsif @job.application_deadline.present? && @job.application_deadline < Date.current %>
+              <div class="application-status-error text-center">
+                <svg class="w-12 h-12 mx-auto mb-2" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
+                </svg>
+                <div class="font-semibold">
+                  <%= t('jobs.deadline_passed', default: 'Application Deadline Passed') %>
+                </div>
+                <div class="text-sm mt-1">
+                  <%= t('jobs.deadline_was', date: @job.application_deadline.strftime("%B %d, %Y"),
+                        default: "Deadline was #{@job.application_deadline.strftime('%B %d, %Y')}") %>
+                </div>
+              </div>
+            <% else %>
+              <div class="application-status-closed text-center">
+                <div class="font-semibold">
+                  <%= t('jobs.applications_closed', default: 'Applications Closed') %>
+                </div>
+              </div>
+            <% end %>
+          <% else %>
+            <div class="text-center">
+              <h3 class="text-xl font-semibold text-primary-700 mb-6">
+                <%= t('jobs.apply_for_job', default: 'Apply for this job') %>
+              </h3>
+              <div class="space-y-3">
+                <%= link_to t('auth.sign_in_to_apply', default: 'Sign In to Apply'), new_user_session_path, 
+                           class: "btn-primary w-full" %>
+                <%= link_to t('auth.create_account', default: 'Create Account'), new_user_registration_path, 
+                           class: "btn-secondary w-full" %>
+              </div>
+            </div>
+          <% end %>
+        </div>
+        
+        <!-- Company Info -->
+        <div class="card-glass">
+          <h3 class="section-title mb-6">
+            <%= t('jobs.about_company', company: @job.business.name, 
+                  default: "About #{@job.business.name}") %>
+          </h3>
+          
+          <div class="text-center mb-6">
+            <% if @job.business.logo.attached? %>
+              <div class="avatar-xl mx-auto mb-4">
+                <%= image_tag @job.business.logo, alt: @job.business.name, class: "w-full h-full object-cover" %>
+              </div>
+            <% else %>
+              <div class="avatar-xl bg-primary-500 mx-auto mb-4 flex items-center justify-center">
+                <span class="text-white font-bold text-3xl"><%= @job.business.name.first.upcase %></span>
+              </div>
+            <% end %>
+          </div>
+          
+          <p class="text-secondary-700 text-center mb-6 leading-relaxed">
+            <%= truncate(@job.business.description, length: 150) %>
+          </p>
+          
+          <div class="space-y-3 text-sm mb-6">
+            <% if @job.business.has_location? %>
+              <div class="flex items-center text-secondary-600">
+                <div class="info-icon"></div>
+                <span class="ml-3"><%= @job.business.city %>, <%= @job.business.state %></span>
+              </div>
+            <% end %>
+            <% if @job.business.website.present? %>
+              <div class="flex items-center">
+                <div class="info-icon">🌐</div>
+                <span class="ml-3">
+                  <%= link_to t('jobs.company_website', default: 'Company Website'), @job.business.website, 
+                             target: "_blank", 
+                             class: "text-accent-600 hover:text-accent-700 font-medium" %>
+                </span>
+              </div>
+            <% end %>
+          </div>
+          
+          <%= link_to t('jobs.view_company_profile', default: 'View Company Profile'), 
+                     business_path(@job.business), 
+                     class: "btn-outline w-full" %>
+        </div>
+        
+        <!-- Quick Stats -->
+        <div class="card-glass">
+          <h3 class="section-title mb-6"><%= t('jobs.job_stats', default: 'Job Stats') %></h3>
+          <div class="stats-grid">
+            <div class="stat-item">
+              <div class="stat-value"><%= @job.applications_count %></div>
+              <div class="stat-label"><%= t('jobs.applications', default: 'Applications') %></div>
+            </div>
+            <div class="stat-item">
+              <div class="stat-value"><%= time_ago_in_words(@job.created_at) %></div>
+              <div class="stat-label"><%= t('jobs.posted_ago', default: 'ago') %></div>
+            </div>
+            <% if @job.application_deadline.present? %>
+              <div class="stat-item">
+                <div class="stat-value text-accent-600">
+                  <%= [@job.application_deadline - Date.current, 0].max.to_i %>
+                </div>
+                <div class="stat-label"><%= t('jobs.days_left', default: 'days left') %></div>
+              </div>
+            <% end %>
+          </div>
+        </div>
+      </div>
+  </div>
+    
+    <!-- Navigation -->
+    <div class="text-center mt-16">
+      <%= link_to jobs_path, class: "btn-link-back" do %>
+        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+        </svg>
+        <%= t('jobs.back_to_job_board', default: 'Back to Job Board') %>
+      <% end %>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,631 @@
+fr:
+  # Navigation
+  navigation:
+    home: "Accueil"
+    news: "Actualités"
+    events: "Événements"
+    forum: "Forum"
+    market: "Marché"
+    business: "Entreprises"
+    jobs: "Emplois"
+    volunteer: "Bénévolat"
+    sign_in: "Se connecter"
+    sign_up: "S'inscrire"
+    profile: "Profil"
+    sign_out: "Se déconnecter"
+    main: "Navigation principale"
+    main_content: "Contenu principal"
+    home_logo: "Page d'accueil"
+    logo: "Logo Pacomien"
+    skip_to_content: "Aller au contenu principal"
+    language: "Langue"
+
+  # General
+  general:
+    welcome_back: "Bon retour !"
+    loading: "Chargement..."
+    save: "Enregistrer"
+    cancel: "Annuler"
+    delete: "Supprimer"
+    edit: "Modifier"
+    create: "Créer"
+    update: "Mettre à jour"
+    search: "Rechercher"
+    filter: "Filtrer"
+    back: "Retour"
+    next: "Suivant"
+    previous: "Précédent"
+    yes: "Oui"
+    no: "Non"
+    or: "ou"
+    and: "et"
+    read_more: "Lire la suite"
+    learn_more: "En savoir plus"
+    get_started: "Commencer"
+    explore: "Explorer"
+
+  # Avo Admin
+  avo:
+    dashboard: "Tableau de bord"
+    content_management: "Gestion du contenu"
+    analytics: "Analyses"
+    admin_dashboard: "Tableau de bord administrateur"
+
+  # Profils
+  profiles:
+    full_name: "Nom complet"
+    member_since: "Membre depuis"
+    online: "En ligne"
+    edit_profile: "Modifier le profil"
+    admin_dashboard: "Tableau de bord administrateur"
+    posts: "Publications"
+    events: "Événements"
+    recent_posts: "Publications récentes"
+    view_all_posts: "Voir toutes les publications"
+    no_posts: "Aucune publication pour le moment"
+    recent_events: "Événements récents"
+    dashboard: "Tableau de bord"
+    view_all_events: "Voir tous les événements"
+    no_events: "Aucun événement organisé pour le moment"
+    edit_title: "Modifier mon profil"
+    edit_subtitle: "Personnalisez vos informations et votre avatar"
+    choose_avatar: "Choisissez votre avatar"
+    save_changes: "Sauvegarder les modifications"
+    back_to_profile: "Retour au profil"
+    upload_custom_photo: "Téléchargez une photo personnalisée"
+
+  # Devise
+  devise:
+    sessions:
+      sign_in: "Connexion"
+      sign_in_subtitle: "Connectez-vous pour accéder à votre espace personnel"
+      email_label: "Adresse email"
+      password_label: "Mot de passe"
+      remember_me: "Se souvenir de moi"
+      forgot_password: "Mot de passe oublié ?"
+      sign_in_button: "SE CONNECTER"
+      no_account: "Pas encore de compte ?"
+      create_account: "Créer un compte gratuitement"
+      back_home: "Retour à l'accueil"
+    registrations:
+      sign_up: "Inscription"
+      sign_up_subtitle: "Rejoignez notre communauté en quelques secondes"
+      full_name_label: "Votre nom complet"
+      full_name_placeholder: "Entrez votre nom complet"
+      full_name_help: "Ce nom sera affiché sur votre profil"
+      email_placeholder: "votre@email.com"
+      email_help: "Votre adresse sera utilisée pour vous connecter"
+      password_help: "Minimum %{count} caractères"
+      confirm_password: "Confirmer le mot de passe"
+      choose_avatar: "Choisissez votre avatar"
+      avatar_help: "Vous pourrez modifier votre avatar plus tard dans votre profil"
+      create_account_button: "CRÉER MON COMPTE"
+      already_member: "Déjà membre ?"
+      sign_in_link: "Se connecter"
+
+  # Messages
+  messages:
+    comment_posted: "Commentaire publié ! Merci pour votre participation."
+    export_csv_todo: "Fonctionnalité d'export CSV à implémenter"
+    event_not_found: "Erreur : Impossible de trouver l'événement."
+    rsvp_confirmed: "Inscription confirmée ! Vous recevrez un email de confirmation."
+    message_sent: "Message envoyé ! L'entreprise vous répondra rapidement."
+    application_sent: "Candidature envoyée ! L'employeur vous répondra rapidement."
+    access_denied: "Accès refusé. Privilèges d'administrateur requis."
+
+  # Home Page
+  home:
+    hero:
+      building_communities: "Construction de communautés incroyables"
+      connect_together: "Se connecter ensemble"
+      tagline: "Où les voisins deviennent amis, les idées deviennent réalité, et chaque voix crée un impact durable dans notre communauté numérique vibrante."
+      start_journey: "Commencez votre voyage"
+      explore_community: "Explorer la communauté"
+      discover_events: "Découvrir les événements"
+      join_discussions: "Rejoindre les discussions"
+    
+    services:
+      title: "Services communautaires"
+      subtitle: "Tout ce dont vous avez besoin pour vous connecter, partager et grandir ensemble"
+      news:
+        title: "Actualités & Histoires"
+        description: "Restez informé avec les dernières nouvelles et histoires de votre communauté locale."
+      events:
+        title: "Événements locaux"
+        description: "Découvrez et participez à des événements passionnants près de chez vous."
+      forum:
+        title: "Discussions communautaires"
+        description: "Participez à des conversations significatives avec vos voisins."
+      marketplace:
+        title: "Marché local"
+        description: "Achetez, vendez et échangez avec les membres de votre communauté."
+    
+    stats:
+      title: "Notre communauté en chiffres"
+      members: "Membres actifs"
+      posts: "Articles partagés"
+      events: "Événements organisés"
+      discussions: "Discussions en cours"
+    
+    community_feed:
+      title: "Activité de la communauté"
+      subtitle: "Découvrez ce qui se passe dans votre quartier"
+      recent_posts: "Articles récents"
+      upcoming_events: "Événements à venir"
+      active_discussions: "Discussions actives"
+      no_recent_activity: "Aucune activité récente"
+      
+    final_cta:
+      title: "Prêt à vous joindre à nous ?"
+      subtitle: "Devenez partie intégrante de cette communauté dynamique dès aujourd'hui"
+      join_now: "Rejoignez-nous maintenant"
+
+  # Events
+  events:
+    title: "Événements"
+    amazing_events: "Événements incroyables"
+    subtitle: "Découvrez des événements à venir incroyables, connectez-vous avec votre communauté et créez des souvenirs inoubliables ensemble."
+    create_new: "Créer un nouvel événement"
+    filter_events: "Filtrer les événements"
+    view_details: "Voir les détails"
+    view_full_details: "Voir tous les détails"
+    close: "Fermer"
+    
+    filters:
+      all_events: "Tous les événements"
+      upcoming: "À venir"
+      this_week: "Cette semaine"
+      this_month: "Ce mois"
+      past: "Passés"
+      all_categories: "Toutes les catégories"
+    
+    categories:
+      community: "Communauté"
+      business: "Affaires"
+      education: "Éducation"
+      entertainment: "Divertissement"
+      sports: "Sports"
+      health: "Santé"
+      technology: "Technologie"
+      culture: "Culture"
+      volunteer: "Bénévolat"
+      other: "Autre"
+    
+    details:
+      event_details: "Détails de l'événement"
+      date_time: "Date et heure"
+      location: "Lieu"
+      location_tbd: "Lieu à déterminer"
+      capacity: "Capacité"
+      price: "Prix"
+      free: "Gratuit"
+      event_host: "Organisateur de l'événement"
+      description: "Description"
+      recent_attendees: "Participants récents"
+      more: "de plus"
+      attending: "participants"
+      
+    rsvp:
+      title: "Statut RSVP"
+      attending: "Vous participez à cet événement !"
+      status: "Statut RSVP"
+      rsvp_to_event: "RSVP à l'événement"
+      cancel_rsvp: "Annuler RSVP"
+      event_full: "Événement complet"
+      no_spots: "Aucune place restante"
+      sign_in_to_rsvp: "Connectez-vous pour RSVP"
+      
+    status:
+      upcoming: "À venir"
+      past_event: "Événement passé"
+      
+    management:
+      title: "Gestion de l'événement"
+      edit_event: "Modifier l'événement"
+      delete_event: "Supprimer l'événement"
+      delete_confirm: "Êtes-vous sûr de vouloir supprimer cet événement ? Cette action ne peut pas être annulée."
+      
+    empty:
+      title: "Aucun événement trouvé"
+      subtitle_filtered: "Essayez d'ajuster vos filtres ou parcourez tous les événements."
+      subtitle_empty: "Soyez le premier à organiser un rassemblement communautaire incroyable."
+      create_first: "Créer le premier événement"
+
+  # Posts/News
+  posts:
+    title: "Actualités et histoires"
+    latest_stories: "Dernières histoires"
+    subtitle: "Restez informé avec les dernières nouvelles, histoires et annonces de votre communauté vibrante."
+    create_new: "Créer une nouvelle histoire"
+    search_stories: "Rechercher des histoires incroyables..."
+    
+    categories:
+      all_categories: "Toutes les catégories"
+      community: "Communauté"
+      business: "Affaires"
+      education: "Éducation"
+      entertainment: "Divertissement"
+      sports: "Sports"
+      health: "Santé"
+      technology: "Technologie"
+      culture: "Culture"
+      volunteer: "Bénévolat"
+      other: "Autre"
+      
+    details:
+      community_story: "Histoire de la communauté"
+      featured: "En vedette"
+      featured_story: "Histoire en vedette"
+      written_by: "Écrit par"
+      ago: "il y a"
+      read_full_article: "Lire l'article complet"
+      
+    empty:
+      title: "Aucune histoire trouvée"
+      subtitle_filtered: "Essayez d'ajuster vos critères de recherche ou parcourez toutes les histoires."
+      subtitle_empty: "Soyez le premier à partager une histoire incroyable avec la communauté."
+      create_first: "Créer la première histoire"
+
+  # Footer
+  footer:
+    tagline: "Votre communauté locale, connectée et engagée."
+    navigation: "Navigation"
+    services: "Services"
+    contact: "Contact"
+    copyright: "Tous droits réservés. Plateforme communautaire Pacomien."
+    made_with: "Créé avec"
+    for_community: "pour la communauté"
+    back_to_top: "Retour en haut"
+    site_footer: "Pied de page du site"
+    
+  # Date and time formats
+  date:
+    formats:
+      default: "%d %B %Y"
+      long: "%A %d %B %Y"
+      short: "%d/%m/%Y"
+    day_names:
+      - dimanche
+      - lundi
+      - mardi
+      - mercredi
+      - jeudi
+      - vendredi
+      - samedi
+    abbr_day_names:
+      - dim
+      - lun
+      - mar
+      - mer
+      - jeu
+      - ven
+      - sam
+    month_names:
+      - ~
+      - janvier
+      - février
+      - mars
+      - avril
+      - mai
+      - juin
+      - juillet
+      - août
+      - septembre
+      - octobre
+      - novembre
+      - décembre
+    abbr_month_names:
+      - ~
+      - jan
+      - fév
+      - mar
+      - avr
+      - mai
+      - jun
+      - jul
+      - aoû
+      - sep
+      - oct
+      - nov
+      - déc
+
+  time:
+    ago: "il y a %{time}"
+    formats:
+      default: "%d %B %Y à %H:%M"
+      long: "%A %d %B %Y à %H:%M:%S %Z"
+      short: "%d/%m/%Y %H:%M"
+      date: "%d %B %Y"
+      time: "%H:%M"
+    am: "matin"
+    pm: "après-midi"
+
+  # Notifications
+  notifications:
+    success: "Opération réussie !"
+    error: "Une erreur s'est produite."
+    warning: "Attention !"
+    info: "Information"
+
+  # Language switcher
+  language:
+    french: "Français"
+    english: "English"
+    switch_to: "Passer à %{language}"
+
+  # Theme toggle
+  theme:
+    toggle: "Basculer le thème"
+    dark_mode: "Mode sombre"
+    light_mode: "Mode clair"
+    switch_to_dark: "Passer au mode sombre"
+    switch_to_light: "Passer au mode clair"
+
+  # Generic error messages (Rails level)
+  errors:
+    messages:
+      blank: "ne peut pas être vide"
+      not_a_number: "n'est pas un nombre"
+      greater_than: "doit être supérieur à %{count}"
+    attributes:
+      location:
+        blank: "ne peut pas être vide"
+      capacity:
+        blank: "ne peut pas être vide"
+        not_a_number: "doit être un nombre"
+
+  # ActiveRecord error messages
+  activerecord:
+    errors:
+      messages:
+        blank: "ne peut pas être vide"
+        not_a_number: "n'est pas un nombre"
+        greater_than: "doit être supérieur à %{count}"
+        greater_than_or_equal_to: "doit être supérieur ou égal à %{count}"
+        less_than: "doit être inférieur à %{count}"
+        less_than_or_equal_to: "doit être inférieur ou égal à %{count}"
+        taken: "n'est pas disponible"
+        too_short: "est trop court (minimum %{count} caractères)"
+        too_long: "est trop long (maximum %{count} caractères)"
+        invalid: "n'est pas valide"
+        confirmation: "ne correspond pas"
+        accepted: "doit être accepté"
+        empty: "ne peut pas être vide"
+        present: "doit être vide"
+        inclusion: "n'est pas inclus dans la liste"
+        exclusion: "n'est pas disponible"
+        wrong_length: "ne fait pas la bonne longueur (doit contenir %{count} caractères)"
+      models:
+        event:
+          attributes:
+            location:
+              blank: "ne peut pas être vide"
+            capacity:
+              blank: "ne peut pas être vide"
+              not_a_number: "doit être un nombre"
+              greater_than: "doit être supérieur à %{count}"
+            date:
+              blank: "ne peut pas être vide"
+            title:
+              blank: "ne peut pas être vide"
+            description:
+              blank: "ne peut pas être vide"
+            date:
+              blank: "ne peut pas être vide"
+            category:
+              blank: "ne peut pas être sélectionné"
+        user:
+          attributes:
+            nickname:
+              taken: "n'est pas disponible"
+              too_long: "est trop long (maximum 30 caractères)"
+            name:
+              blank: "ne peut pas être vide"
+              too_short: "est trop court (minimum 2 caractères)"
+              too_long: "est trop long (maximum 50 caractères)"
+
+  # Actions & Buttons
+  actions:
+    create: "Créer"
+    create_event: "Créer un événement" 
+    create_story: "Créer une histoire"
+    create_opportunity: "Créer une opportunité"
+    add_business: "Ajouter mon entreprise"
+    post_job: "Publier une offre"
+    publish: "Publier"
+    publish_comment: "Publier le commentaire"
+    publish_article: "Publier l'article"
+    send: "Envoyer"
+    send_message: "Envoyer le message"
+    send_application: "Envoyer la candidature"
+    register: "S'inscrire"
+    sign_up_event: "S'inscrire"
+    join: "Rejoindre"
+    join_discussion: "Rejoindre la discussion"
+    edit: "Modifier"
+    edit_profile: "Modifier le profil"
+    modify: "Modifier"
+    delete: "Supprimer"
+    search: "Rechercher"
+    search_placeholder: "Rechercher..."
+    type_message: "Tapez votre message... (Entrée pour envoyer)"
+    be_first_create: "Soyez le premier à créer"
+    close: "Fermer"
+    cancel: "Annuler"
+    confirm: "Confirmer"
+    save: "Sauvegarder"
+    save_changes: "Sauvegarder les modifications"
+    confirm_registration: "Confirmer l'inscription"
+    refresh: "Actualiser"
+    
+  # Common text
+  common:
+    or: "ou"
+    first_to_create: "Soyez le premier à créer un événement!"
+    join_event_modal: "S'inscrire à l'événement"
+    join_discussion_modal: "Rejoindre la discussion"
+    contact_business: "Contacter l'entreprise"
+    apply_job: "Postuler pour l'emploi"
+    apply_volunteer: "Postuler pour l'opportunité de bénévolat"
+    your_full_name: "Votre nom complet"
+    your_comment: "Votre commentaire..."
+    explain_motivation: "Expliquez votre motivation..."
+    availability: "Ex: weekends, soirées..."
+    your_message: "Votre message..."
+    
+  # Form labels
+  forms:
+    your_name: "Votre nom"
+    comment: "Commentaire"
+    motivation: "Motivation"
+    availability: "Disponibilité"
+    message: "Message"
+
+  # Dropdown Options
+  dropdowns:
+    category: "Catégorie"
+    all_categories: "Toutes les catégories"
+    news: "Actualités"
+    local_news: "Actualités locales" 
+    community: "Communauté"
+    practical_life: "Vie pratique"
+    culture: "Culture"
+    sports: "Sports"
+    health: "Santé"
+    education: "Éducation"
+    environment: "Environnement"
+    social: "Social"
+    announcements: "Annonces"
+    questions: "Questions"
+    suggestions: "Suggestions"
+    time_required: "Temps requis"
+    one_time: "Ponctuel"
+    regular: "Régulier"
+    flexible: "Flexible"
+    no_categories_yet: "Aucune catégorie pour le moment"
+    sector: "Secteur"
+    tech: "Tech"
+    commerce: "Commerce"
+    marketing: "Marketing"
+    job_type: "Type de poste"
+    permanent: "CDI"
+    temporary: "CDD"
+    freelance: "Freelance"
+    internship: "Stage"
+    part_time: "Temps partiel"
+
+  # Products/Marketplace
+  products:
+    title: "Marché communautaire"
+    subtitle: "Achetez et vendez avec votre communauté"
+    sell_product: "Vendre un produit"
+    
+    filters:
+      all_categories: "Toutes les catégories"
+      all_conditions: "Toutes les conditions"
+      region: "Région"
+      search: "Rechercher"
+      
+    categories:
+      electronics: "Électronique"
+      clothing: "Vêtements" 
+      home: "Maison"
+      sport: "Sport"
+      fashion: "Mode"
+      
+    conditions:
+      new: "Neuf"
+      like_new: "Comme neuf"
+      good: "Bon état"
+      used: "Occasion"
+      excellent: "Excellent état"
+      
+    details:
+      by: "Par"
+      contact: "Contacter"
+      contact_seller: "Contacter le vendeur"
+      
+    contact_form:
+      your_name: "Votre nom"
+      your_full_name: "Votre nom complet"
+      message: "Message"
+      interested_message: "Je suis intéressé(e) par votre produit..."
+      send_message: "Envoyer le message"
+      close: "Fermer"
+      
+    alerts:
+      cannot_contact_self: "Vous ne pouvez pas vous contacter pour votre propre produit!"
+      interested_default: "Bonjour, je suis intéressé(e) par votre produit"
+      must_login: "Vous devez vous connecter pour envoyer un message."
+      message_sent_success: "Message envoyé avec succès! Vous pouvez voir la conversation dans vos messages."
+      message_sent_simple: "Message envoyé! Le vendeur vous répondra bientôt."
+      message_send_error: "Erreur lors de l'envoi du message. Veuillez réessayer."
+      product_info_error: "Erreur: Impossible de trouver les informations du produit."
+      
+    sample_products:
+      phone_title: "iPhone 13 Pro - État impeccable"
+      phone_desc: "Vends iPhone 13 Pro 256GB en excellent état. Toujours utilisé avec protection..."
+      bike_title: "Vélo VTT tout terrain"
+      bike_desc: "Vélo de montagne 26 pouces en bon état général. Idéal pour les balades en nature..."
+      jacket_title: "Veste en cuir vintage"
+      jacket_desc: "Belle veste en cuir véritable, style vintage années 80. Couleur marron, taille M..."
+      table_title: "Table basse en bois massif"
+      table_desc: "Table basse artisanale en chêne massif. Dimensions: 120x60x45cm..."
+      ago_text: "il y a"
+      by_seller: "Par"
+      
+    time:
+      ago: "il y a %{time}"
+
+  # Notifications & Flash Messages
+  flash:
+    event_created_success: "Événement créé avec succès!"
+    access_denied: "Accès refusé."
+    access_denied_admin: "Accès refusé. Privilèges d'administrateur requis."
+    not_authorized: "Non autorisé."
+    profile_updated: "Profil mis à jour avec succès!"
+    event_updated: "L'événement a été mis à jour avec succès."
+    event_deleted: "L'événement a été supprimé avec succès."
+    rsvp_success: "Inscription à l'événement réussie!"
+    cannot_rsvp: "Impossible de s'inscrire à cet événement."
+    rsvp_cancelled: "Inscription annulée avec succès."
+    could_not_cancel_rsvp: "Impossible d'annuler l'inscription."
+    job_created: "Offre d'emploi créée avec succès!"
+    job_updated: "Offre d'emploi mise à jour avec succès!"
+    job_deleted: "Offre d'emploi supprimée avec succès."
+    application_submitted: "Candidature soumise avec succès!"
+    cannot_apply: "Impossible de postuler pour cet emploi."
+    business_required: "Veuillez d'abord créer un profil d'entreprise."
+    business_created: "Fiche entreprise créée avec succès!"
+    business_updated: "Fiche entreprise mise à jour avec succès!"
+    business_deleted: "Fiche entreprise supprimée avec succès."
+    volunteer_created: "Opportunité de bénévolat créée avec succès!"
+    volunteer_updated: "Opportunité de bénévolat mise à jour avec succès!"
+    volunteer_deleted: "Opportunité de bénévolat supprimée avec succès."
+    cannot_apply_volunteer: "Impossible de postuler pour cette opportunité."
+    product_created: "Annonce de produit créée avec succès!"
+    product_updated: "Annonce de produit mise à jour avec succès!"
+    product_deleted: "Annonce de produit supprimée avec succès!"
+    product_sold: "Produit marqué comme vendu!"
+    could_not_mark_sold: "Impossible de marquer le produit comme vendu."
+    post_created: "Article créé avec succès."
+    post_updated: "Article mis à jour avec succès."
+    post_deleted: "Article supprimé avec succès."
+    thread_created: "Discussion créée avec succès!"
+    thread_updated: "Discussion mise à jour avec succès!"
+    thread_deleted: "Discussion supprimée avec succès."
+    thread_locked: "Discussion verrouillée."
+    thread_unlocked: "Discussion déverrouillée."
+    thread_pinned: "Discussion épinglée."
+    thread_unpinned: "Discussion désépinglée."
+    reply_posted: "Réponse publiée avec succès!"
+    reply_updated: "Réponse mise à jour avec succès!"
+    reply_deleted: "Réponse supprimée avec succès."
+    message_send_error: "Le message n'a pas pu être envoyé."
+    no_conversation_access: "Vous n'avez pas accès à cette conversation."
+    left_conversation: "Conversation quittée avec succès"
+    conversation_archived: "Conversation archivée"
+
+  # Meta tags
+  meta:
+    default_description: "Pacomien - Votre plateforme communautaire locale pour se connecter, partager et grandir ensemble."
