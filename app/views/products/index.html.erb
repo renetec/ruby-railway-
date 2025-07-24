@@ -1,239 +1,416 @@
-<% content_for :title, t('products.index.title') %>
+<!-- Marketplace - 2 Column Layout matching Home page -->
+<div class="max-w-6xl mx-auto px-4 py-8">
+  <!-- Page Header with Logo -->
+  <%= render 'shared/page_header_with_logo', 
+      title: t('products.title'),
+      subtitle: t('products.subtitle') %>
 
-<div class="min-h-screen relative overflow-hidden">
-  <!-- Stunning Background -->
-  <div class="absolute inset-0 bg-gradient-to-br from-primary-bg via-secondary-bg to-primary-bg"></div>
-  
-  <div class="container-wide relative z-10">
-    <!-- Epic Header Section -->
-    <div class="text-center mb-20 animate-slide-up">
-      <div class="inline-flex items-center px-6 py-3 bg-glass-bg backdrop-filter backdrop-blur-lg border border-glass-border rounded-full mb-8">
-        <span class="w-3 h-3 bg-emerald-green rounded-full mr-4 animate-pulse"></span>
-        <span class="text-text-secondary text-sm font-medium font-display"><%= t('products.index.subtitle') %></span>
-      </div>
-      
-      <h1 class="font-display text-2xl lg:text-3xl font-black text-text-primary mb-8 leading-tight">
-        <%= t('products.index.community') %>
-        <br>
-        <span class="bg-gradient-to-r from-emerald-green via-electric-blue to-vibrant-purple bg-clip-text text-transparent"><%= t('products.index.marketplace') %></span>
-      </h1>
-      
-      <p class="font-content text-xl text-text-secondary max-w-4xl mx-auto mb-12 leading-relaxed">
-        <%= t('products.index.description') %>
-      </p>
-      
-      <% if user_signed_in? %>
-        <div class="flex flex-col sm:flex-row gap-6 justify-center">
-          <%= link_to my_products_products_path, class: "btn-secondary-lg" do %>
-            <span class="relative z-10 flex items-center font-display">
-              <%= t('products.index.my_products') %>
-              <svg class="w-5 h-5 ml-2 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
-              </svg>
-            </span>
-          <% end %>
-          <%= link_to new_product_path, class: "btn-primary-lg" do %>
-            <span class="relative z-10 flex items-center font-display">
-              <%= t('products.index.list_product') %>
-              <svg class="w-5 h-5 ml-2 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
-              </svg>
-            </span>
-          <% end %>
-        </div>
+  <!-- Filters Section -->
+  <div class="flex flex-col md:flex-row gap-4 mb-8 justify-center">
+    <%= form_with url: products_path, method: :get, local: true, class: "flex flex-col md:flex-row gap-4" do |form| %>
+      <%= form.select :category, 
+                     options_for_select([[t('products.filters.all_categories'), ""]] + (defined?(@categories) ? @categories.map { |cat| [cat.humanize, cat] } : [[t('products.categories.electronics'), "electronics"], [t('products.categories.clothing'), "clothing"], [t('products.categories.home'), "home"]]), params[:category]),
+                     {}, 
+                     { class: "px-4 py-2 border border-gray-300 rounded-lg bg-white" } %>
+      <%= form.select :condition, 
+                     options_for_select([[t('products.filters.all_conditions'), ""]] + [[t('products.conditions.new'), "new"], [t('products.conditions.like_new'), "like_new"], [t('products.conditions.good'), "good"], [t('products.conditions.used'), "used"]], params[:condition]),
+                     {}, 
+                     { class: "px-4 py-2 border border-gray-300 rounded-lg bg-white" } %>
+      <%= form.text_field :location, placeholder: t('products.filters.region'), value: params[:location], class: "px-4 py-2 border border-gray-300 rounded-lg bg-white" %>
+      <%= form.submit "🔄 #{t('products.filters.search')}", class: "px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600" %>
+    <% end %>
+  </div>
+
+  <!-- Add Product Button -->
+  <% if user_signed_in? %>
+    <div class="text-center mb-8">
+      <%= link_to new_product_path, class: "bg-green-500 text-white px-6 py-3 rounded-lg hover:bg-green-600 transition-colors inline-flex items-center" do %>
+        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+        </svg>
+        <%= t('products.sell_product') %>
       <% end %>
     </div>
-  
-    <div class="bento-grid-layout">
-      <!-- Filters Sidebar -->
-      <div class="lg:col-span-1">
-        <div class="card-stunning overflow-hidden sticky top-4">
-          <div class="bg-gradient-to-r from-emerald-green/10 to-electric-blue/10 backdrop-filter backdrop-blur-sm px-6 py-4 border-b border-glass-border">
-            <div class="flex items-center space-x-3">
-              <div class="w-10 h-10 bg-gradient-to-br from-emerald-green to-electric-blue rounded-2xl flex items-center justify-center shadow-lg">
-                <span class="text-white text-lg">🔎</span>
-              </div>
-              <h3 class="font-display text-xl font-bold text-text-primary"><%= t('products.index.filter.title') %></h3>
+  <% end %>
+
+  <!-- 2-Column Products Grid -->
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <% if @products.any? %>
+      <% @products.each_with_index do |product, index| %>
+        <div class="bg-white border border-gray-200 rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow cursor-pointer" onclick="openProductModal('product-<%= product.id %>')">
+          <div class="flex gap-4">
+            <div class="w-24 h-24 bg-gray-100 rounded-lg flex items-center justify-center flex-shrink-0">
+              <% if product.images.attached? %>
+                <%= image_tag product.images.first, class: "w-24 h-24 rounded-lg object-cover" %>
+              <% else %>
+                <span class="text-3xl">📦</span>
+              <% end %>
             </div>
-          </div>
-          
-          <div class="p-6">
-        
-            <%= form_with url: products_path, method: :get, local: true, class: "space-y-6" do |form| %>
-              <!-- Search -->
-              <div class="form-group">
-                <%= form.label :search, t('products.index.filter.search'), class: "form-label" %>
-                <%= form.text_field :search, placeholder: t('products.index.filter.search_placeholder'), 
-                                   value: params[:search], 
-                                   class: "input-modern" %>
+            <div class="flex-1">
+              <div class="flex justify-between items-start mb-2">
+                <span class="bg-blue-500 text-white px-2 py-1 rounded text-xs">
+                  <%= product.category.humanize %>
+                </span>
+                <span class="text-sm text-gray-500">
+                  <%= time_ago_in_words(product.created_at) %> ago
+                </span>
               </div>
-          
-              <!-- Category -->
-              <div class="form-group">
-                <%= form.label :category, t('products.index.filter.category'), class: "form-label" %>
-                <%= form.select :category, 
-                               options_for_select([[t('products.index.filter.all_categories'), ""]] + @categories.map { |cat| [cat.humanize, cat] }, params[:category]),
-                               {}, 
-                               { class: "input-modern" } %>
-              </div>
-          
-              <!-- Condition -->
-              <div class="form-group">
-                <%= form.label :condition, t('products.index.filter.condition'), class: "form-label" %>
-                <%= form.select :condition, 
-                               options_for_select([[t('products.index.filter.all_conditions'), ""]] + @conditions.map { |cond| [cond.humanize, cond] }, params[:condition]),
-                               {}, 
-                               { class: "input-modern" } %>
-              </div>
-          
-              <!-- Location -->
-              <div class="form-group">
-                <%= form.label :location, t('products.index.filter.location'), class: "form-label" %>
-                <%= form.text_field :location, placeholder: t('products.index.filter.location_placeholder'), 
-                                   value: params[:location], 
-                                   class: "input-modern" %>
-              </div>
-          
-              <!-- Price Range -->
-              <div class="form-group">
-                <label class="form-label"><%= t('products.index.filter.price_range') %></label>
-                <div class="space-y-2">
-                  <% @price_ranges.each do |range| %>
-                    <div class="radio-modern">
-                      <%= radio_button_tag :price_range, "#{range[:min]}-#{range[:max]}", 
-                                          params[:min_price] == range[:min].to_s && params[:max_price] == range[:max].to_s,
-                                          class: "radio-input" %>
-                      <%= label_tag "price_range_#{range[:min]}_#{range[:max]}", range[:label], class: "radio-label" %>
-                    </div>
-                  <% end %>
-                  <%= hidden_field_tag :min_price, params[:min_price] %>
-                  <%= hidden_field_tag :max_price, params[:max_price] %>
+              <h3 class="font-bold text-lg mb-1 text-gray-900">
+                <%= truncate(product.name, length: 40) %>
+              </h3>
+              <p class="text-gray-600 text-sm mb-2">
+                <%= truncate(product.description, length: 80) %>
+              </p>
+              <div class="flex justify-between items-center">
+                <span class="text-xs text-gray-500">
+                  <%= t('products.details.by') %> <%= product.user.name %>
+                </span>
+                <div class="flex items-center gap-2">
+                  <span class="font-bold text-green-600">
+                    <%= product.formatted_price %>
+                  </span>
+                  <button class="text-blue-600 hover:text-blue-800 text-sm font-medium" onclick="event.stopPropagation(); openProductModal('product-<%= product.id %>')">
+                    💬 <%= t('products.details.contact') %>
+                  </button>
                 </div>
               </div>
-          
-              <div class="space-y-3">
-                <%= form.submit t('products.index.filter.apply_filters'), class: "btn-primary-full" %>
-                <%= link_to t('products.index.filter.clear_filters'), products_path, class: "btn-secondary-full" %>
+            </div>
+          </div>
+        </div>
+      <% end %>
+    <% else %>
+      <!-- Sample Products if no @products available -->
+      <div class="bg-white border border-gray-200 rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow cursor-pointer" onclick="openProductModal('modal-1')">
+        <div class="flex gap-4">
+          <div class="w-24 h-24 bg-blue-100 rounded-lg flex items-center justify-center flex-shrink-0">
+            <span class="text-3xl">📱</span>
+          </div>
+          <div class="flex-1">
+            <div class="flex justify-between items-start mb-2">
+              <span class="bg-blue-500 text-white px-2 py-1 rounded text-xs"><%= t('products.categories.electronics') %></span>
+              <span class="text-sm text-gray-500">1h <%= t('products.time.ago').gsub('%{time} ', '') %></span>
+            </div>
+            <h3 class="font-bold text-lg mb-1 text-gray-900"><%= t('products.sample_products.phone_title') %></h3>
+            <p class="text-gray-600 text-sm mb-2"><%= t('products.sample_products.phone_desc') %></p>
+            <div class="flex justify-between items-center">
+              <span class="text-xs text-gray-500"><%= t('products.sample_products.by_seller') %> Marie L.</span>
+              <div class="flex items-center gap-2">
+                <span class="font-bold text-green-600">850€</span>
+                <button class="text-blue-600 hover:text-blue-800 text-sm font-medium" onclick="event.stopPropagation(); openProductModal('modal-1')">
+                  💬 <%= t('products.details.contact') %>
+                </button>
               </div>
-            <% end %>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-white border border-gray-200 rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow cursor-pointer" onclick="openProductModal('modal-2')">
+        <div class="flex gap-4">
+          <div class="w-24 h-24 bg-green-100 rounded-lg flex items-center justify-center flex-shrink-0">
+            <span class="text-3xl">🚴</span>
+          </div>
+          <div class="flex-1">
+            <div class="flex justify-between items-start mb-2">
+              <span class="bg-green-500 text-white px-2 py-1 rounded text-xs"><%= t('products.categories.sport') %></span>
+              <span class="text-sm text-gray-500">3h <%= t('products.sample_products.ago_text') %></span>
+            </div>
+            <h3 class="font-bold text-lg mb-1 text-gray-900"><%= t('products.sample_products.bike_title') %></h3>
+            <p class="text-gray-600 text-sm mb-2"><%= t('products.sample_products.bike_desc') %></p>
+            <div class="flex justify-between items-center">
+              <span class="text-xs text-gray-500"><%= t('products.sample_products.by_seller') %> Thomas K.</span>
+              <div class="flex items-center gap-2">
+                <span class="font-bold text-green-600">320€</span>
+                <button class="text-blue-600 hover:text-blue-800 text-sm font-medium" onclick="event.stopPropagation(); openProductModal('modal-2')">
+                  💬 <%= t('products.details.contact') %>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-white border border-gray-200 rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow cursor-pointer" onclick="openProductModal('modal-3')">
+        <div class="flex gap-4">
+          <div class="w-24 h-24 bg-purple-100 rounded-lg flex items-center justify-center flex-shrink-0">
+            <span class="text-3xl">👗</span>
+          </div>
+          <div class="flex-1">
+            <div class="flex justify-between items-start mb-2">
+              <span class="bg-purple-500 text-white px-2 py-1 rounded text-xs"><%= t('products.categories.fashion') %></span>
+              <span class="text-sm text-gray-500">5h <%= t('products.sample_products.ago_text') %></span>
+            </div>
+            <h3 class="font-bold text-lg mb-1 text-gray-900"><%= t('products.sample_products.jacket_title') %></h3>
+            <p class="text-gray-600 text-sm mb-2"><%= t('products.sample_products.jacket_desc') %></p>
+            <div class="flex justify-between items-center">
+              <span class="text-xs text-gray-500"><%= t('products.sample_products.by_seller') %> Sophie D.</span>
+              <div class="flex items-center gap-2">
+                <span class="font-bold text-green-600">120€</span>
+                <button class="text-blue-600 hover:text-blue-800 text-sm font-medium" onclick="event.stopPropagation(); openProductModal('modal-3')">
+                  💬 <%= t('products.details.contact') %>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-white border border-gray-200 rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow cursor-pointer" onclick="openProductModal('modal-4')">
+        <div class="flex gap-4">
+          <div class="w-24 h-24 bg-yellow-100 rounded-lg flex items-center justify-center flex-shrink-0">
+            <span class="text-3xl">🏠</span>
+          </div>
+          <div class="flex-1">
+            <div class="flex justify-between items-start mb-2">
+              <span class="bg-yellow-500 text-white px-2 py-1 rounded text-xs"><%= t('products.categories.home') %></span>
+              <span class="text-sm text-gray-500">8h <%= t('products.sample_products.ago_text') %></span>
+            </div>
+            <h3 class="font-bold text-lg mb-1 text-gray-900"><%= t('products.sample_products.table_title') %></h3>
+            <p class="text-gray-600 text-sm mb-2"><%= t('products.sample_products.table_desc') %></p>
+            <div class="flex justify-between items-center">
+              <span class="text-xs text-gray-500"><%= t('products.sample_products.by_seller') %> Jean-Paul M.</span>
+              <div class="flex items-center gap-2">
+                <span class="font-bold text-green-600">180€</span>
+                <button class="text-blue-600 hover:text-blue-800 text-sm font-medium" onclick="event.stopPropagation(); openProductModal('modal-4')">
+                  💬 <%= t('products.details.contact') %>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>
+
+<!-- Product Detail Modal -->
+<div id="product-modal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black bg-opacity-50">
+  <div class="bg-white max-w-2xl w-full mx-4 rounded-lg overflow-hidden max-h-[80vh] overflow-y-auto">
+    <div class="p-6">
+      <!-- Modal Header -->
+      <div class="flex justify-between items-start mb-6">
+        <div id="product-modal-category" class="bg-blue-500 text-white px-4 py-2 rounded-full text-sm font-medium"></div>
+        <button onclick="closeProductModal()" class="text-gray-500 hover:text-gray-700 text-2xl font-bold">×</button>
+      </div>
+      
+      <!-- Modal Content -->
+      <div class="flex gap-6 mb-6">
+        <div id="product-modal-image" class="w-32 h-32 bg-gray-100 rounded-lg flex items-center justify-center flex-shrink-0">
+          <span id="product-modal-emoji" class="text-4xl"></span>
+        </div>
+        <div class="flex-1">
+          <h2 id="product-modal-title" class="text-2xl font-bold text-gray-900 mb-4"></h2>
+          <div class="flex items-center gap-4 mb-4">
+            <span id="product-modal-price" class="text-3xl font-bold text-green-600"></span>
+            <span id="product-modal-condition" class="bg-gray-200 text-gray-700 px-3 py-1 rounded-full text-sm"></span>
+          </div>
+          <p id="product-modal-description" class="text-gray-600 mb-4"></p>
+          <div class="flex justify-between items-center">
+            <div id="product-modal-seller" class="text-sm text-gray-500"></div>
+            <div id="product-modal-time" class="text-sm text-gray-500"></div>
           </div>
         </div>
       </div>
       
-      <!-- Products Grid -->
-      <div class="lg:col-span-3">
-        <% if @products.any? %>
-          <div class="bento-grid-layout gap-8 mb-12">
-          <% @products.each do |product| %>
-              <div class="card-stunning overflow-hidden group hover:scale-105 transition-all duration-500 animate-slide-up">
-                <% if product.images.attached? %>
-                  <div class="relative h-32 overflow-hidden">
-                    <%= image_tag product.images.first, alt: product.name, class: "w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" %>
-                    <div class="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent"></div>
-                    <% if product.featured? %>
-                      <span class="absolute top-3 right-3 inline-flex items-center px-3 py-1 bg-gradient-to-r from-warm-gold/90 to-emerald-green/90 backdrop-filter backdrop-blur-sm border border-warm-gold/40 rounded-full text-sm font-bold text-white">
-                        <span class="w-2 h-2 bg-warm-gold rounded-full mr-2 animate-pulse"></span>
-                        <%= t('products.index.featured') %>
-                      </span>
-                    <% end %>
-                    <% if product.sold? %>
-                      <div class="absolute inset-0 bg-black/70 backdrop-filter backdrop-blur-sm flex items-center justify-center">
-                        <span class="inline-flex items-center px-6 py-3 bg-gradient-to-r from-red-500 to-red-600 border border-red-400 rounded-2xl font-bold text-white shadow-2xl">
-                          <%= t('products.index.sold') %>
-                        </span>
-                      </div>
-                    <% end %>
-                  </div>
-                <% else %>
-                  <div class="bg-gradient-to-br from-emerald-green to-electric-blue h-32 flex items-center justify-center relative">
-                    <div class="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent"></div>
-                    <span class="text-white text-lg font-bold relative z-10"><%= t('products.index.no_image') %></span>
-                  </div>
-                <% end %>
-                
-                <div class="p-6">
-                  <div class="flex items-center justify-between mb-4">
-                    <span class="inline-flex items-center px-3 py-1 bg-gradient-to-r from-emerald-green/20 to-electric-blue/20 border border-emerald-green/30 rounded-full text-sm font-bold text-emerald-green">
-                      <%= product.category.humanize %>
-                    </span>
-                    <span class="inline-flex items-center px-3 py-1 bg-gradient-to-r from-electric-blue/20 to-vibrant-purple/20 border border-electric-blue/30 rounded-full text-sm font-bold text-electric-blue">
-                      <%= product.condition.humanize %>
-                    </span>
-                  </div>
-                
-                  <h3 class="font-display text-xl font-bold text-text-primary group-hover:text-electric-blue transition-colors mb-3">
-                    <%= link_to product.name, product_path(product) %>
-                  </h3>
-                
-                  <p class="font-content text-text-secondary mb-4 leading-relaxed">
-                    <%= truncate(product.description, length: 80) %>
-                  </p>
-                
-                  <div class="flex items-center justify-between mb-4">
-                    <span class="font-display text-3xl font-black bg-gradient-to-r from-emerald-green to-electric-blue bg-clip-text text-transparent">
-                      $<%= product.price %>
-                    </span>
-                    <div class="flex items-center text-text-secondary">
-                      <span class="w-5 h-5 bg-gradient-to-br from-emerald-green to-electric-blue rounded-lg flex items-center justify-center mr-2">
-                        <span class="text-white text-xs"></span>
-                      </span>
-                      <span class="font-medium"><%= product.location %></span>
-                    </div>
-                  </div>
-                
-                  <div class="flex items-center justify-between">
-                    <span class="text-text-secondary font-medium">
-                      <%= t('products.index.by', name: product.user.name) %>
-                    </span>
-                    <%= link_to t('products.index.view_details'), product_path(product), class: "text-electric-blue hover:text-vibrant-purple font-bold transition-colors" %>
-                  </div>
-                </div>
-              </div>
-          <% end %>
+      <!-- Contact Form -->
+      <div class="border-t pt-6">
+        <h3 class="text-lg font-bold text-gray-900 mb-4"><%= t('products.contact_form.contact_seller') %></h3>
+        <form id="seller-contact-form" class="space-y-4" onsubmit="handleSellerContact(event)">
+          <div>
+            <label class="block text-gray-700 font-medium mb-2"><%= t('products.contact_form.your_name') %></label>
+            <input type="text" id="buyer-name" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:border-blue-500 focus:outline-none" placeholder="<%= t('products.contact_form.your_full_name') %>" required>
           </div>
-          
-          <!-- Pagination -->
-          <div class="flex justify-center mt-12">
-            <%= paginate @products if respond_to?(:paginate) %>
+          <div>
+            <label class="block text-gray-700 font-medium mb-2"><%= t('products.contact_form.message') %></label>
+            <textarea id="buyer-message" rows="4" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:border-blue-500 focus:outline-none resize-none" placeholder="<%= t('products.contact_form.interested_message') %>" required></textarea>
           </div>
-        <% else %>
-          <div class="text-center py-16">
-            <div class="w-24 h-24 mx-auto mb-8 bg-gradient-to-br from-emerald-green/20 to-electric-blue/20 backdrop-filter backdrop-blur-sm border border-glass-border rounded-3xl flex items-center justify-center">
-              <span class="text-4xl">🛒</span>
-            </div>
-            <h3 class="font-display text-3xl font-bold text-text-primary mb-6"><%= t('products.index.no_products') %></h3>
-            <p class="font-content text-text-secondary mb-8 text-lg max-w-md mx-auto leading-relaxed">
-              <%= t('products.index.no_products_description') %>
-            </p>
-            <% if user_signed_in? %>
-              <%= link_to new_product_path, class: "btn-primary-lg" do %>
-                <span class="relative z-10 flex items-center font-display">
-                  <%= t('products.index.list_first_product') %>
-                  <svg class="w-5 h-5 ml-2 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
-                  </svg>
-                </span>
-              <% end %>
-            <% end %>
+          <div class="flex gap-4 pt-4">
+            <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white flex-1 py-3 px-6 rounded-lg font-semibold">
+              📤 <%= t('products.contact_form.send_message') %>
+            </button>
+            <button type="button" onclick="closeProductModal()" class="bg-gray-500 hover:bg-gray-600 text-white py-3 px-6 rounded-lg font-semibold">
+              <%= t('products.contact_form.close') %>
+            </button>
           </div>
-        <% end %>
+        </form>
       </div>
     </div>
   </div>
 </div>
 
 <script>
-// Handle price range radio buttons with modern styling
-document.addEventListener('DOMContentLoaded', function() {
-  document.querySelectorAll('input[name="price_range"]').forEach(radio => {
-    radio.addEventListener('change', function() {
-      const [min, max] = this.value.split('-');
-      const minInput = document.querySelector('input[name="min_price"]');
-      const maxInput = document.querySelector('input[name="max_price"]');
-      
-      if (minInput) minInput.value = min;
-      if (maxInput) maxInput.value = max;
-    });
+// Product modal data - including both real products and sample data
+const productModalData = {
+  <% if @products.any? %>
+    <% @products.each do |product| %>
+      'product-<%= product.id %>': {
+        id: '<%= product.id %>',
+        sellerId: '<%= product.user.id %>',
+        category: '<%= product.category.humanize %>',
+        title: '<%= j(product.name) %>',
+        price: '<%= product.formatted_price %>',
+        condition: '<%= product.condition.humanize %>',
+        description: '<%= j(product.description) %>',
+        seller: 'Par <%= j(product.user.name) %>',
+        time: '<%= time_ago_in_words(product.created_at) %> ago',
+        emoji: '📦'
+      },
+    <% end %>
+  <% end %>
+  'modal-1': {
+    category: 'Électronique',
+    title: 'iPhone 13 Pro - État impeccable',
+    price: '850€',
+    condition: 'Comme neuf',
+    description: 'Vends iPhone 13 Pro 256GB en excellent état. Toujours utilisé avec coque de protection et verre trempé. Batterie à 95%. Aucun défaut, fonctionne parfaitement. Vendu avec tous les accessoires d\'origine : chargeur, écouteurs, boîte.',
+    seller: 'Par Marie L.',
+    time: 'Il y a 1h',
+    emoji: '📱'
+  },
+  'modal-2': {
+    category: 'Sport',
+    title: 'Vélo VTT tout terrain',
+    price: '320€',
+    condition: 'Bon état',
+    description: 'Vélo de montagne 26 pouces en bon état général. Idéal pour les balades en nature et chemins forestiers. Freins à disques, 21 vitesses. Quelques traces d\'usage normales mais mécanique parfaite. Révisé récemment.',
+    seller: 'Par Thomas K.',
+    time: 'Il y a 3h',
+    emoji: '🚴'
+  },
+  'modal-3': {
+    category: 'Mode',
+    title: 'Veste en cuir vintage',
+    price: '120€',
+    condition: 'Bon état',
+    description: 'Belle veste en cuir véritable, style vintage années 80. Couleur marron, taille M. Très confortable et stylée. Parfaite pour la mi-saison. Quelques marques du temps qui donnent son charme vintage.',
+    seller: 'Par Sophie D.',
+    time: 'Il y a 5h',
+    emoji: '👗'
+  },
+  'modal-4': {
+    category: 'Maison',
+    title: 'Table basse en bois massif',
+    price: '180€',
+    condition: 'Très bon état',
+    description: 'Table basse artisanale en chêne massif. Dimensions : 120x60x45cm. Finition cirée, très solide. Parfaite pour salon ou séjour. Fabrication française, travail d\'ébéniste. Aucun défaut visible.',
+    seller: 'Par Jean-Paul M.',
+    time: 'Il y a 8h',
+    emoji: '🏠'
+  }
+};
+
+// Product modal functions
+function openProductModal(modalId) {
+  const data = productModalData[modalId];
+  if (data) {
+    // Store current product data for use in form submission
+    currentProductData = data;
+    
+    document.getElementById('product-modal-category').textContent = data.category;
+    document.getElementById('product-modal-title').textContent = data.title;
+    document.getElementById('product-modal-price').textContent = data.price;
+    document.getElementById('product-modal-condition').textContent = data.condition;
+    document.getElementById('product-modal-description').textContent = data.description;
+    document.getElementById('product-modal-seller').textContent = data.seller;
+    document.getElementById('product-modal-time').textContent = data.time;
+    document.getElementById('product-modal-emoji').textContent = data.emoji;
+    
+    // Clear form fields
+    document.getElementById('buyer-name').value = '';
+    document.getElementById('buyer-message').value = '';
+    
+    document.getElementById('product-modal').style.display = 'flex';
+    document.getElementById('product-modal').classList.remove('hidden');
+  }
+}
+
+function closeProductModal() {
+  document.getElementById('product-modal').style.display = 'none';
+  document.getElementById('product-modal').classList.add('hidden');
+}
+
+let currentProductData = null;
+
+function handleSellerContact(event) {
+  event.preventDefault();
+  
+  if (!currentProductData) {
+    alert('<%= j(t("products.alerts.product_info_error")) %>');
+    return;
+  }
+  
+  // Check if user is trying to contact themselves
+  <% if user_signed_in? %>
+  if (currentProductData.sellerId === '<%= current_user.id %>') {
+    alert('<%= j(t("products.alerts.cannot_contact_self")) %>');
+    return;
+  }
+  <% end %>
+  
+  const buyerName = document.getElementById('buyer-name').value;
+  const buyerMessage = document.getElementById('buyer-message').value;
+  const productTitle = currentProductData.title;
+  
+  // Create the full message with product context
+  const fullMessage = `<%= j(t("products.alerts.interested_default")) %> "${productTitle}". ${buyerMessage}`;
+  
+  // Send the message via AJAX to create conversation and message
+  fetch('<%= conversations_path %>', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+    },
+    body: JSON.stringify({
+      other_user_id: currentProductData.sellerId,
+      initial_message: fullMessage,
+      buyer_name: buyerName,
+      product_id: currentProductData.id
+    })
+  })
+  .then(response => {
+    if (response.ok) {
+      return response.json();
+    } else if (response.status === 401) {
+      // User is not authenticated
+      return response.json().then(data => {
+        alert('<%= j(t("products.alerts.must_login")) %>');
+        window.location.href = '<%= new_user_session_path %>';
+        return null;
+      });
+    } else if (response.redirected) {
+      // If redirected (likely to login), follow the redirect
+      window.location.href = response.url;
+      return null;
+    }
+    throw new Error('Network response was not ok');
+  })
+  .then(data => {
+    if (!data) return; // Exit if authentication failed
+    
+    if (data && data.conversation_id) {
+      alert('<%= j(t("products.alerts.message_sent_success")) %>');
+      closeProductModal();
+      // Optionally redirect to the conversation
+      window.location.href = '<%= conversations_path %>/' + data.conversation_id;
+    } else if (data && data.error) {
+      alert('Erreur: ' + data.error);
+    } else {
+      alert('<%= j(t("products.alerts.message_sent_simple")) %>');
+      closeProductModal();
+    }
+  })
+  .catch(error => {
+    console.error('Error:', error);
+    alert('<%= j(t("products.alerts.message_send_error")) %>');
   });
+}
+
+// Close modal when clicking outside
+document.getElementById('product-modal').addEventListener('click', function(e) {
+  if (e.target === document.getElementById('product-modal')) {
+    closeProductModal();
+  }
 });
 </script>

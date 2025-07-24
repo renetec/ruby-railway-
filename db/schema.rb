@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 15) do
+ActiveRecord::Schema[7.2].define(version: 2025_07_21_220203) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -86,6 +86,18 @@ ActiveRecord::Schema[7.2].define(version: 15) do
     t.index ["status"], name: "index_businesses_on_status"
     t.index ["user_id", "created_at"], name: "index_businesses_on_user_id_and_created_at"
     t.index ["user_id"], name: "index_businesses_on_user_id"
+  end
+
+  create_table "conversations", force: :cascade do |t|
+    t.string "name"
+    t.integer "conversation_type", default: 0, null: false
+    t.bigint "created_by_id", null: false
+    t.json "settings", default: {}
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["conversation_type"], name: "index_conversations_on_conversation_type"
+    t.index ["created_by_id"], name: "index_conversations_on_created_by_id"
+    t.index ["updated_at"], name: "index_conversations_on_updated_at"
   end
 
   create_table "event_rsvps", force: :cascade do |t|
@@ -230,6 +242,25 @@ ActiveRecord::Schema[7.2].define(version: 15) do
     t.index ["urgent"], name: "index_jobs_on_urgent"
   end
 
+  create_table "messages", force: :cascade do |t|
+    t.bigint "conversation_id", null: false
+    t.bigint "user_id", null: false
+    t.bigint "reply_to_message_id"
+    t.text "content"
+    t.integer "message_type", default: 0, null: false
+    t.integer "delivery_status", default: 0, null: false
+    t.datetime "edited_at", precision: nil
+    t.json "read_by", default: []
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["conversation_id", "created_at"], name: "index_messages_on_conversation_id_and_created_at"
+    t.index ["conversation_id"], name: "index_messages_on_conversation_id"
+    t.index ["created_at"], name: "index_messages_on_created_at"
+    t.index ["message_type"], name: "index_messages_on_message_type"
+    t.index ["reply_to_message_id"], name: "index_messages_on_reply_to_message_id"
+    t.index ["user_id"], name: "index_messages_on_user_id"
+  end
+
   create_table "posts", force: :cascade do |t|
     t.string "title", null: false
     t.text "content", null: false
@@ -277,6 +308,23 @@ ActiveRecord::Schema[7.2].define(version: 15) do
     t.index ["user_id"], name: "index_products_on_user_id"
   end
 
+  create_table "user_conversations", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "conversation_id", null: false
+    t.datetime "joined_at", precision: nil, default: -> { "CURRENT_TIMESTAMP" }
+    t.datetime "left_at", precision: nil
+    t.datetime "last_read_at", precision: nil
+    t.boolean "is_admin", default: false
+    t.boolean "is_muted", default: false
+    t.boolean "notification_enabled", default: true
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["conversation_id"], name: "index_user_conversations_on_conversation_id"
+    t.index ["last_read_at"], name: "index_user_conversations_on_last_read_at"
+    t.index ["user_id", "conversation_id"], name: "index_user_conversations_on_user_id_and_conversation_id", unique: true
+    t.index ["user_id"], name: "index_user_conversations_on_user_id"
+  end
+
   create_table "users", force: :cascade do |t|
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
@@ -293,7 +341,13 @@ ActiveRecord::Schema[7.2].define(version: 15) do
     t.string "last_sign_in_ip"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.datetime "last_seen_at", precision: nil
+    t.json "notification_preferences", default: {}
+    t.string "nickname"
+    t.string "avatar_preset"
     t.index ["email"], name: "index_users_on_email", unique: true
+    t.index ["last_seen_at"], name: "index_users_on_last_seen_at"
+    t.index ["nickname"], name: "index_users_on_nickname"
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
     t.index ["role"], name: "index_users_on_role"
   end
@@ -356,6 +410,7 @@ ActiveRecord::Schema[7.2].define(version: 15) do
   add_foreign_key "business_reviews", "businesses"
   add_foreign_key "business_reviews", "users"
   add_foreign_key "businesses", "users"
+  add_foreign_key "conversations", "users", column: "created_by_id"
   add_foreign_key "event_rsvps", "events"
   add_foreign_key "event_rsvps", "users"
   add_foreign_key "events", "users"
@@ -367,8 +422,13 @@ ActiveRecord::Schema[7.2].define(version: 15) do
   add_foreign_key "job_applications", "jobs"
   add_foreign_key "job_applications", "users"
   add_foreign_key "jobs", "businesses"
+  add_foreign_key "messages", "conversations"
+  add_foreign_key "messages", "messages", column: "reply_to_message_id"
+  add_foreign_key "messages", "users"
   add_foreign_key "posts", "users"
   add_foreign_key "products", "users"
+  add_foreign_key "user_conversations", "conversations"
+  add_foreign_key "user_conversations", "users"
   add_foreign_key "volunteer_applications", "users"
   add_foreign_key "volunteer_applications", "volunteer_opportunities"
   add_foreign_key "volunteer_opportunities", "businesses", column: "organization_id"

@@ -1,0 +1,48 @@
+#!/bin/bash
+set -e
+
+echo "Starting Railway deployment..."
+
+# Set Rails environment to production if not set
+export RAILS_ENV=${RAILS_ENV:-production}
+echo "RAILS_ENV=$RAILS_ENV"
+
+# Wait for database to be available
+echo "Waiting for database connection..."
+echo "DATABASE_URL is ${DATABASE_URL:+set}${DATABASE_URL:-not set}"
+timeout=${DB_CONNECTION_TIMEOUT:-30}
+counter=0
+until bundle exec rails db:version 2>/dev/null || [ $counter -eq $timeout ]; do
+  echo "Waiting for database... ($counter/$timeout)"
+  sleep 1
+  counter=$((counter + 1))
+done
+
+if [ $counter -eq $timeout ]; then
+  echo "Database connection timeout!"
+  exit 1
+fi
+
+# Run database setup
+echo "Setting up database..."
+bundle exec rails db:prepare
+
+# Run migrations
+echo "Running database migrations..."
+bundle exec rails db:migrate
+
+# Skip asset precompilation on startup for faster boot
+echo "Skipping asset precompilation for faster startup..."
+# Assets should be precompiled during build phase
+
+# Seed database if needed (only in development/staging)
+if [ "$RAILS_ENV" != "production" ] || [ "$SEED_DATABASE" = "true" ]; then
+  echo "Seeding database..."
+  bundle exec rails db:seed || true
+fi
+
+# Start the Rails server
+echo "Starting Rails server on port ${PORT:-3000}..."
+echo "RAILS_ENV=${RAILS_ENV:-production}"
+echo "DATABASE_URL is ${DATABASE_URL:+set}${DATABASE_URL:-not set}"
+exec bundle exec rails server -b 0.0.0.0 -p ${PORT:-3000}

@@ -1,24 +1,6 @@
 require_relative "boot"
 
-require "rails"
-# Skip ActiveRecord temporarily for Railway deployment
-%w(
-  active_model/railtie
-  active_job/railtie
-  action_controller/railtie
-  action_mailer/railtie
-  action_mailbox/engine
-  action_text/engine
-  action_view/railtie
-  action_cable/engine
-  rails/test_unit/railtie
-  sprockets/railtie
-).each do |railtie|
-  begin
-    require railtie
-  rescue LoadError
-  end
-end
+require "rails/all"
 
 # Require the gems listed in Gemfile, including any gems
 # you've limited to :test, :development, or :production.
@@ -36,7 +18,6 @@ module Leclub
     #
     # config.time_zone = "Central Time (US & Canada)"
     # config.eager_load_paths << Rails.root.join("extras")
-
 
     # Permitted locales available for the application
     config.i18n.available_locales = [:fr, :en]

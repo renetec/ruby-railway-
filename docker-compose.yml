@@ -66,6 +66,31 @@ services:
       RAILS_ENV: development
     tty: true
 
+  test:
+    build:
+      context: .
+      dockerfile: Dockerfile.test
+    command: ruby simple_test_runner.rb
+    volumes:
+      - .:/app
+      - bundle_cache:/usr/local/bundle
+    depends_on:
+      - db
+      - redis
+    environment:
+      DATABASE_HOST: db
+      DATABASE_USERNAME: postgres
+      DATABASE_PASSWORD: password
+      REDIS_URL: redis://redis:6379/0
+      RAILS_ENV: test
+      CHROME_BIN: /usr/bin/google-chrome
+      CHROME_PATH: /usr/bin/google-chrome
+      DISPLAY: ":99"
+    stdin_open: true
+    tty: true
+    # Run xvfb for headless browser testing
+    entrypoint: ["sh", "-c", "Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 & ruby simple_test_runner.rb"]
+
 volumes:
   postgres_data:
   bundle_cache:

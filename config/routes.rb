@@ -1,4 +1,7 @@
 Rails.application.routes.draw do
+  # Mount Action Cable
+  mount ActionCable.server => '/cable'
+  
   # Locale scope for internationalization
   scope "(:locale)", locale: /#{I18n.available_locales.join("|")}/ do
     devise_for :users
@@ -114,6 +117,11 @@ Rails.application.routes.draw do
       get :events
       get :forum_activity
     end
+  end
+  
+  # Messaging routes
+  resources :conversations, only: [:index, :show, :create, :update, :destroy] do
+    resources :messages, only: [:create, :destroy]
   end
 
     # Search

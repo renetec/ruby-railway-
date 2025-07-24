@@ -55,7 +55,7 @@ gem "devise", "~> 4.9"
 gem "cancancan", "~> 3.5"
 
 # CSS Framework
-gem "tailwindcss-rails", "~> 2.0"
+gem "tailwindcss-rails", "~> 3.0"
 
 # Background Jobs
 gem "sidekiq", "~> 7.0"
