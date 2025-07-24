@@ -21,14 +21,24 @@ class User < ApplicationRecord
   has_many :volunteer_applications, dependent: :destroy
   has_many :business_reviews, dependent: :destroy
   has_one_attached :avatar
+  
+  # Messaging associations
+  has_many :user_conversations, dependent: :destroy
+  has_many :conversations, through: :user_conversations
+  has_many :messages, dependent: :destroy
 
   # Scopes
   scope :active, -> { where(active: true) }
   scope :by_role, ->(role) { where(role: role) }
+  scope :online, -> { where('last_seen_at > ?', 5.minutes.ago) }
 
   # Methods
   def full_name
     name
+  end
+
+  def display_name
+    nickname.present? ? nickname : name
   end
 
   def admin?
@@ -37,5 +47,21 @@ class User < ApplicationRecord
 
   def moderator?
     role == 'moderator' || admin?
+  end
+  
+  def online?
+    last_seen_at && last_seen_at > 5.minutes.ago
+  end
+  
+  def appear
+    update_column(:last_seen_at, Time.current)
+  end
+  
+  def disappear
+    update_column(:last_seen_at, 1.hour.ago)
+  end
+  
+  def away
+    update_column(:last_seen_at, 10.minutes.ago)
   end
 end

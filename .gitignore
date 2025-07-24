@@ -30,7 +30,7 @@
 # Ignore master key for decrypting credentials and more.
 /config/master.key
 
-# Ignore database config (commented out for Railway deployment)
+# Database config is now tracked for Railway deployment
 # /config/database.yml
 
 # Ignore environment variables

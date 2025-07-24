@@ -1,0 +1,166 @@
+<div class="min-h-screen relative overflow-hidden">
+  <!-- Modern Background -->
+  <div class="absolute inset-0 bg-gradient-to-br from-primary-bg via-secondary-bg to-primary-bg"></div>
+  
+  <div class="max-w-6xl mx-auto px-6 py-16 relative z-10">
+    <!-- Header Section -->
+    <div class="card-stunning mb-8">
+      <div class="flex justify-between items-center mb-6">
+        <div>
+          <h1 class="font-display text-4xl font-black text-text-primary mb-2">
+            📊 Tableau de bord
+          </h1>
+          <h2 class="text-2xl font-bold text-vibrant-purple mb-2"><%= @event.title %></h2>
+          <p class="text-text-secondary">
+            📅 <%= l(@event.date, format: '%d %B %Y à %H:%M') %> • 📍 <%= @event.location %>
+          </p>
+        </div>
+        <div class="flex gap-4">
+          <%= link_to @event, class: "btn-primary" do %>
+            <span class="flex items-center">
+              <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+              </svg>
+              Voir l'événement
+            </span>
+          <% end %>
+          <%= link_to edit_event_path(@event), class: "btn-secondary" do %>
+            <span class="flex items-center">
+              <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+              </svg>
+              <%= t('actions.modify') %>
+            </span>
+          <% end %>
+        </div>
+      </div>
+
+      <!-- Stats Cards -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <!-- Total RSVPs -->
+        <div class="glass-surface p-6 rounded-2xl border border-glass-border hover:scale-105 transition-transform">
+          <div class="flex items-center justify-between mb-2">
+            <h3 class="font-display text-lg font-bold text-text-primary">Inscriptions</h3>
+            <span class="w-10 h-10 bg-gradient-to-br from-electric-blue to-vibrant-purple rounded-xl flex items-center justify-center text-white text-xl">🎫</span>
+          </div>
+          <p class="text-3xl font-black text-text-primary"><%= @total_rsvps %></p>
+          <% if @event.capacity.present? %>
+            <p class="text-sm text-text-secondary mt-1">sur <%= @event.capacity %> places</p>
+          <% else %>
+            <p class="text-sm text-emerald-green font-semibold mt-1">Places illimitées</p>
+          <% end %>
+        </div>
+
+        <!-- Capacity -->
+        <% if @event.capacity.present? %>
+          <div class="glass-surface p-6 rounded-2xl border border-glass-border hover:scale-105 transition-transform">
+            <div class="flex items-center justify-between mb-2">
+              <h3 class="font-display text-lg font-bold text-text-primary">Remplissage</h3>
+              <span class="w-10 h-10 bg-gradient-to-br from-emerald-green to-electric-blue rounded-xl flex items-center justify-center text-white text-xl">📈</span>
+            </div>
+            <p class="text-3xl font-black text-text-primary"><%= @capacity_percentage %>%</p>
+            <div class="w-full bg-surface-bg rounded-full h-3 mt-3 overflow-hidden">
+              <div class="h-full rounded-full bg-gradient-to-r from-emerald-green to-electric-blue transition-all duration-500" style="width: <%= [@capacity_percentage, 100].min %>%"></div>
+            </div>
+          </div>
+        <% end %>
+
+        <!-- Status -->
+        <div class="glass-surface p-6 rounded-2xl border border-glass-border hover:scale-105 transition-transform">
+          <div class="flex items-center justify-between mb-2">
+            <h3 class="font-display text-lg font-bold text-text-primary">Statut</h3>
+            <span class="w-10 h-10 bg-gradient-to-br from-warm-gold to-vibrant-purple rounded-xl flex items-center justify-center text-white text-xl">✅</span>
+          </div>
+          <p class="text-xl font-bold <%= @event.published? ? 'text-emerald-green' : 'text-warm-gold' %>">
+            <%= @event.status.humanize %>
+          </p>
+          <p class="text-sm text-text-secondary mt-1">
+            <%= @event.date > Time.current ? "🔜 À venir" : "✓ Passé" %>
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Attendees List -->
+    <div class="card-stunning">
+      <h2 class="font-display text-3xl font-black text-text-primary mb-6 flex items-center">
+        <span class="w-10 h-10 bg-gradient-to-br from-vibrant-purple to-electric-blue rounded-xl flex items-center justify-center mr-3">
+          <span class="text-white text-xl">👥</span>
+        </span>
+        Participants inscrits
+        <span class="ml-3 text-vibrant-purple">(<%= @total_rsvps %>)</span>
+      </h2>
+
+      <% if @rsvps.any? %>
+        <div class="overflow-x-auto glass-surface-sm rounded-2xl">
+          <table class="w-full">
+            <thead>
+              <tr class="border-b border-glass-border">
+                <th class="text-left py-4 px-6 text-text-secondary font-display font-bold">Participant</th>
+                <th class="text-left py-4 px-6 text-text-secondary font-display font-bold">Contact</th>
+                <th class="text-left py-4 px-6 text-text-secondary font-display font-bold">Inscription</th>
+                <th class="text-left py-4 px-6 text-text-secondary font-display font-bold">Statut</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% @rsvps.each do |rsvp| %>
+                <tr class="border-b border-glass-border hover:bg-glass-surface transition-colors">
+                  <td class="py-4 px-6">
+                    <div class="flex items-center gap-3">
+                      <div class="w-10 h-10 bg-gradient-to-br from-electric-blue to-vibrant-purple rounded-full flex items-center justify-center text-white font-bold shadow-lg">
+                        <%= rsvp.user.display_name.first.upcase %>
+                      </div>
+                      <div>
+                        <p class="text-text-primary font-semibold"><%= rsvp.user.display_name %></p>
+                        <p class="text-text-secondary text-sm">@<%= rsvp.user.nickname || rsvp.user.name.parameterize %></p>
+                      </div>
+                    </div>
+                  </td>
+                  <td class="py-4 px-6 text-text-secondary">
+                    <%= rsvp.user.email %>
+                  </td>
+                  <td class="py-4 px-6 text-text-secondary">
+                    <%= l(rsvp.created_at, format: '%d/%m/%Y %H:%M') %>
+                  </td>
+                  <td class="py-4 px-6">
+                    <span class="px-3 py-1 bg-gradient-to-r from-emerald-green to-electric-blue text-white text-sm rounded-full font-semibold">
+                      ✓ Confirmé
+                    </span>
+                  </td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Export Button -->
+        <div class="mt-6 flex justify-end">
+          <button class="btn-primary group" onclick="exportAttendees()">
+            <span class="flex items-center">
+              <svg class="w-5 h-5 mr-2 transform group-hover:translate-y-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+              </svg>
+              Exporter la liste (CSV)
+            </span>
+          </button>
+        </div>
+      <% else %>
+        <div class="text-center py-16">
+          <div class="w-24 h-24 bg-gradient-to-br from-electric-blue/20 to-vibrant-purple/20 rounded-full flex items-center justify-center mx-auto mb-6">
+            <span class="text-5xl">📋</span>
+          </div>
+          <h3 class="font-display text-2xl font-bold text-text-primary mb-3">Aucune inscription pour le moment</h3>
+          <p class="text-text-secondary max-w-md mx-auto">Les participants apparaîtront ici dès qu'ils s'inscriront à votre événement.</p>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>
+
+<script>
+function exportAttendees() {
+  // In a real implementation, this would generate and download a CSV file
+  alert('Fonctionnalité d\'export CSV à implémenter');
+}
+</script>

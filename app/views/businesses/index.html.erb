@@ -1,234 +1,406 @@
-<% content_for :title, t('businesses.index.title') %>
+<!-- Entreprises - 2 Column Layout -->
+<div class="max-w-6xl mx-auto px-4 py-8">
+  <!-- Page Header with Logo -->
+  <%= render 'shared/page_header_with_logo', 
+      title: "Annuaire des Entreprises",
+      subtitle: "Découvrez les entreprises locales de votre région" %>
 
-<div class="min-h-screen relative overflow-hidden">
-  <!-- Stunning Background -->
-  <div class="absolute inset-0 bg-gradient-to-br from-primary-bg via-secondary-bg to-primary-bg"></div>
-  
-  <div class="container-wide relative z-10">
-    <!-- Epic Header Section -->
-    <div class="text-center mb-20 animate-slide-up">
-      <div class="inline-flex items-center px-6 py-3 bg-glass-bg backdrop-filter backdrop-blur-lg border border-glass-border rounded-full mb-8">
-        <span class="w-3 h-3 bg-vibrant-purple rounded-full mr-4 animate-pulse"></span>
-        <span class="text-text-secondary text-sm font-medium font-display"><%= t('businesses.index.subtitle') %></span>
-      </div>
-      
-      <h1 class="font-display text-2xl lg:text-3xl font-black text-text-primary mb-8 leading-tight">
-        <%= t('businesses.index.business') %>
-        <br>
-        <span class="bg-gradient-to-r from-electric-blue via-vibrant-purple to-emerald-green bg-clip-text text-transparent"><%= t('businesses.index.directory') %></span>
-      </h1>
-      
-      <p class="font-content text-xl text-text-secondary max-w-4xl mx-auto mb-12 leading-relaxed">
-        <%= t('businesses.index.description') %>
-      </p>
-      
-      <% if user_signed_in? %>
-        <div class="flex flex-col sm:flex-row gap-6 justify-center">
-          <%= link_to my_businesses_businesses_path, class: "btn-secondary-lg" do %>
-            <span class="relative z-10 flex items-center font-display">
-              <%= t('businesses.index.my_businesses') %>
-              <svg class="w-5 h-5 ml-2 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
-              </svg>
-            </span>
-          <% end %>
-          <%= link_to new_business_path, class: "btn-primary-lg" do %>
-            <span class="relative z-10 flex items-center font-display">
-              <%= t('businesses.index.add_business') %>
-              <svg class="w-5 h-5 ml-2 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
-              </svg>
-            </span>
-          <% end %>
-        </div>
-      <% end %>
+  <!-- Action Buttons -->
+  <% if user_signed_in? %>
+    <div class="flex flex-col sm:flex-row gap-4 mb-8 justify-center">
+      <%= link_to "🏢 #{t('actions.add_business')}", new_business_path, 
+                  class: "px-6 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg font-semibold" %>
+      <%= link_to "📊 Mes entreprises", my_businesses_businesses_path, 
+                  class: "px-6 py-2 bg-green-500 hover:bg-green-600 text-white rounded-lg font-semibold" %>
     </div>
-  
-    <div class="bento-grid-layout">
-    <!-- Filters Sidebar -->
-    <div class="lg:col-span-1">
-        <div class="card-stunning overflow-hidden sticky top-4">
-          <div class="bg-gradient-to-r from-electric-blue/10 to-vibrant-purple/10 backdrop-filter backdrop-blur-sm px-6 py-4 border-b border-glass-border">
-            <div class="flex items-center space-x-3">
-              <div class="w-10 h-10 bg-gradient-to-br from-electric-blue to-vibrant-purple rounded-2xl flex items-center justify-center shadow-lg">
-                <span class="text-white text-lg">🔍</span>
-              </div>
-              <h3 class="font-display text-xl font-bold text-text-primary"><%= t('businesses.index.filter.title') %></h3>
+  <% end %>
+
+  <!-- Filters Section -->
+  <div class="flex flex-col md:flex-row gap-4 mb-8 justify-center">
+    <select class="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100">
+      <option>Secteur d'activité</option>
+      <option>Restaurants</option>
+      <option>Services</option>
+      <option>Commerce</option>
+      <option>Artisanat</option>
+      <option>Technologie</option>
+    </select>
+    <select class="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100">
+      <option>Localisation</option>
+      <option>Centre-ville</option>
+      <option>Zone industrielle</option>
+      <option>Banlieue</option>
+    </select>
+    <button class="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 dark:bg-blue-600 dark:hover:bg-blue-700">
+      🔄 Actualiser
+    </button>
+  </div>
+
+  <!-- 2-Column Businesses Grid -->
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <!-- Business 1 -->
+    <div class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow cursor-pointer" onclick="openModal('modal-1')">
+      <div class="flex gap-4">
+        <div class="w-24 h-24 bg-blue-100 dark:bg-blue-900 rounded-lg flex items-center justify-center flex-shrink-0">
+          <span class="text-3xl">🍕</span>
+        </div>
+        <div class="flex-1">
+          <div class="flex justify-between items-start mb-2">
+            <span class="bg-orange-500 text-white px-2 py-1 rounded text-xs">Restaurant</span>
+            <div class="flex items-center">
+              <span class="text-yellow-500">★</span>
+              <span class="text-sm text-gray-500 dark:text-gray-400 ml-1">4.5 (28)</span>
             </div>
           </div>
-          
-          <div class="p-6">
-        
-            <%= form_with url: businesses_path, method: :get, local: true, class: "space-y-6" do |form| %>
-              <!-- Search -->
-              <div class="form-group">
-                <%= form.label :search, t('businesses.index.filter.search'), class: "form-label" %>
-                <%= form.text_field :search, placeholder: t('businesses.index.filter.search_placeholder'), 
-                                   value: params[:search], 
-                                   class: "input-modern" %>
-              </div>
-          
-              <!-- Category -->
-              <div class="form-group">
-                <%= form.label :category, t('businesses.index.filter.category'), class: "form-label" %>
-                <%= form.select :category, 
-                               options_for_select([[t('businesses.index.filter.all_categories'), ""]] + @categories.map { |cat| [cat.humanize, cat] }, params[:category]),
-                               {}, 
-                               { class: "input-modern" } %>
-              </div>
-          
-          <!-- Location -->
-          <div>
-            <%= form.label :location, "Location", class: "block text-sm font-medium text-gray-700 mb-1" %>
-            <%= form.select :location, 
-                               options_for_select([[t('businesses.index.filter.all_locations'), ""]] + @locations.map { |loc| [loc, loc] }, params[:location]),
-                               {}, 
-                               { class: "input-modern" } %>
-          </div>
-          
-              <!-- Special Filters -->
-              <div class="space-y-3">
-                <div class="checkbox-modern">
-                  <%= check_box_tag :featured, 'true', params[:featured] == 'true', class: "checkbox-input" %>
-                  <%= label_tag :featured, t('businesses.index.filter.featured_only'), class: "checkbox-label" %>
-                </div>
-                <div class="checkbox-modern">
-                  <%= check_box_tag :with_jobs, 'true', params[:with_jobs] == 'true', class: "checkbox-input" %>
-                  <%= label_tag :with_jobs, t('businesses.index.filter.currently_hiring'), class: "checkbox-label" %>
-                </div>
-              </div>
-          
-              <div class="space-y-3">
-                <%= form.submit t('businesses.index.filter.search_button'), class: "btn-primary-full" %>
-                <%= link_to t('businesses.index.filter.clear_filters'), businesses_path, class: "btn-secondary-full" %>
-              </div>
-            <% end %>
+          <h3 class="font-bold text-lg mb-1 text-gray-900 dark:text-gray-100">Pizzeria Bella Vista</h3>
+          <p class="text-gray-600 dark:text-gray-400 text-sm mb-2">Pizzas authentiques au feu de bois, ambiance familiale...</p>
+          <div class="flex justify-between items-center">
+            <span class="text-xs text-gray-500 dark:text-gray-400">📍 Centre-ville</span>
+            <button class="text-blue-600 hover:text-blue-800 text-sm font-medium" onclick="event.stopPropagation(); openModal('modal-1')">
+              📞 Contacter
+            </button>
           </div>
         </div>
       </div>
-    
-      <!-- Businesses Grid -->
-      <div class="lg:col-span-3">
-        <% if @businesses.any? %>
-          <div class="bento-grid-layout gap-8 mb-12">
-          <% @businesses.each do |business| %>
-              <div class="card-stunning overflow-hidden group hover:scale-105 transition-all duration-500 animate-slide-up">
-                <div class="p-8">
-                  <div class="flex items-start justify-between mb-6">
-                    <div class="flex-1">
-                      <div class="flex items-center mb-4">
-                      <% if business.logo.attached? %>
-                          <%= image_tag business.logo, alt: business.name, class: "w-16 h-16 object-cover rounded-2xl mr-4 shadow-xl" %>
-                      <% else %>
-                          <div class="w-16 h-16 bg-gradient-to-br from-electric-blue to-vibrant-purple rounded-2xl flex items-center justify-center mr-4 shadow-xl">
-                            <span class="text-white font-bold text-xl"><%= business.name.first.upcase %></span>
-                        </div>
-                      <% end %>
-                      <div>
-                          <h3 class="font-display text-2xl font-bold text-text-primary group-hover:text-electric-blue transition-colors mb-2">
-                            <%= link_to business.name, business_path(business) %>
-                          </h3>
-                          <span class="inline-flex items-center px-3 py-1 bg-gradient-to-r from-electric-blue/20 to-vibrant-purple/20 border border-electric-blue/30 rounded-full text-sm font-bold text-electric-blue">
-                            <%= business.category.humanize %>
-                          </span>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="flex flex-col items-end">
-                    <% if business.featured? %>
-                        <span class="inline-flex items-center px-3 py-1 bg-gradient-to-r from-warm-gold/20 to-emerald-green/20 border border-warm-gold/40 rounded-full text-sm font-bold text-warm-gold mb-3">
-                          <%= t('businesses.index.featured') %>
-                        </span>
-                    <% end %>
-                    <% if business.average_rating > 0 %>
-                      <div class="flex items-center">
-                        <span class="text-yellow-500">★</span>
-                        <span class="text-sm text-gray-600 ml-1">
-                          <%= business.average_rating %> (<%= business.reviews_count %>)
-                        </span>
-                      </div>
-                    <% end %>
-                  </div>
-                </div>
-                
-                  <p class="font-content text-text-secondary mb-6 leading-relaxed text-lg">
-                    <%= truncate(business.description, length: 120) %>
-                  </p>
-                
-                  <div class="space-y-3 mb-6">
-                    <% if business.has_location? %>
-                      <div class="flex items-center text-text-secondary">
-                        <span class="w-6 h-6 bg-gradient-to-br from-emerald-green to-electric-blue rounded-lg flex items-center justify-center mr-3">
-                          <span class="text-white text-sm"></span>
-                        </span>
-                        <span class="font-medium"><%= business.full_address %></span>
-                      </div>
-                    <% end %>
-                    <% if business.phone.present? %>
-                      <div class="flex items-center text-text-secondary">
-                        <span class="w-6 h-6 bg-gradient-to-br from-vibrant-purple to-electric-blue rounded-lg flex items-center justify-center mr-3">
-                          <span class="text-white text-sm"></span>
-                        </span>
-                        <span class="font-medium"><%= business.phone %></span>
-                      </div>
-                    <% end %>
-                    <% if business.website.present? %>
-                      <div class="flex items-center text-text-secondary">
-                        <span class="w-6 h-6 bg-gradient-to-br from-electric-blue to-warm-gold rounded-lg flex items-center justify-center mr-3">
-                          <span class="text-white text-sm"></span>
-                        </span>
-                        <span class="font-medium">
-                          <%= link_to t('businesses.index.visit_website'), business.website, target: "_blank", 
-                                     class: "text-electric-blue hover:text-vibrant-purple transition-colors" %>
-                        </span>
-                      </div>
-                    <% end %>
-                  </div>
-                
-                  <div class="flex items-center justify-between">
-                    <div class="text-sm text-text-secondary">
-                      <% if business.active_jobs_count > 0 %>
-                        <span class="inline-flex items-center px-3 py-1 bg-gradient-to-r from-emerald-green/20 to-electric-blue/20 border border-emerald-green/30 rounded-full text-sm font-bold text-emerald-green">
-                          <%= pluralize(business.active_jobs_count, t('businesses.index.job_opening')) %>
-                        </span>
-                      <% else %>
-                        <span class="font-medium"><%= t('businesses.index.listed_by', name: business.user.name) %></span>
-                      <% end %>
-                    </div>
-                    <%= link_to t('businesses.index.view_details'), business_path(business), 
-                               class: "text-electric-blue hover:text-vibrant-purple font-bold transition-colors" %>
-                  </div>
-                </div>
-              </div>
-          <% end %>
-          </div>
-          
-          <!-- Pagination -->
-          <div class="flex justify-center mt-12">
-            <%= paginate @businesses if respond_to?(:paginate) %>
-          </div>
-        <% else %>
-          <div class="text-center py-16">
-            <div class="w-24 h-24 mx-auto mb-8 bg-gradient-to-br from-electric-blue/20 to-vibrant-purple/20 backdrop-filter backdrop-blur-sm border border-glass-border rounded-3xl flex items-center justify-center">
-              <span class="text-4xl"></span>
+    </div>
+
+    <!-- Business 2 -->
+    <div class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow cursor-pointer" onclick="openModal('modal-2')">
+      <div class="flex gap-4">
+        <div class="w-24 h-24 bg-green-100 dark:bg-green-900 rounded-lg flex items-center justify-center flex-shrink-0">
+          <span class="text-3xl">🔧</span>
+        </div>
+        <div class="flex-1">
+          <div class="flex justify-between items-start mb-2">
+            <span class="bg-green-500 text-white px-2 py-1 rounded text-xs">Services</span>
+            <div class="flex items-center">
+              <span class="text-yellow-500">★</span>
+              <span class="text-sm text-gray-500 dark:text-gray-400 ml-1">4.8 (15)</span>
             </div>
-            <h3 class="font-display text-3xl font-bold text-text-primary mb-6"><%= t('businesses.index.no_businesses') %></h3>
-            <p class="font-content text-text-secondary mb-8 text-lg max-w-md mx-auto leading-relaxed">
-              <%= t('businesses.index.no_businesses_description') %>
-            </p>
-            <% if user_signed_in? %>
-              <%= link_to new_business_path, class: "btn-primary-lg" do %>
-                <span class="relative z-10 flex items-center font-display">
-                  <%= t('businesses.index.add_first_business') %>
-                  <svg class="w-5 h-5 ml-2 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
-                  </svg>
-                </span>
-              <% end %>
-            <% end %>
           </div>
-        <% end %>
+          <h3 class="font-bold text-lg mb-1 text-gray-900 dark:text-gray-100">Garage Auto Plus</h3>
+          <p class="text-gray-600 dark:text-gray-400 text-sm mb-2">Réparation automobile, entretien, diagnostic électronique...</p>
+          <div class="flex justify-between items-center">
+            <span class="text-xs text-gray-500 dark:text-gray-400">📍 Zone industrielle</span>
+            <button class="text-blue-600 hover:text-blue-800 text-sm font-medium" onclick="event.stopPropagation(); openModal('modal-2')">
+              📞 Contacter
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Business 3 -->
+    <div class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow cursor-pointer" onclick="openModal('modal-3')">
+      <div class="flex gap-4">
+        <div class="w-24 h-24 bg-purple-100 dark:bg-purple-900 rounded-lg flex items-center justify-center flex-shrink-0">
+          <span class="text-3xl">💄</span>
+        </div>
+        <div class="flex-1">
+          <div class="flex justify-between items-start mb-2">
+            <span class="bg-purple-500 text-white px-2 py-1 rounded text-xs">Beauté</span>
+            <div class="flex items-center">
+              <span class="text-yellow-500">★</span>
+              <span class="text-sm text-gray-500 dark:text-gray-400 ml-1">4.9 (42)</span>
+            </div>
+          </div>
+          <h3 class="font-bold text-lg mb-1 text-gray-900 dark:text-gray-100">Salon Élégance</h3>
+          <p class="text-gray-600 dark:text-gray-400 text-sm mb-2">Coiffure, soins esthétiques, manucure dans un cadre moderne...</p>
+          <div class="flex justify-between items-center">
+            <span class="text-xs text-gray-500 dark:text-gray-400">📍 Centre-ville</span>
+            <button class="text-blue-600 hover:text-blue-800 text-sm font-medium" onclick="event.stopPropagation(); openModal('modal-3')">
+              📞 Contacter
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Business 4 -->
+    <div class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow cursor-pointer" onclick="openModal('modal-4')">
+      <div class="flex gap-4">
+        <div class="w-24 h-24 bg-red-100 dark:bg-red-900 rounded-lg flex items-center justify-center flex-shrink-0">
+          <span class="text-3xl">🥖</span>
+        </div>
+        <div class="flex-1">
+          <div class="flex justify-between items-start mb-2">
+            <span class="bg-red-500 text-white px-2 py-1 rounded text-xs">Boulangerie</span>
+            <div class="flex items-center">
+              <span class="text-yellow-500">★</span>
+              <span class="text-sm text-gray-500 dark:text-gray-400 ml-1">4.7 (35)</span>
+            </div>
+          </div>
+          <h3 class="font-bold text-lg mb-1 text-gray-900 dark:text-gray-100">Boulangerie du Coin</h3>
+          <p class="text-gray-600 dark:text-gray-400 text-sm mb-2">Pain frais, viennoiseries, pâtisseries artisanales...</p>
+          <div class="flex justify-between items-center">
+            <span class="text-xs text-gray-500 dark:text-gray-400">📍 Quartier résidentiel</span>
+            <button class="text-blue-600 hover:text-blue-800 text-sm font-medium" onclick="event.stopPropagation(); openModal('modal-4')">
+              📞 Contacter
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Business 5 -->
+    <div class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow cursor-pointer" onclick="openModal('modal-5')">
+      <div class="flex gap-4">
+        <div class="w-24 h-24 bg-yellow-100 dark:bg-yellow-900 rounded-lg flex items-center justify-center flex-shrink-0">
+          <span class="text-3xl">💻</span>
+        </div>
+        <div class="flex-1">
+          <div class="flex justify-between items-start mb-2">
+            <span class="bg-yellow-500 text-white px-2 py-1 rounded text-xs">Informatique</span>
+            <div class="flex items-center">
+              <span class="text-yellow-500">★</span>
+              <span class="text-sm text-gray-500 dark:text-gray-400 ml-1">4.6 (22)</span>
+            </div>
+          </div>
+          <h3 class="font-bold text-lg mb-1 text-gray-900 dark:text-gray-100">Tech Solutions</h3>
+          <p class="text-gray-600 dark:text-gray-400 text-sm mb-2">Dépannage informatique, développement web, formation...</p>
+          <div class="flex justify-between items-center">
+            <span class="text-xs text-gray-500 dark:text-gray-400">📍 Centre d'affaires</span>
+            <button class="text-blue-600 hover:text-blue-800 text-sm font-medium" onclick="event.stopPropagation(); openModal('modal-5')">
+              📞 Contacter
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Business 6 -->
+    <div class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow cursor-pointer" onclick="openModal('modal-6')">
+      <div class="flex gap-4">
+        <div class="w-24 h-24 bg-indigo-100 dark:bg-indigo-900 rounded-lg flex items-center justify-center flex-shrink-0">
+          <span class="text-3xl">🌸</span>
+        </div>
+        <div class="flex-1">
+          <div class="flex justify-between items-start mb-2">
+            <span class="bg-indigo-500 text-white px-2 py-1 rounded text-xs">Fleuriste</span>
+            <div class="flex items-center">
+              <span class="text-yellow-500">★</span>
+              <span class="text-sm text-gray-500 dark:text-gray-400 ml-1">4.8 (18)</span>
+            </div>
+          </div>
+          <h3 class="font-bold text-lg mb-1 text-gray-900 dark:text-gray-100">Fleurs & Jardins</h3>
+          <p class="text-gray-600 dark:text-gray-400 text-sm mb-2">Compositions florales, plantes d'intérieur, conseils jardinage...</p>
+          <div class="flex justify-between items-center">
+            <span class="text-xs text-gray-500 dark:text-gray-400">📍 Centre-ville</span>
+            <button class="text-blue-600 hover:text-blue-800 text-sm font-medium" onclick="event.stopPropagation(); openModal('modal-6')">
+              📞 Contacter
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- Detail Modal -->
+<div id="detail-modal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black bg-opacity-50">
+  <div class="bg-white dark:bg-gray-800 max-w-2xl w-full mx-4 rounded-lg overflow-hidden max-h-[80vh] overflow-y-auto">
+    <div class="p-6">
+      <!-- Modal Header -->
+      <div class="flex justify-between items-start mb-6">
+        <div id="modal-category" class="bg-blue-500 text-white px-4 py-2 rounded-full text-sm font-medium"></div>
+        <button onclick="closeModal()" class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 text-2xl font-bold">×</button>
+      </div>
+      
+      <!-- Modal Content -->
+      <div class="flex gap-6 mb-6">
+        <div id="modal-image" class="w-32 h-32 bg-gray-100 dark:bg-gray-700 rounded-lg flex items-center justify-center flex-shrink-0">
+          <span id="modal-emoji" class="text-4xl"></span>
+        </div>
+        <div class="flex-1">
+          <h2 id="modal-title" class="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-4"></h2>
+          <div class="flex items-center mb-3">
+            <div id="modal-rating" class="flex items-center text-yellow-500 mr-4">
+              <span>★</span>
+              <span id="modal-rating-text" class="text-gray-600 dark:text-gray-400 ml-1"></span>
+            </div>
+            <span id="modal-location" class="text-gray-600 dark:text-gray-400 text-sm"></span>
+          </div>
+          <p id="modal-description" class="text-gray-600 dark:text-gray-400 mb-4"></p>
+          <div id="modal-contact" class="space-y-2"></div>
+        </div>
+      </div>
+      
+      <!-- Contact Form -->
+      <div class="border-t dark:border-gray-600 pt-6">
+        <h3 class="text-lg font-bold text-gray-900 dark:text-gray-100 mb-4">Contacter l'entreprise</h3>
+        <form class="space-y-4" onsubmit="handleContactSubmit(event)">
+          <div>
+            <label class="block text-gray-700 dark:text-gray-300 font-medium mb-2">Votre nom</label>
+            <input type="text" class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded-lg focus:border-blue-500 focus:outline-none" placeholder="Votre nom complet" required>
+          </div>
+          <div>
+            <label class="block text-gray-700 dark:text-gray-300 font-medium mb-2">Sujet</label>
+            <select class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded-lg focus:border-blue-500 focus:outline-none" required>
+              <option>Demande d'information</option>
+              <option>Prise de rendez-vous</option>
+              <option>Devis</option>
+              <option>Réclamation</option>
+              <option>Autre</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-gray-700 dark:text-gray-300 font-medium mb-2">Message</label>
+            <textarea rows="4" class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded-lg focus:border-blue-500 focus:outline-none resize-none" placeholder="Votre message..." required></textarea>
+          </div>
+          <div class="flex gap-4 pt-4">
+            <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white flex-1 py-3 px-6 rounded-lg font-semibold">
+              📤 <%= t('actions.send_message') %>
+            </button>
+            <button type="button" onclick="closeModal()" class="bg-gray-500 hover:bg-gray-600 text-white py-3 px-6 rounded-lg font-semibold">
+              <%= t('actions.close') %>
+            </button>
+          </div>
+        </form>
       </div>
     </div>
   </div>
 </div>
+
+<script>
+// Modal data for businesses
+const modalData = {
+  'modal-1': {
+    category: 'Restaurant',
+    title: 'Pizzeria Bella Vista',
+    rating: '4.5 (28 avis)',
+    location: '📍 Centre-ville - 15 Rue de la Paix',
+    emoji: '🍕',
+    description: 'Pizzeria familiale proposant des pizzas authentiques cuites au feu de bois. Ambiance chaleureuse, ingrédients frais et recettes traditionnelles italiennes. Terrasse ouverte en saison.',
+    contact: [
+      '📞 05 12 34 56 78',
+      '📧 contact@bellavista.fr',
+      '🌐 www.bellavista-pizzeria.fr',
+      '🕒 Mar-Dim 11h30-14h / 18h30-22h30'
+    ]
+  },
+  'modal-2': {
+    category: 'Services',
+    title: 'Garage Auto Plus',
+    rating: '4.8 (15 avis)',
+    location: '📍 Zone industrielle - 42 Avenue des Artisans',
+    emoji: '🔧',
+    description: 'Garage automobile spécialisé dans la réparation toutes marques, l\'entretien périodique et le diagnostic électronique. Équipe qualifiée, matériel moderne, devis gratuit.',
+    contact: [
+      '📞 05 98 76 54 32',
+      '📧 info@garageautoplus.fr',
+      '🌐 www.garage-autoplus.com',
+      '🕒 Lun-Ven 8h-18h / Sam 8h-12h'
+    ]
+  },
+  'modal-3': {
+    category: 'Beauté',
+    title: 'Salon Élégance',
+    rating: '4.9 (42 avis)',
+    location: '📍 Centre-ville - 8 Place du Marché',
+    emoji: '💄',
+    description: 'Salon de coiffure et institut de beauté dans un cadre moderne et relaxant. Services : coiffure dame/homme, soins esthétiques, manucure, maquillage. Produits haut de gamme.',
+    contact: [
+      '📞 05 45 67 89 12',
+      '📧 rdv@salon-elegance.fr',
+      '🌐 www.salon-elegance.com',
+      '🕒 Mar-Sam 9h-19h'
+    ]
+  },
+  'modal-4': {
+    category: 'Boulangerie',
+    title: 'Boulangerie du Coin',
+    rating: '4.7 (35 avis)',
+    location: '📍 Quartier résidentiel - 25 Rue des Lilas',
+    emoji: '🥖',
+    description: 'Boulangerie artisanale proposant pains frais, viennoiseries maison et pâtisseries traditionnelles. Spécialités : pain de campagne, croissants au beurre, tartes aux fruits de saison.',
+    contact: [
+      '📞 05 23 45 67 89',
+      '📧 boulangerie.coin@gmail.com',
+      '🕒 Mar-Dim 6h30-19h30'
+    ]
+  },
+  'modal-5': {
+    category: 'Informatique',
+    title: 'Tech Solutions',
+    rating: '4.6 (22 avis)',
+    location: '📍 Centre d\'affaires - 12 Boulevard Innovation',
+    emoji: '💻',
+    description: 'Société de services informatiques : dépannage, maintenance, développement web, formation. Intervention rapide, support technique, solutions sur mesure pour particuliers et entreprises.',
+    contact: [
+      '📞 05 67 89 12 34',
+      '📧 contact@tech-solutions.fr',
+      '🌐 www.tech-solutions-pro.com',
+      '🕒 Lun-Ven 8h30-18h / Dépannage 24h/7j'
+    ]
+  },
+  'modal-6': {
+    category: 'Fleuriste',
+    title: 'Fleurs & Jardins',
+    rating: '4.8 (18 avis)',
+    location: '📍 Centre-ville - 33 Rue des Jardins',
+    emoji: '🌸',
+    description: 'Fleuriste créateur proposant compositions florales, plantes d\'intérieur et d\'extérieur, conseils jardinage. Livraison possible, service événementiel (mariages, obsèques).',
+    contact: [
+      '📞 05 34 56 78 90',
+      '📧 fleurs.jardins@orange.fr',
+      '🌐 www.fleurs-et-jardins.fr',
+      '🕒 Mar-Sam 8h30-19h / Dim 9h-12h'
+    ]
+  }
+};
+
+// Modal functions
+function openModal(modalId) {
+  const data = modalData[modalId];
+  if (data) {
+    document.getElementById('modal-category').textContent = data.category;
+    document.getElementById('modal-title').textContent = data.title;
+    document.getElementById('modal-rating-text').textContent = data.rating;
+    document.getElementById('modal-location').textContent = data.location;
+    document.getElementById('modal-emoji').textContent = data.emoji;
+    document.getElementById('modal-description').textContent = data.description;
+    
+    // Set contact info
+    const contactDiv = document.getElementById('modal-contact');
+    contactDiv.innerHTML = data.contact.map(info => 
+      `<div class="text-gray-600 dark:text-gray-400 text-sm">${info}</div>`
+    ).join('');
+    
+    // Set category color based on type
+    const categoryElement = document.getElementById('modal-category');
+    const categoryColors = {
+      'Restaurant': 'bg-orange-500',
+      'Services': 'bg-green-500',
+      'Beauté': 'bg-purple-500',
+      'Boulangerie': 'bg-red-500',
+      'Informatique': 'bg-yellow-500',
+      'Fleuriste': 'bg-indigo-500'
+    };
+    
+    // Reset classes and add appropriate color
+    categoryElement.className = `text-white px-4 py-2 rounded-full text-sm font-medium ${categoryColors[data.category] || 'bg-blue-500'}`;
+    
+    document.getElementById('detail-modal').style.display = 'flex';
+    document.getElementById('detail-modal').classList.remove('hidden');
+  }
+}
+
+function closeModal() {
+  document.getElementById('detail-modal').style.display = 'none';
+  document.getElementById('detail-modal').classList.add('hidden');
+}
+
+function handleContactSubmit(event) {
+  event.preventDefault();
+  alert('Message envoyé! L\'entreprise vous répondra rapidement.');
+  closeModal();
+}
+
+// Close modal when clicking outside
+document.getElementById('detail-modal').addEventListener('click', function(e) {
+  if (e.target === document.getElementById('detail-modal')) {
+    closeModal();
+  }
+});
+</script>

@@ -1,265 +1,279 @@
-<% content_for :title, "Community Forum" %>
+<!-- Forum Categories - 2 Column Layout -->
+<div class="max-w-6xl mx-auto px-4 py-8">
+  <!-- Page Header with Logo -->
+  <%= render 'shared/page_header_with_logo', 
+      title: "Forum Communautaire",
+      subtitle: "Rejoignez les discussions et partagez avec votre communauté" %>
 
-<div class="min-h-screen relative overflow-hidden">
-  <!-- Stunning Background -->
-  <div class="absolute inset-0 bg-gradient-to-br from-primary-bg via-secondary-bg to-primary-bg"></div>
-  
-  <div class="max-w-7xl mx-auto px-6 py-16 relative z-10">
-    <!-- Epic Header Section -->
-    <div class="text-center mb-20 animate-slide-up">
-      <div class="inline-flex items-center px-6 py-3 bg-glass-bg backdrop-filter backdrop-blur-lg border border-glass-border rounded-full mb-8">
-        <span class="w-3 h-3 bg-vibrant-purple rounded-full mr-4 animate-pulse"></span>
-        <span class="text-text-secondary text-sm font-medium font-display">Community Discussions</span>
-      </div>
-      
-      <h1 class="font-display text-2xl lg:text-3xl font-black text-text-primary mb-8 leading-tight">
-        Community
-        <br>
-        <span class="bg-gradient-to-r from-electric-blue via-vibrant-purple to-emerald-green bg-clip-text text-transparent">Forum</span>
-      </h1>
-      
-      <p class="font-content text-xl text-text-secondary max-w-4xl mx-auto mb-12 leading-relaxed">
-        Connect with neighbors, share brilliant ideas, ask meaningful questions, and build extraordinary conversations that shape our vibrant community space.
-      </p>
-      
-      <% if user_signed_in? %>
-        <div class="flex flex-col sm:flex-row gap-6 justify-center">
-          <%= link_to "#", class: "group relative overflow-hidden bg-gradient-to-r from-electric-blue to-vibrant-purple px-8 py-4 rounded-2xl font-bold text-text-primary shadow-2xl transform hover:scale-105 transition-all duration-500 inline-flex items-center" do %>
-            <span class="relative z-10 flex items-center font-display">
-              My Activity
-              <svg class="w-5 h-5 ml-2 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
-              </svg>
-            </span>
-          <% end %>
-          <%= link_to "#", class: "group relative overflow-hidden bg-glass-bg backdrop-filter backdrop-blur-lg border border-glass-border px-8 py-4 rounded-2xl font-bold text-text-primary hover:bg-surface-hover transition-all duration-500 inline-flex items-center" do %>
-            <span class="relative z-10 flex items-center font-display">
-              Browse All Threads
-              <svg class="w-5 h-5 ml-2 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
-              </svg>
-            </span>
-          <% end %>
+  <!-- Action Buttons -->
+  <% if user_signed_in? %>
+    <div class="flex flex-col sm:flex-row gap-4 mb-8 justify-center">
+      <button onclick="openNewThreadModal()" 
+              class="px-6 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg font-semibold">
+        🆕 Nouveau sujet
+      </button>
+      <%= link_to "📋 Mes discussions", "#", 
+                  class: "px-6 py-2 bg-green-500 hover:bg-green-600 text-white rounded-lg font-semibold" %>
+    </div>
+  <% end %>
+
+  <!-- Filters Section -->
+  <div class="flex flex-col md:flex-row gap-4 mb-8 justify-center">
+    <select class="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100">
+      <option><%= t('dropdowns.all_categories') %></option>
+      <option><%= t('navigation.main') %></option>
+      <option><%= t('dropdowns.announcements') %></option>
+      <option><%= t('dropdowns.questions') %></option>
+      <option><%= t('dropdowns.suggestions') %></option>
+    </select>
+    <input type="text" placeholder="<%= t('actions.search_placeholder') %>" class="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100">
+    <button class="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 dark:bg-blue-600 dark:hover:bg-blue-700">
+      🔄 <%= t('actions.refresh') %>
+    </button>
+  </div>
+  <!-- 2-Column Forum Categories Grid -->
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <% if @forum_categories.any? %>
+      <% @forum_categories.each_with_index do |category, index| %>
+        <!-- Category <%= index + 1 %> -->
+        <div class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow cursor-pointer" onclick="openModal('modal-<%= index + 1 %>')">
+          <div class="flex gap-4">
+            <div class="w-24 h-24 bg-blue-100 dark:bg-blue-900 rounded-lg flex items-center justify-center flex-shrink-0">
+              <span class="text-3xl">💬</span>
+            </div>
+            <div class="flex-1">
+              <div class="flex justify-between items-start mb-2">
+                <span class="bg-blue-500 text-white px-2 py-1 rounded text-xs">Forum</span>
+                <span class="text-sm text-gray-500 dark:text-gray-400"><%= pluralize(category.forum_threads.count, 'discussion') %></span>
+              </div>
+              <h3 class="font-bold text-lg mb-1 text-gray-900 dark:text-gray-100"><%= category.name %></h3>
+              <p class="text-gray-600 dark:text-gray-400 text-sm mb-2"><%= truncate(category.description, length: 80) %></p>
+              <div class="flex justify-between items-center">
+                <span class="text-xs text-gray-500 dark:text-gray-400">
+                  <% if category.forum_threads.recent.first %>
+                    Dernier: <%= time_ago_in_words(category.forum_threads.recent.first.updated_at) %>
+                  <% else %>
+                    Aucune discussion
+                  <% end %>
+                </span>
+                <button class="text-blue-600 hover:text-blue-800 text-sm font-medium" onclick="event.stopPropagation(); openModal('modal-<%= index + 1 %>')">
+                  👥 <%= t('actions.join') %>
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
       <% end %>
-    </div>
-    
-    <div class="grid lg:grid-cols-3 gap-8">
-      <!-- Forum Categories -->
-      <div class="lg:col-span-2">
-        <div class="card-stunning overflow-hidden mb-8">
-          <div class="bg-gradient-to-r from-electric-blue/10 to-vibrant-purple/10 backdrop-filter backdrop-blur-sm px-8 py-6 border-b border-glass-border">
-            <div class="flex items-center justify-between">
-              <h2 class="font-display text-2xl font-bold text-text-primary">Discussion Categories</h2>
-              <div class="flex items-center px-4 py-2 bg-glass-bg backdrop-filter backdrop-blur-lg border border-glass-border rounded-full">
-                <span class="w-2 h-2 bg-electric-blue rounded-full mr-2 animate-pulse"></span>
-                <span class="text-sm text-text-secondary font-medium">
-                  <%= @forum_categories.count %> categories
-                </span>
-              </div>
-            </div>
+    <% else %>
+      <!-- Empty State -->
+      <div class="md:col-span-2 text-center py-16">
+        <div class="w-24 h-24 mx-auto mb-8 bg-blue-100 dark:bg-blue-900 rounded-lg flex items-center justify-center">
+          <span class="text-4xl">💬</span>
+        </div>
+        <h3 class="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-4"><%= t('dropdowns.no_categories_yet') %></h3>
+        <p class="text-gray-600 dark:text-gray-400 mb-8 max-w-md mx-auto">
+          Soyez le premier à démarrer une conversation dans notre forum communautaire.
+        </p>
+        <% if user_signed_in? %>
+          <%= link_to t('actions.be_first_create'), "#", 
+                      class: "px-6 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg font-semibold" %>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+</div>
+
+<!-- Detail Modal -->
+<div id="detail-modal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black bg-opacity-50">
+  <div class="bg-white dark:bg-gray-800 max-w-2xl w-full mx-4 rounded-lg overflow-hidden max-h-[80vh] overflow-y-auto">
+    <div class="p-6">
+      <!-- Modal Header -->
+      <div class="flex justify-between items-start mb-6">
+        <div id="modal-category" class="bg-blue-500 text-white px-4 py-2 rounded-full text-sm font-medium"></div>
+        <button onclick="closeModal()" class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 text-2xl font-bold">×</button>
+      </div>
+      
+      <!-- Modal Content -->
+      <div class="flex gap-6 mb-6">
+        <div id="modal-image" class="w-32 h-32 bg-gray-100 dark:bg-gray-700 rounded-lg flex items-center justify-center flex-shrink-0">
+          <span id="modal-emoji" class="text-4xl"></span>
+        </div>
+        <div class="flex-1">
+          <h2 id="modal-title" class="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-4"></h2>
+          <p id="modal-description" class="text-gray-600 dark:text-gray-400 mb-4"></p>
+          <div class="space-y-2">
+            <div id="modal-threads" class="text-sm text-gray-600 dark:text-gray-400"></div>
+            <div id="modal-activity" class="text-sm text-gray-500 dark:text-gray-400"></div>
           </div>
-          
-          <% if @forum_categories.any? %>
-            <% @forum_categories.each_with_index do |category, index| %>
-              <div class="border-b border-glass-border/30 last:border-b-0">
-                <div class="p-8 hover:bg-surface-hover transition-all duration-300 group">
-                  <div class="flex items-start justify-between">
-                    <div class="flex-1">
-                      <div class="flex items-center mb-6">
-                        <div class="w-14 h-14 bg-gradient-to-br from-electric-blue to-vibrant-purple rounded-2xl flex items-center justify-center mr-6 shadow-xl group-hover:scale-110 transition-transform duration-300">
-                          <span class="text-2xl">💬</span>
-                        </div>
-                        <div>
-                          <h3 class="font-display text-xl font-bold text-text-primary group-hover:text-electric-blue transition-colors mb-2">
-                            <%= link_to category.name, forum_category_path(category) %>
-                          </h3>
-                          <% if category.forum_threads.count > 0 %>
-                            <span class="inline-flex items-center px-3 py-1 bg-gradient-to-r from-electric-blue/20 to-vibrant-purple/20 border border-electric-blue/30 rounded-full text-xs font-bold text-electric-blue">
-                              <%= pluralize(category.forum_threads.count, 'thread') %>
-                            </span>
-                          <% end %>
-                        </div>
-                      </div>
-                      
-                      <p class="font-content text-text-secondary mb-6 leading-relaxed text-lg">
-                        <%= category.description %>
-                      </p>
-                      
-                      <% if category.forum_threads.recent.first %>
-                        <% latest_thread = category.forum_threads.recent.first %>
-                        <div class="bg-surface-bg backdrop-filter backdrop-blur-sm border border-glass-border rounded-xl p-4">
-                          <div class="flex items-center space-x-4">
-                            <div class="w-10 h-10 bg-gradient-to-br from-vibrant-purple to-electric-blue rounded-xl flex items-center justify-center">
-                              <span class="text-white text-sm font-bold"><%= latest_thread.user.name.first.upcase %></span>
-                            </div>
-                            <div class="flex-1 min-w-0">
-                              <div class="text-sm font-bold text-text-primary mb-1">
-                                Latest: <%= link_to latest_thread.title, [category, latest_thread], class: "text-electric-blue hover:text-vibrant-purple transition-colors" %>
-                              </div>
-                              <div class="text-xs text-text-secondary">
-                                by <span class="font-medium"><%= latest_thread.user.name %></span> • 
-                                <span class="text-emerald-green"><%= time_ago_in_words(latest_thread.updated_at) %> ago</span>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      <% end %>
-                    </div>
-                    
-                    <div class="text-center ml-8">
-                      <div class="card-stunning p-4 group-hover:scale-105 transition-transform duration-300">
-                        <div class="font-display text-3xl font-black bg-gradient-to-r from-electric-blue to-vibrant-purple bg-clip-text text-transparent mb-2">
-                          <%= category.forum_threads.count %>
-                        </div>
-                        <div class="text-xs text-text-secondary font-bold uppercase tracking-wider">threads</div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            <% end %>
-          <% else %>
-            <div class="p-16 text-center">
-              <div class="w-24 h-24 mx-auto mb-8 bg-gradient-to-br from-electric-blue/20 to-vibrant-purple/20 backdrop-filter backdrop-blur-sm border border-glass-border rounded-3xl flex items-center justify-center">
-                <span class="text-4xl">💬</span>
-              </div>
-              <h3 class="font-display text-3xl font-bold text-text-primary mb-6">No categories yet</h3>
-              <p class="font-content text-text-secondary mb-8 text-lg max-w-md mx-auto leading-relaxed">
-                Be the first to start an amazing conversation in our vibrant community forum.
-              </p>
-              <% if user_signed_in? && current_user.moderator? %>
-                <%= link_to "#", class: "group relative overflow-hidden bg-gradient-to-r from-electric-blue to-vibrant-purple px-8 py-4 rounded-2xl font-bold text-text-primary shadow-2xl transform hover:scale-105 transition-all duration-500 inline-flex items-center" do %>
-                  <span class="relative z-10 flex items-center font-display">
-                    Create First Category
-                    <svg class="w-5 h-5 ml-2 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
-                    </svg>
-                  </span>
-                <% end %>
-              <% end %>
-            </div>
-          <% end %>
         </div>
       </div>
       
-      <!-- Sidebar -->
-      <div class="lg:col-span-1 space-y-8">
-        <!-- Recent Activity -->
-        <div class="card-stunning overflow-hidden">
-          <div class="bg-gradient-to-r from-emerald-green/10 to-electric-blue/10 backdrop-filter backdrop-blur-sm px-6 py-4 border-b border-glass-border">
-            <div class="flex items-center space-x-3">
-              <div class="w-10 h-10 bg-gradient-to-br from-emerald-green to-electric-blue rounded-2xl flex items-center justify-center shadow-lg">
-                <span class="text-white text-lg">⚡</span>
-              </div>
-              <h3 class="font-display text-xl font-bold text-text-primary">Recent Activity</h3>
-            </div>
+      <!-- Join/Create Thread Form -->
+      <div class="border-t dark:border-gray-600 pt-6">
+        <h3 class="text-lg font-bold text-gray-900 dark:text-gray-100 mb-4"><%= t('common.join_discussion_modal') %></h3>
+        <form class="space-y-4" onsubmit="handleForumJoin(event)">
+          <div>
+            <label class="block text-gray-700 dark:text-gray-300 font-medium mb-2">Titre de votre discussion</label>
+            <input type="text" class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded-lg focus:border-blue-500 focus:outline-none" placeholder="Sujet de discussion..." required>
           </div>
-          <div class="p-6">
-            <% if @recent_threads.any? %>
-              <div class="space-y-4">
-                <% @recent_threads.each do |thread| %>
-                  <div class="group p-4 bg-surface-bg backdrop-filter backdrop-blur-sm border border-glass-border rounded-xl hover:bg-surface-hover transition-all duration-300">
-                    <div class="font-bold text-text-primary group-hover:text-electric-blue transition-colors mb-2">
-                      <%= link_to thread.title, [thread.forum_category, thread] %>
-                    </div>
-                    <div class="text-xs text-vibrant-purple mb-2 font-medium">
-                      in <%= link_to thread.forum_category.name, thread.forum_category, class: "hover:text-electric-blue transition-colors" %>
-                    </div>
-                    <div class="flex items-center space-x-3 text-xs text-text-secondary">
-                      <div class="w-6 h-6 bg-gradient-to-br from-vibrant-purple to-electric-blue rounded-lg flex items-center justify-center">
-                        <span class="text-white text-xs font-bold"><%= thread.user.name.first.upcase %></span>
-                      </div>
-                      <span class="font-medium">by <%= thread.user.name %></span>
-                      <span>•</span>
-                      <span class="text-emerald-green font-medium"><%= time_ago_in_words(thread.created_at) %> ago</span>
-                    </div>
-                  </div>
-                <% end %>
-              </div>
-            <% else %>
-              <div class="text-center py-8">
-                <div class="w-16 h-16 mx-auto mb-4 bg-gradient-to-br from-electric-blue/20 to-vibrant-purple/20 backdrop-filter backdrop-blur-sm border border-glass-border rounded-2xl flex items-center justify-center">
-                  <span class="text-2xl">💬</span>
-                </div>
-                <p class="text-text-secondary font-medium">No recent discussions</p>
-              </div>
-            <% end %>
+          <div>
+            <label class="block text-gray-700 dark:text-gray-300 font-medium mb-2">Votre message</label>
+            <textarea rows="4" class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded-lg focus:border-blue-500 focus:outline-none resize-none" placeholder="Votre message..." required></textarea>
           </div>
-        </div>
-        
-        <!-- Forum Stats -->
-        <div class="card-stunning overflow-hidden">
-          <div class="bg-gradient-to-r from-electric-blue/10 to-vibrant-purple/10 backdrop-filter backdrop-blur-sm px-6 py-4 border-b border-glass-border">
-            <div class="flex items-center space-x-3">
-              <div class="w-10 h-10 bg-gradient-to-br from-electric-blue to-vibrant-purple rounded-2xl flex items-center justify-center shadow-lg">
-                <span class="text-white text-lg">📊</span>
-              </div>
-              <h3 class="font-display text-xl font-bold text-text-primary">Forum Stats</h3>
-            </div>
+          <div class="flex gap-4 pt-4">
+            <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white flex-1 py-3 px-6 rounded-lg font-semibold">
+              💬 <%= t('actions.publish') %>
+            </button>
+            <button type="button" onclick="closeModal()" class="bg-gray-500 hover:bg-gray-600 text-white py-3 px-6 rounded-lg font-semibold">
+              <%= t('actions.close') %>
+            </button>
           </div>
-          <div class="p-6 grid grid-cols-2 gap-4">
-            <div class="card-stunning p-4 text-center group hover:scale-105 transition-transform duration-300">
-              <div class="font-display text-2xl font-black bg-gradient-to-r from-electric-blue to-vibrant-purple bg-clip-text text-transparent mb-2">
-                <%= @forum_categories.count %>
-              </div>
-              <div class="text-xs text-text-secondary font-bold uppercase tracking-wider">Categories</div>
-            </div>
-            <div class="card-stunning p-4 text-center group hover:scale-105 transition-transform duration-300">
-              <div class="font-display text-2xl font-black bg-gradient-to-r from-emerald-green to-electric-blue bg-clip-text text-transparent mb-2">
-                <%= ForumThread.count %>
-              </div>
-              <div class="text-xs text-text-secondary font-bold uppercase tracking-wider">Threads</div>
-            </div>
-            <div class="card-stunning p-4 text-center group hover:scale-105 transition-transform duration-300">
-              <div class="font-display text-2xl font-black bg-gradient-to-r from-vibrant-purple to-warm-gold bg-clip-text text-transparent mb-2">
-                <%= ForumReply.count %>
-              </div>
-              <div class="text-xs text-text-secondary font-bold uppercase tracking-wider">Replies</div>
-            </div>
-            <div class="card-stunning p-4 text-center group hover:scale-105 transition-transform duration-300">
-              <div class="font-display text-2xl font-black bg-gradient-to-r from-warm-gold to-vibrant-purple bg-clip-text text-transparent mb-2">
-                <%= User.count %>
-              </div>
-              <div class="text-xs text-text-secondary font-bold uppercase tracking-wider">Members</div>
-            </div>
-          </div>
-        </div>
-        
-        <!-- Guidelines -->
-        <div class="card-stunning overflow-hidden">
-          <div class="bg-gradient-to-r from-warm-gold/10 to-emerald-green/10 backdrop-filter backdrop-blur-sm px-6 py-4 border-b border-glass-border">
-            <div class="flex items-center space-x-3">
-              <div class="w-10 h-10 bg-gradient-to-br from-warm-gold to-emerald-green rounded-2xl flex items-center justify-center shadow-lg">
-                <span class="text-white text-lg">📋</span>
-              </div>
-              <h3 class="font-display text-xl font-bold text-text-primary">Community Guidelines</h3>
-            </div>
-          </div>
-          <div class="p-6 space-y-4">
-            <div class="flex items-start space-x-4 p-3 bg-surface-bg backdrop-filter backdrop-blur-sm border border-glass-border rounded-xl">
-              <div class="w-2 h-2 bg-gradient-to-r from-electric-blue to-vibrant-purple rounded-full mt-3 flex-shrink-0"></div>
-              <span class="text-text-secondary font-content leading-relaxed">Be respectful and courteous to all community members</span>
-            </div>
-            <div class="flex items-start space-x-4 p-3 bg-surface-bg backdrop-filter backdrop-blur-sm border border-glass-border rounded-xl">
-              <div class="w-2 h-2 bg-gradient-to-r from-vibrant-purple to-emerald-green rounded-full mt-3 flex-shrink-0"></div>
-              <span class="text-text-secondary font-content leading-relaxed">Stay on topic and choose the most appropriate category</span>
-            </div>
-            <div class="flex items-start space-x-4 p-3 bg-surface-bg backdrop-filter backdrop-blur-sm border border-glass-border rounded-xl">
-              <div class="w-2 h-2 bg-gradient-to-r from-emerald-green to-warm-gold rounded-full mt-3 flex-shrink-0"></div>
-              <span class="text-text-secondary font-content leading-relaxed">Search existing discussions before posting to avoid duplicates</span>
-            </div>
-            <div class="flex items-start space-x-4 p-3 bg-surface-bg backdrop-filter backdrop-blur-sm border border-glass-border rounded-xl">
-              <div class="w-2 h-2 bg-gradient-to-r from-warm-gold to-electric-blue rounded-full mt-3 flex-shrink-0"></div>
-              <span class="text-text-secondary font-content leading-relaxed">No spam, excessive self-promotion, or purely commercial posts</span>
-            </div>
-            <div class="flex items-start space-x-4 p-3 bg-surface-bg backdrop-filter backdrop-blur-sm border border-glass-border rounded-xl">
-              <div class="w-2 h-2 bg-gradient-to-r from-electric-blue to-vibrant-purple rounded-full mt-3 flex-shrink-0"></div>
-              <span class="text-text-secondary font-content leading-relaxed">Report inappropriate content to our dedicated moderators</span>
-            </div>
-          </div>
-        </div>
+        </form>
       </div>
     </div>
   </div>
 </div>
+
+<!-- New Thread Modal -->
+<div id="new-thread-modal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black bg-opacity-50">
+  <div class="bg-white dark:bg-gray-800 max-w-3xl w-full mx-4 rounded-lg overflow-hidden max-h-[80vh] overflow-y-auto">
+    <div class="p-6">
+      <!-- Modal Header -->
+      <div class="flex justify-between items-start mb-6">
+        <h2 class="text-2xl font-bold text-gray-900 dark:text-gray-100">🆕 Créer un Nouveau Sujet</h2>
+        <button onclick="closeNewThreadModal()" class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 text-2xl font-bold">×</button>
+      </div>
+      
+      <!-- Form -->
+      <form class="space-y-6" onsubmit="handleNewThread(event)">
+        <!-- Category Selection -->
+        <div>
+          <label class="block text-gray-700 dark:text-gray-300 font-medium mb-2">🏷️ Catégorie</label>
+          <select class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded-lg focus:border-blue-500 focus:outline-none" required>
+            <option value="">Sélectionnez une catégorie...</option>
+            <% @forum_categories.each do |category| %>
+              <option value="<%= category.id %>"><%= category.name %></option>
+            <% end %>
+            <% if @forum_categories.empty? %>
+              <option value="general">Général</option>
+              <option value="discussions">Discussions</option>
+              <option value="questions">Questions</option>
+              <option value="annonces">Annonces</option>
+            <% end %>
+          </select>
+        </div>
+
+        <!-- Thread Title -->
+        <div>
+          <label class="block text-gray-700 dark:text-gray-300 font-medium mb-2">📝 Titre du Sujet</label>
+          <input type="text" 
+                 class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded-lg focus:border-blue-500 focus:outline-none" 
+                 placeholder="Donnez un titre clair et descriptif à votre sujet..." 
+                 required>
+        </div>
+
+        <!-- Thread Content -->
+        <div>
+          <label class="block text-gray-700 dark:text-gray-300 font-medium mb-2">💬 Votre Message</label>
+          <textarea rows="8" 
+                    class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded-lg focus:border-blue-500 focus:outline-none resize-none" 
+                    placeholder="Exprimez-vous, posez votre question ou partagez votre opinion..." 
+                    required></textarea>
+          <p class="text-xs text-gray-500 mt-2">Soyez respectueux et constructif dans vos échanges</p>
+        </div>
+
+        <!-- Tags (Optional) -->
+        <div>
+          <label class="block text-gray-700 dark:text-gray-300 font-medium mb-2">🏷️ Tags (optionnel)</label>
+          <input type="text" 
+                 class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded-lg focus:border-blue-500 focus:outline-none" 
+                 placeholder="aide, question, conseil, annonce... (séparez par des virgules)">
+          <p class="text-xs text-gray-500 mt-2">Ajoutez des mots-clés pour faciliter la recherche</p>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="flex gap-4 pt-4">
+          <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white flex-1 py-3 px-6 rounded-lg font-semibold">
+            🚀 Publier le Sujet
+          </button>
+          <button type="button" onclick="closeNewThreadModal()" class="bg-gray-500 hover:bg-gray-600 text-white py-3 px-6 rounded-lg font-semibold">
+            Annuler
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script>
+// Modal data for forum categories
+const modalData = {
+  <% @forum_categories.each_with_index do |category, index| %>
+  'modal-<%= index + 1 %>': {
+    category: 'Forum',
+    title: '<%= j category.name %>',
+    description: '<%= j category.description %>',
+    emoji: '💬',
+    threads: '<%= pluralize(category.forum_threads.count, 'discussion') %>',
+    activity: '<% if category.forum_threads.recent.first %>Dernière activité: <%= time_ago_in_words(category.forum_threads.recent.first.updated_at) %><% else %>Aucune activité récente<% end %>'
+  }<%= ',' unless index == @forum_categories.count - 1 %>
+  <% end %>
+};
+
+// Modal functions
+function openModal(modalId) {
+  const data = modalData[modalId];
+  if (data) {
+    document.getElementById('modal-category').textContent = data.category;
+    document.getElementById('modal-title').textContent = data.title;
+    document.getElementById('modal-description').textContent = data.description;
+    document.getElementById('modal-emoji').textContent = data.emoji;
+    document.getElementById('modal-threads').textContent = data.threads;
+    document.getElementById('modal-activity').textContent = data.activity;
+    
+    document.getElementById('detail-modal').style.display = 'flex';
+    document.getElementById('detail-modal').classList.remove('hidden');
+  }
+}
+
+function closeModal() {
+  document.getElementById('detail-modal').style.display = 'none';
+  document.getElementById('detail-modal').classList.add('hidden');
+}
+
+function handleForumJoin(event) {
+  event.preventDefault();
+  alert('Discussion publiée! Vous pouvez maintenant participer au forum.');
+  closeModal();
+}
+
+// New Thread Modal Functions
+function openNewThreadModal() {
+  document.getElementById('new-thread-modal').style.display = 'flex';
+  document.getElementById('new-thread-modal').classList.remove('hidden');
+}
+
+function closeNewThreadModal() {
+  document.getElementById('new-thread-modal').style.display = 'none';
+  document.getElementById('new-thread-modal').classList.add('hidden');
+}
+
+function handleNewThread(event) {
+  event.preventDefault();
+  alert('Nouveau sujet créé avec succès! Il sera visible après modération.');
+  closeNewThreadModal();
+}
+
+// Close modals when clicking outside
+document.getElementById('detail-modal').addEventListener('click', function(e) {
+  if (e.target === document.getElementById('detail-modal')) {
+    closeModal();
+  }
+});
+
+document.getElementById('new-thread-modal').addEventListener('click', function(e) {
+  if (e.target === document.getElementById('new-thread-modal')) {
+    closeNewThreadModal();
+  }
+});
+</script>

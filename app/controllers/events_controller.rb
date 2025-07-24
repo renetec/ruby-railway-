@@ -1,8 +1,13 @@
 class EventsController < ApplicationController
-  before_action :set_event, only: [:show, :edit, :update, :destroy, :rsvp, :cancel_rsvp]
-  before_action :authorize_event, only: [:edit, :update, :destroy]
+  before_action :authenticate_user!, only: [:new, :create, :edit, :update, :destroy, :rsvp, :cancel_rsvp, :dashboard]
+  before_action :set_event, only: [:show, :edit, :update, :destroy, :rsvp, :cancel_rsvp, :dashboard]
+  before_action :authorize_event, only: [:edit, :update, :destroy, :dashboard]
   
   def index
+    # Get all events for calendar view (unpaginated)
+    @all_events = Event.published.includes(:user, :event_rsvps)
+    
+    # Get filtered events for list view (paginated)
     @events = Event.published
                    .includes(:user, :event_rsvps, images_attachments: :blob)
     
@@ -11,7 +16,7 @@ class EventsController < ApplicationController
     @events = @events.by_category(params[:category]) if params[:category].present?
     @events = @events.by_date_range(params[:start_date], params[:end_date]) if params[:start_date].present? && params[:end_date].present?
     
-    @events = @events.order(:date).page(params[:page]).per(12)
+    @events = @events.order(created_at: :desc).page(params[:page]).per(12)
     @categories = Event.categories.keys
   end
   
@@ -21,14 +26,14 @@ class EventsController < ApplicationController
   end
   
   def new
-    @event = current_user.events.build
+    @event = current_user.events.build(status: :published)
   end
   
   def create
     @event = current_user.events.build(event_params)
     
     if @event.save
-      redirect_to @event, notice: 'Event was successfully created.'
+      redirect_to events_path, notice: t('flash.event_created_success')
     else
       render :new, status: :unprocessable_entity
     end
@@ -55,12 +60,21 @@ class EventsController < ApplicationController
       @rsvp = current_user.event_rsvps.build(event: @event)
       
       if @rsvp.save
-        redirect_to @event, notice: 'Successfully RSVP\'d to event!'
+        respond_to do |format|
+          format.html { redirect_to @event, notice: 'Successfully RSVP\'d to event!' }
+          format.json { render json: { success: true, message: 'Inscription confirmée!' } }
+        end
       else
-        redirect_to @event, alert: @rsvp.errors.full_messages.join(', ')
+        respond_to do |format|
+          format.html { redirect_to @event, alert: @rsvp.errors.full_messages.join(', ') }
+          format.json { render json: { success: false, errors: @rsvp.errors.full_messages }, status: :unprocessable_entity }
+        end
       end
     else
-      redirect_to @event, alert: 'Cannot RSVP to this event.'
+      respond_to do |format|
+        format.html { redirect_to @event, alert: 'Cannot RSVP to this event.' }
+        format.json { render json: { success: false, error: 'Cannot RSVP to this event.' }, status: :unprocessable_entity }
+      end
     end
   end
   
@@ -72,6 +86,12 @@ class EventsController < ApplicationController
     else
       redirect_to @event, alert: 'Could not cancel RSVP.'
     end
+  end
+  
+  def dashboard
+    @rsvps = @event.event_rsvps.includes(:user).confirmed
+    @total_rsvps = @rsvps.count
+    @capacity_percentage = @event.capacity.present? ? (@total_rsvps.to_f / @event.capacity * 100).round : nil
   end
   
   private
