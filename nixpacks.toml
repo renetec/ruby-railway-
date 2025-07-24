@@ -1,0 +1,8 @@
+[phases.setup]
+nixPkgs = ["...", "postgresql"]
+
+[phases.build]
+cmds = ["bundle install"]
+
+[start]
+cmd = "bin/rails server -b :: -p $PORT"
