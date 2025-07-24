@@ -16,8 +16,8 @@ workers ENV.fetch("WEB_CONCURRENCY", 2)
 threads_count = ENV.fetch("RAILS_MAX_THREADS", 5)
 threads threads_count, threads_count
 
-# Preload the application for better performance
-preload_app!
+# Disable preload to prevent Rails startup issues on Railway
+# preload_app!
 
 # Restart workers if they use too much memory
 worker_timeout 30
