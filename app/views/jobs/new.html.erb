@@ -1,0 +1,185 @@
+<div class="min-h-screen bg-gradient-to-br from-primary-bg via-secondary-bg to-primary-bg relative overflow-hidden">
+  <!-- Background Elements -->
+  <div class="absolute inset-0 overflow-hidden">
+    <div class="absolute -top-40 -right-40 w-80 h-80 bg-electric-blue opacity-10 rounded-full blur-3xl animate-pulse"></div>
+    <div class="absolute -bottom-40 -left-40 w-80 h-80 bg-vibrant-purple opacity-10 rounded-full blur-3xl animate-pulse delay-1000"></div>
+  </div>
+
+  <div class="relative z-10 p-8 max-w-4xl mx-auto">
+    <!-- Page Header -->
+    <%= render 'shared/page_header_with_logo', title: '💼 Post New Job' %>
+    
+    <!-- Form Card -->
+    <div class="glass-surface-lg rounded-3xl p-8 shadow-soft-xl border border-glass-border-2">
+      <%= form_with model: @job, local: true, html: { class: "space-y-6" } do |f| %>
+        <!-- Error Messages -->
+        <% if @job.errors.any? %>
+          <div class="bg-red-500/10 border border-red-500/30 rounded-xl p-4">
+            <div class="flex items-center mb-2">
+              <svg class="w-5 h-5 text-red-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+              </svg>
+              <h3 class="font-semibold text-red-500">Please fix the following errors:</h3>
+            </div>
+            <ul class="text-sm text-red-400 space-y-1">
+              <% @job.errors.full_messages.each do |message| %>
+                <li>• <%= message %></li>
+              <% end %>
+            </ul>
+          </div>
+        <% end %>
+
+        <!-- Job Title -->
+        <div>
+          <%= f.label :title, "💼 Job Title", class: "block text-sm font-bold mb-3 text-text-primary" %>
+          <%= f.text_field :title, 
+              placeholder: "e.g., Senior Software Developer",
+              class: "w-full px-4 py-4 bg-glass-surface-1 border border-glass-border-1 rounded-xl text-text-primary placeholder-text-tertiary focus:outline-none focus:border-electric-blue focus:ring-4 focus:ring-electric-blue/20 transition-all duration-300" %>
+          <p class="text-xs mt-2 text-text-tertiary">Enter a clear, descriptive job title</p>
+        </div>
+
+        <!-- Company Name -->
+        <div>
+          <%= f.label :company, "🏢 Company Name", class: "block text-sm font-bold mb-3 text-text-primary" %>
+          <%= f.text_field :company, 
+              placeholder: "e.g., Tech Innovations Inc.",
+              class: "w-full px-4 py-4 bg-glass-surface-1 border border-glass-border-1 rounded-xl text-text-primary placeholder-text-tertiary focus:outline-none focus:border-electric-blue focus:ring-4 focus:ring-electric-blue/20 transition-all duration-300" %>
+        </div>
+
+        <!-- Location -->
+        <div>
+          <%= f.label :location, "📍 Location", class: "block text-sm font-bold mb-3 text-text-primary" %>
+          <%= f.text_field :location, 
+              placeholder: "e.g., Montreal, QC or Remote",
+              class: "w-full px-4 py-4 bg-glass-surface-1 border border-glass-border-1 rounded-xl text-text-primary placeholder-text-tertiary focus:outline-none focus:border-electric-blue focus:ring-4 focus:ring-electric-blue/20 transition-all duration-300" %>
+        </div>
+
+        <!-- Job Type -->
+        <div>
+          <%= f.label :job_type, "⏰ Job Type", class: "block text-sm font-bold mb-3 text-text-primary" %>
+          <%= f.select :job_type, 
+              options_for_select([
+                ['Full-time', 'full_time'],
+                ['Part-time', 'part_time'],
+                ['Contract', 'contract'],
+                ['Freelance', 'freelance'],
+                ['Internship', 'internship']
+              ], @job.job_type),
+              { prompt: 'Select job type' },
+              { class: "w-full px-4 py-4 bg-glass-surface-1 border border-glass-border-1 rounded-xl text-text-primary focus:outline-none focus:border-electric-blue focus:ring-4 focus:ring-electric-blue/20 transition-all duration-300" } %>
+        </div>
+
+        <!-- Salary Range -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <%= f.label :salary_min, "💰 Minimum Salary", class: "block text-sm font-bold mb-3 text-text-primary" %>
+            <%= f.number_field :salary_min, 
+                placeholder: "50000",
+                class: "w-full px-4 py-4 bg-glass-surface-1 border border-glass-border-1 rounded-xl text-text-primary placeholder-text-tertiary focus:outline-none focus:border-electric-blue focus:ring-4 focus:ring-electric-blue/20 transition-all duration-300" %>
+          </div>
+          <div>
+            <%= f.label :salary_max, "💰 Maximum Salary", class: "block text-sm font-bold mb-3 text-text-primary" %>
+            <%= f.number_field :salary_max, 
+                placeholder: "80000",
+                class: "w-full px-4 py-4 bg-glass-surface-1 border border-glass-border-1 rounded-xl text-text-primary placeholder-text-tertiary focus:outline-none focus:border-electric-blue focus:ring-4 focus:ring-electric-blue/20 transition-all duration-300" %>
+          </div>
+        </div>
+
+        <!-- Job Description -->
+        <div>
+          <%= f.label :description, "📝 Job Description", class: "block text-sm font-bold mb-3 text-text-primary" %>
+          <%= f.text_area :description, 
+              rows: 6,
+              placeholder: "Describe the role, responsibilities, and what you're looking for in a candidate...",
+              class: "w-full px-4 py-4 bg-glass-surface-1 border border-glass-border-1 rounded-xl text-text-primary placeholder-text-tertiary focus:outline-none focus:border-electric-blue focus:ring-4 focus:ring-electric-blue/20 transition-all duration-300 resize-none" %>
+          <p class="text-xs mt-2 text-text-tertiary">Provide detailed information about the position</p>
+        </div>
+
+        <!-- Requirements -->
+        <div>
+          <%= f.label :requirements, "✅ Requirements", class: "block text-sm font-bold mb-3 text-text-primary" %>
+          <%= f.text_area :requirements, 
+              rows: 4,
+              placeholder: "• Bachelor's degree in Computer Science
+• 3+ years of experience with Ruby on Rails
+• Strong problem-solving skills
+• Excellent communication abilities",
+              class: "w-full px-4 py-4 bg-glass-surface-1 border border-glass-border-1 rounded-xl text-text-primary placeholder-text-tertiary focus:outline-none focus:border-electric-blue focus:ring-4 focus:ring-electric-blue/20 transition-all duration-300 resize-none" %>
+          <p class="text-xs mt-2 text-text-tertiary">List the key requirements and qualifications</p>
+        </div>
+
+        <!-- Benefits -->
+        <div>
+          <%= f.label :benefits, "🎁 Benefits & Perks", class: "block text-sm font-bold mb-3 text-text-primary" %>
+          <%= f.text_area :benefits, 
+              rows: 3,
+              placeholder: "• Health and dental insurance
+• Flexible working hours
+• Professional development budget
+• Remote work options",
+              class: "w-full px-4 py-4 bg-glass-surface-1 border border-glass-border-1 rounded-xl text-text-primary placeholder-text-tertiary focus:outline-none focus:border-electric-blue focus:ring-4 focus:ring-electric-blue/20 transition-all duration-300 resize-none" %>
+          <p class="text-xs mt-2 text-text-tertiary">Optional: Highlight what makes this role attractive</p>
+        </div>
+
+        <!-- Application Instructions -->
+        <div>
+          <%= f.label :application_instructions, "📧 How to Apply", class: "block text-sm font-bold mb-3 text-text-primary" %>
+          <%= f.text_area :application_instructions, 
+              rows: 3,
+              placeholder: "Send your resume and cover letter to careers@company.com or apply directly through our website.",
+              class: "w-full px-4 py-4 bg-glass-surface-1 border border-glass-border-1 rounded-xl text-text-primary placeholder-text-tertiary focus:outline-none focus:border-electric-blue focus:ring-4 focus:ring-electric-blue/20 transition-all duration-300 resize-none" %>
+          <p class="text-xs mt-2 text-text-tertiary">Provide clear application instructions</p>
+        </div>
+
+        <!-- Status -->
+        <div>
+          <%= f.label :status, "📊 Status", class: "block text-sm font-bold mb-3 text-text-primary" %>
+          <%= f.select :status, 
+              options_for_select([
+                ['Draft', 'draft'],
+                ['Published', 'published']
+              ], @job.status || 'draft'),
+              {},
+              { class: "w-full px-4 py-4 bg-glass-surface-1 border border-glass-border-1 rounded-xl text-text-primary focus:outline-none focus:border-electric-blue focus:ring-4 focus:ring-electric-blue/20 transition-all duration-300" } %>
+          <p class="text-xs mt-2 text-text-tertiary">Choose whether to save as draft or publish immediately</p>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="flex flex-col sm:flex-row gap-4 pt-6">
+          <%= f.submit "🚀 Post Job", 
+              class: "flex-1 py-4 px-6 bg-gradient-to-r from-electric-blue to-vibrant-purple hover:from-electric-blue/90 hover:to-vibrant-purple/90 text-white font-bold text-lg rounded-xl shadow-soft-lg transform hover:scale-105 hover:shadow-soft-xl transition-all duration-300 cursor-pointer" %>
+          
+          <%= link_to jobs_path, 
+              class: "flex-1 py-4 px-6 bg-glass-surface-2 hover:bg-glass-surface-3 border border-glass-border-1 text-text-primary font-semibold text-lg rounded-xl text-center transition-all duration-300 hover:scale-105" do %>
+            Cancel
+          <% end %>
+        </div>
+      <% end %>
+    </div>
+
+    <!-- Help Text -->
+    <div class="mt-8 glass-surface-lg rounded-3xl p-6 shadow-soft-xl border border-glass-border-2">
+      <h3 class="text-text-primary text-lg font-bold mb-4">💡 Tips for a Great Job Posting</h3>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-text-secondary">
+        <div>
+          <h4 class="font-semibold text-text-primary mb-2">📝 Writing Tips</h4>
+          <ul class="space-y-1">
+            <li>• Use clear, specific job titles</li>
+            <li>• Include salary range for better responses</li>
+            <li>• Be honest about requirements</li>
+            <li>• Highlight company culture</li>
+          </ul>
+        </div>
+        <div>
+          <h4 class="font-semibold text-text-primary mb-2">🎯 Best Practices</h4>
+          <ul class="space-y-1">
+            <li>• Keep descriptions concise but complete</li>
+            <li>• Use bullet points for easy reading</li>
+            <li>• Include growth opportunities</li>
+            <li>• Specify remote work options</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

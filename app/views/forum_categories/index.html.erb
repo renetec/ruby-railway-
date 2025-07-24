@@ -1,0 +1,279 @@
+<!-- Forum Categories - 2 Column Layout -->
+<div class="max-w-6xl mx-auto px-4 py-8">
+  <!-- Page Header with Logo -->
+  <%= render 'shared/page_header_with_logo', 
+      title: "Forum Communautaire",
+      subtitle: "Rejoignez les discussions et partagez avec votre communauté" %>
+
+  <!-- Action Buttons -->
+  <% if user_signed_in? %>
+    <div class="flex flex-col sm:flex-row gap-4 mb-8 justify-center">
+      <button onclick="openNewThreadModal()" 
+              class="px-6 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg font-semibold">
+        🆕 Nouveau sujet
+      </button>
+      <%= link_to "📋 Mes discussions", "#", 
+                  class: "px-6 py-2 bg-green-500 hover:bg-green-600 text-white rounded-lg font-semibold" %>
+    </div>
+  <% end %>
+
+  <!-- Filters Section -->
+  <div class="flex flex-col md:flex-row gap-4 mb-8 justify-center">
+    <select class="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100">
+      <option><%= t('dropdowns.all_categories') %></option>
+      <option><%= t('navigation.main') %></option>
+      <option><%= t('dropdowns.announcements') %></option>
+      <option><%= t('dropdowns.questions') %></option>
+      <option><%= t('dropdowns.suggestions') %></option>
+    </select>
+    <input type="text" placeholder="<%= t('actions.search_placeholder') %>" class="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100">
+    <button class="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 dark:bg-blue-600 dark:hover:bg-blue-700">
+      🔄 <%= t('actions.refresh') %>
+    </button>
+  </div>
+  <!-- 2-Column Forum Categories Grid -->
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <% if @forum_categories.any? %>
+      <% @forum_categories.each_with_index do |category, index| %>
+        <!-- Category <%= index + 1 %> -->
+        <div class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow cursor-pointer" onclick="openModal('modal-<%= index + 1 %>')">
+          <div class="flex gap-4">
+            <div class="w-24 h-24 bg-blue-100 dark:bg-blue-900 rounded-lg flex items-center justify-center flex-shrink-0">
+              <span class="text-3xl">💬</span>
+            </div>
+            <div class="flex-1">
+              <div class="flex justify-between items-start mb-2">
+                <span class="bg-blue-500 text-white px-2 py-1 rounded text-xs">Forum</span>
+                <span class="text-sm text-gray-500 dark:text-gray-400"><%= pluralize(category.forum_threads.count, 'discussion') %></span>
+              </div>
+              <h3 class="font-bold text-lg mb-1 text-gray-900 dark:text-gray-100"><%= category.name %></h3>
+              <p class="text-gray-600 dark:text-gray-400 text-sm mb-2"><%= truncate(category.description, length: 80) %></p>
+              <div class="flex justify-between items-center">
+                <span class="text-xs text-gray-500 dark:text-gray-400">
+                  <% if category.forum_threads.recent.first %>
+                    Dernier: <%= time_ago_in_words(category.forum_threads.recent.first.updated_at) %>
+                  <% else %>
+                    Aucune discussion
+                  <% end %>
+                </span>
+                <button class="text-blue-600 hover:text-blue-800 text-sm font-medium" onclick="event.stopPropagation(); openModal('modal-<%= index + 1 %>')">
+                  👥 <%= t('actions.join') %>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      <% end %>
+    <% else %>
+      <!-- Empty State -->
+      <div class="md:col-span-2 text-center py-16">
+        <div class="w-24 h-24 mx-auto mb-8 bg-blue-100 dark:bg-blue-900 rounded-lg flex items-center justify-center">
+          <span class="text-4xl">💬</span>
+        </div>
+        <h3 class="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-4"><%= t('dropdowns.no_categories_yet') %></h3>
+        <p class="text-gray-600 dark:text-gray-400 mb-8 max-w-md mx-auto">
+          Soyez le premier à démarrer une conversation dans notre forum communautaire.
+        </p>
+        <% if user_signed_in? %>
+          <%= link_to t('actions.be_first_create'), "#", 
+                      class: "px-6 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg font-semibold" %>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+</div>
+
+<!-- Detail Modal -->
+<div id="detail-modal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black bg-opacity-50">
+  <div class="bg-white dark:bg-gray-800 max-w-2xl w-full mx-4 rounded-lg overflow-hidden max-h-[80vh] overflow-y-auto">
+    <div class="p-6">
+      <!-- Modal Header -->
+      <div class="flex justify-between items-start mb-6">
+        <div id="modal-category" class="bg-blue-500 text-white px-4 py-2 rounded-full text-sm font-medium"></div>
+        <button onclick="closeModal()" class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 text-2xl font-bold">×</button>
+      </div>
+      
+      <!-- Modal Content -->
+      <div class="flex gap-6 mb-6">
+        <div id="modal-image" class="w-32 h-32 bg-gray-100 dark:bg-gray-700 rounded-lg flex items-center justify-center flex-shrink-0">
+          <span id="modal-emoji" class="text-4xl"></span>
+        </div>
+        <div class="flex-1">
+          <h2 id="modal-title" class="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-4"></h2>
+          <p id="modal-description" class="text-gray-600 dark:text-gray-400 mb-4"></p>
+          <div class="space-y-2">
+            <div id="modal-threads" class="text-sm text-gray-600 dark:text-gray-400"></div>
+            <div id="modal-activity" class="text-sm text-gray-500 dark:text-gray-400"></div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Join/Create Thread Form -->
+      <div class="border-t dark:border-gray-600 pt-6">
+        <h3 class="text-lg font-bold text-gray-900 dark:text-gray-100 mb-4"><%= t('common.join_discussion_modal') %></h3>
+        <form class="space-y-4" onsubmit="handleForumJoin(event)">
+          <div>
+            <label class="block text-gray-700 dark:text-gray-300 font-medium mb-2">Titre de votre discussion</label>
+            <input type="text" class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded-lg focus:border-blue-500 focus:outline-none" placeholder="Sujet de discussion..." required>
+          </div>
+          <div>
+            <label class="block text-gray-700 dark:text-gray-300 font-medium mb-2">Votre message</label>
+            <textarea rows="4" class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded-lg focus:border-blue-500 focus:outline-none resize-none" placeholder="Votre message..." required></textarea>
+          </div>
+          <div class="flex gap-4 pt-4">
+            <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white flex-1 py-3 px-6 rounded-lg font-semibold">
+              💬 <%= t('actions.publish') %>
+            </button>
+            <button type="button" onclick="closeModal()" class="bg-gray-500 hover:bg-gray-600 text-white py-3 px-6 rounded-lg font-semibold">
+              <%= t('actions.close') %>
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- New Thread Modal -->
+<div id="new-thread-modal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black bg-opacity-50">
+  <div class="bg-white dark:bg-gray-800 max-w-3xl w-full mx-4 rounded-lg overflow-hidden max-h-[80vh] overflow-y-auto">
+    <div class="p-6">
+      <!-- Modal Header -->
+      <div class="flex justify-between items-start mb-6">
+        <h2 class="text-2xl font-bold text-gray-900 dark:text-gray-100">🆕 Créer un Nouveau Sujet</h2>
+        <button onclick="closeNewThreadModal()" class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 text-2xl font-bold">×</button>
+      </div>
+      
+      <!-- Form -->
+      <form class="space-y-6" onsubmit="handleNewThread(event)">
+        <!-- Category Selection -->
+        <div>
+          <label class="block text-gray-700 dark:text-gray-300 font-medium mb-2">🏷️ Catégorie</label>
+          <select class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded-lg focus:border-blue-500 focus:outline-none" required>
+            <option value="">Sélectionnez une catégorie...</option>
+            <% @forum_categories.each do |category| %>
+              <option value="<%= category.id %>"><%= category.name %></option>
+            <% end %>
+            <% if @forum_categories.empty? %>
+              <option value="general">Général</option>
+              <option value="discussions">Discussions</option>
+              <option value="questions">Questions</option>
+              <option value="annonces">Annonces</option>
+            <% end %>
+          </select>
+        </div>
+
+        <!-- Thread Title -->
+        <div>
+          <label class="block text-gray-700 dark:text-gray-300 font-medium mb-2">📝 Titre du Sujet</label>
+          <input type="text" 
+                 class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded-lg focus:border-blue-500 focus:outline-none" 
+                 placeholder="Donnez un titre clair et descriptif à votre sujet..." 
+                 required>
+        </div>
+
+        <!-- Thread Content -->
+        <div>
+          <label class="block text-gray-700 dark:text-gray-300 font-medium mb-2">💬 Votre Message</label>
+          <textarea rows="8" 
+                    class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded-lg focus:border-blue-500 focus:outline-none resize-none" 
+                    placeholder="Exprimez-vous, posez votre question ou partagez votre opinion..." 
+                    required></textarea>
+          <p class="text-xs text-gray-500 mt-2">Soyez respectueux et constructif dans vos échanges</p>
+        </div>
+
+        <!-- Tags (Optional) -->
+        <div>
+          <label class="block text-gray-700 dark:text-gray-300 font-medium mb-2">🏷️ Tags (optionnel)</label>
+          <input type="text" 
+                 class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded-lg focus:border-blue-500 focus:outline-none" 
+                 placeholder="aide, question, conseil, annonce... (séparez par des virgules)">
+          <p class="text-xs text-gray-500 mt-2">Ajoutez des mots-clés pour faciliter la recherche</p>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="flex gap-4 pt-4">
+          <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white flex-1 py-3 px-6 rounded-lg font-semibold">
+            🚀 Publier le Sujet
+          </button>
+          <button type="button" onclick="closeNewThreadModal()" class="bg-gray-500 hover:bg-gray-600 text-white py-3 px-6 rounded-lg font-semibold">
+            Annuler
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script>
+// Modal data for forum categories
+const modalData = {
+  <% @forum_categories.each_with_index do |category, index| %>
+  'modal-<%= index + 1 %>': {
+    category: 'Forum',
+    title: '<%= j category.name %>',
+    description: '<%= j category.description %>',
+    emoji: '💬',
+    threads: '<%= pluralize(category.forum_threads.count, 'discussion') %>',
+    activity: '<% if category.forum_threads.recent.first %>Dernière activité: <%= time_ago_in_words(category.forum_threads.recent.first.updated_at) %><% else %>Aucune activité récente<% end %>'
+  }<%= ',' unless index == @forum_categories.count - 1 %>
+  <% end %>
+};
+
+// Modal functions
+function openModal(modalId) {
+  const data = modalData[modalId];
+  if (data) {
+    document.getElementById('modal-category').textContent = data.category;
+    document.getElementById('modal-title').textContent = data.title;
+    document.getElementById('modal-description').textContent = data.description;
+    document.getElementById('modal-emoji').textContent = data.emoji;
+    document.getElementById('modal-threads').textContent = data.threads;
+    document.getElementById('modal-activity').textContent = data.activity;
+    
+    document.getElementById('detail-modal').style.display = 'flex';
+    document.getElementById('detail-modal').classList.remove('hidden');
+  }
+}
+
+function closeModal() {
+  document.getElementById('detail-modal').style.display = 'none';
+  document.getElementById('detail-modal').classList.add('hidden');
+}
+
+function handleForumJoin(event) {
+  event.preventDefault();
+  alert('Discussion publiée! Vous pouvez maintenant participer au forum.');
+  closeModal();
+}
+
+// New Thread Modal Functions
+function openNewThreadModal() {
+  document.getElementById('new-thread-modal').style.display = 'flex';
+  document.getElementById('new-thread-modal').classList.remove('hidden');
+}
+
+function closeNewThreadModal() {
+  document.getElementById('new-thread-modal').style.display = 'none';
+  document.getElementById('new-thread-modal').classList.add('hidden');
+}
+
+function handleNewThread(event) {
+  event.preventDefault();
+  alert('Nouveau sujet créé avec succès! Il sera visible après modération.');
+  closeNewThreadModal();
+}
+
+// Close modals when clicking outside
+document.getElementById('detail-modal').addEventListener('click', function(e) {
+  if (e.target === document.getElementById('detail-modal')) {
+    closeModal();
+  }
+});
+
+document.getElementById('new-thread-modal').addEventListener('click', function(e) {
+  if (e.target === document.getElementById('new-thread-modal')) {
+    closeNewThreadModal();
+  }
+});
+</script>
