@@ -2,6 +2,9 @@ Rails.application.routes.draw do
   # Mount Action Cable
   mount ActionCable.server => '/cable'
   
+  # Health check (outside locale scope for Railway)
+  get '/health', to: 'application#health'
+  
   # Locale scope for internationalization
   scope "(:locale)", locale: /#{I18n.available_locales.join("|")}/ do
     devise_for :users
@@ -126,9 +129,6 @@ Rails.application.routes.draw do
 
     # Search
     get '/search', to: 'search#index'
-    
-    # Health check
-    get '/health', to: 'application#health'
   end
   
   # Redirect root to default locale
