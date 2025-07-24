@@ -1,8 +1,12 @@
 class ApplicationController < ActionController::Base
   protect_from_forgery with: :exception
   before_action :set_locale
-  before_action :authenticate_user!, unless: :devise_controller?
+  before_action :authenticate_user!, unless: :devise_controller?, except: [:health]
   before_action :configure_permitted_parameters, if: :devise_controller?
+
+  def health
+    render json: { status: 'ok', timestamp: Time.current.iso8601 }
+  end
 
   protected
 
