@@ -1,9 +1,9 @@
 Rails.application.routes.draw do
-  # Health check (outside locale scope for Railway) - simple response
+  # Health check (outside locale scope for Railway)
   get '/health' => proc { [200, {'Content-Type' => 'application/json'}, ['{status: "ok"}']] }
   
-  # Mount Action Cable (disabled for Railway deployment)
-  # mount ActionCable.server => '/cable'
+  # Mount Action Cable
+  mount ActionCable.server => '/cable'
   
   # Locale scope for internationalization
   scope "(:locale)", locale: /#{I18n.available_locales.join("|")}/ do
