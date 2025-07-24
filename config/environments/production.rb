@@ -40,8 +40,7 @@ Rails.application.configure do
   config.active_storage.variant_processor = :mini_magick
 
   # Force all access to the app over SSL, use Strict-Transport-Security, and use secure cookies.
-  # Temporarily disable SSL for Railway debugging
-  config.force_ssl = false
+  config.force_ssl = true
 
   # Log to STDOUT by default
   config.logger = ActiveSupport::Logger.new(STDOUT)
