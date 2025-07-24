@@ -1,5 +1,5 @@
 class ApplicationController < ActionController::Base
-  # Force Railway redeploy - trigger new deployment
+  # Force Railway redeploy - nixpacks final attempt
   protect_from_forgery with: :exception
   before_action :set_locale
   before_action :authenticate_user!, unless: :devise_controller?, except: [:health]
