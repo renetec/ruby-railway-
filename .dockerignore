@@ -1,0 +1,55 @@
+# Git
+.git/
+.gitignore
+
+# Logs
+log/*
+*.log
+
+# Temp files
+tmp/
+temp/
+
+# Cache
+.cache/
+vendor/cache/
+
+# Development
+.env.local
+.env.development.local
+
+# Test
+/coverage/
+.rspec
+/spec/tmp/
+
+# Production secrets
+/config/master.key
+/config/credentials/*.key
+
+# OS files
+.DS_Store
+*.swp
+*.swo
+
+# IDE
+.idea/
+.vscode/
+*.iml
+
+# Docker
+Dockerfile*
+docker-compose*.yml
+
+# Documentation
+README.md
+docs/
+
+# Node modules (will be installed fresh)
+node_modules/
+
+# Rails specific
+public/packs/
+public/packs-test/
+storage/
+*.pid

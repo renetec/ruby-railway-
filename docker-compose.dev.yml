@@ -1,0 +1,74 @@
+version: '3.8'
+
+# This compose file works on both Windows (WSL2) and Ubuntu
+# Just run: docker-compose -f docker-compose.dev.yml up
+
+services:
+  leclub_db_dev:
+    image: postgres:15
+    container_name: leclub_postgres_dev
+    environment:
+      POSTGRES_USER: leclub
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-devpassword123}
+      POSTGRES_DB: leclub_development
+    volumes:
+      - leclub_postgres_dev_data:/var/lib/postgresql/data
+    ports:
+      - "5433:5432"
+    networks:
+      - leclub_dev_network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U leclub"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  leclub_web_dev:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    container_name: leclub_rails_dev
+    command: bash -c "rm -f tmp/pids/server.pid && bundle exec rails server -b 0.0.0.0"
+    volumes:
+      - .:/app
+      - leclub_bundle_cache:/usr/local/bundle
+      - leclub_node_modules:/app/node_modules
+      - leclub_rails_cache:/app/tmp/cache
+    ports:
+      - "3005:3000"
+    depends_on:
+      leclub_db_dev:
+        condition: service_healthy
+    environment:
+      DATABASE_HOST: leclub_db_dev
+      DATABASE_USERNAME: leclub
+      DATABASE_PASSWORD: ${POSTGRES_PASSWORD:-devpassword123}
+      DATABASE_NAME: leclub_development
+      RAILS_ENV: development
+      RAILS_LOG_TO_STDOUT: "true"
+      SECRET_KEY_BASE: ${SECRET_KEY_BASE:-development_secret_key_base_1234567890}
+    stdin_open: true
+    tty: true
+    networks:
+      - leclub_dev_network
+
+  leclub_redis_dev:
+    image: redis:7-alpine
+    container_name: leclub_redis_dev
+    ports:
+      - "6380:6379"
+    volumes:
+      - leclub_redis_dev_data:/data
+    networks:
+      - leclub_dev_network
+
+volumes:
+  leclub_postgres_dev_data:
+  leclub_bundle_cache:
+  leclub_node_modules:
+  leclub_rails_cache:
+  leclub_redis_dev_data:
+
+networks:
+  leclub_dev_network:
+    name: leclub_development_network

@@ -341,10 +341,10 @@ ActiveRecord::Schema[7.2].define(version: 2025_07_21_220203) do
     t.string "last_sign_in_ip"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.datetime "last_seen_at", precision: nil
-    t.json "notification_preferences", default: {}
     t.string "nickname"
     t.string "avatar_preset"
+    t.datetime "last_seen_at", precision: nil
+    t.json "notification_preferences", default: {}
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["last_seen_at"], name: "index_users_on_last_seen_at"
     t.index ["nickname"], name: "index_users_on_nickname"
