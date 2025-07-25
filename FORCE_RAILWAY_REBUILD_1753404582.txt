@@ -1,0 +1,5 @@
+This file forces Railway to do a completely fresh build.
+Generated at: $(date)
+Random ID: REBUILD_$(uuidgen)
+
+This should force Railway to use the correct modern 2025 login design with navigation bar.
