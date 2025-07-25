@@ -28,6 +28,9 @@ Rails.application.configure do
 
   # Force asset compilation for Railway deployment
   config.assets.compile = true
+  
+  # Force cache busting with timestamp
+  config.assets.version = Time.now.to_i.to_s
 
   # Enable serving of images, stylesheets, and JavaScripts from an asset server.
   # config.asset_host = "http://assets.example.com"
