@@ -1,0 +1,218 @@
+<div class="min-h-screen bg-gradient-to-br from-primary-bg via-secondary-bg to-primary-bg relative overflow-hidden">
+  <!-- Background Elements -->
+  <div class="absolute inset-0 overflow-hidden">
+    <div class="absolute -top-40 -right-40 w-80 h-80 bg-electric-blue opacity-10 rounded-full blur-3xl animate-pulse"></div>
+    <div class="absolute -bottom-40 -left-40 w-80 h-80 bg-vibrant-purple opacity-10 rounded-full blur-3xl animate-pulse delay-1000"></div>
+  </div>
+
+  <div class="relative z-10 p-8">
+    <!-- Page Header -->
+    <%= render 'shared/page_header_with_logo', title: '🛠️ Admin Dashboard' %>
+    
+    <!-- Stats Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+      <!-- Users Count -->
+      <div class="glass-surface-lg rounded-3xl p-6 shadow-soft-xl border border-glass-border-2">
+        <div class="flex items-center justify-between">
+          <div>
+            <p class="text-text-secondary text-sm font-medium">Total Users</p>
+            <p class="text-text-primary text-3xl font-bold"><%= @users_count %></p>
+          </div>
+          <div class="w-12 h-12 bg-gradient-to-r from-electric-blue to-vibrant-purple rounded-2xl flex items-center justify-center">
+            <span class="text-white text-xl">👥</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Posts Count -->
+      <div class="glass-surface-lg rounded-3xl p-6 shadow-soft-xl border border-glass-border-2">
+        <div class="flex items-center justify-between">
+          <div>
+            <p class="text-text-secondary text-sm font-medium">Total Posts</p>
+            <p class="text-text-primary text-3xl font-bold"><%= @posts_count %></p>
+          </div>
+          <div class="w-12 h-12 bg-gradient-to-r from-emerald-green to-warm-gold rounded-2xl flex items-center justify-center">
+            <span class="text-white text-xl">📝</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Events Count -->
+      <div class="glass-surface-lg rounded-3xl p-6 shadow-soft-xl border border-glass-border-2">
+        <div class="flex items-center justify-between">
+          <div>
+            <p class="text-text-secondary text-sm font-medium">Total Events</p>
+            <p class="text-text-primary text-3xl font-bold"><%= @events_count %></p>
+          </div>
+          <div class="w-12 h-12 bg-gradient-to-r from-warm-gold to-electric-blue rounded-2xl flex items-center justify-center">
+            <span class="text-white text-xl">📅</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Forum Threads Count -->
+      <div class="glass-surface-lg rounded-3xl p-6 shadow-soft-xl border border-glass-border-2">
+        <div class="flex items-center justify-between">
+          <div>
+            <p class="text-text-secondary text-sm font-medium">Forum Threads</p>
+            <p class="text-text-primary text-3xl font-bold"><%= @forum_threads_count %></p>
+          </div>
+          <div class="w-12 h-12 bg-gradient-to-r from-vibrant-purple to-emerald-green rounded-2xl flex items-center justify-center">
+            <span class="text-white text-xl">💬</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Additional Stats Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+      <!-- Products Count -->
+      <div class="glass-surface-lg rounded-3xl p-6 shadow-soft-xl border border-glass-border-2">
+        <div class="flex items-center justify-between">
+          <div>
+            <p class="text-text-secondary text-sm font-medium">Products</p>
+            <p class="text-text-primary text-3xl font-bold"><%= @products_count %></p>
+          </div>
+          <div class="w-12 h-12 bg-gradient-to-r from-electric-blue to-emerald-green rounded-2xl flex items-center justify-center">
+            <span class="text-white text-xl">🛍️</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Businesses Count -->
+      <div class="glass-surface-lg rounded-3xl p-6 shadow-soft-xl border border-glass-border-2">
+        <div class="flex items-center justify-between">
+          <div>
+            <p class="text-text-secondary text-sm font-medium">Businesses</p>
+            <p class="text-text-primary text-3xl font-bold"><%= @businesses_count %></p>
+          </div>
+          <div class="w-12 h-12 bg-gradient-to-r from-warm-gold to-vibrant-purple rounded-2xl flex items-center justify-center">
+            <span class="text-white text-xl">🏢</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Jobs Count -->
+      <div class="glass-surface-lg rounded-3xl p-6 shadow-soft-xl border border-glass-border-2">
+        <div class="flex items-center justify-between">
+          <div>
+            <p class="text-text-secondary text-sm font-medium">Jobs</p>
+            <p class="text-text-primary text-3xl font-bold"><%= @jobs_count %></p>
+          </div>
+          <div class="w-12 h-12 bg-gradient-to-r from-emerald-green to-electric-blue rounded-2xl flex items-center justify-center">
+            <span class="text-white text-xl">💼</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Volunteer Opportunities Count -->
+      <div class="glass-surface-lg rounded-3xl p-6 shadow-soft-xl border border-glass-border-2">
+        <div class="flex items-center justify-between">
+          <div>
+            <p class="text-text-secondary text-sm font-medium">Volunteer Ops</p>
+            <p class="text-text-primary text-3xl font-bold"><%= @volunteer_opportunities_count %></p>
+          </div>
+          <div class="w-12 h-12 bg-gradient-to-r from-vibrant-purple to-warm-gold rounded-2xl flex items-center justify-center">
+            <span class="text-white text-xl">🤝</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+      <!-- Users Management -->
+      <div class="glass-surface-lg rounded-3xl p-6 shadow-soft-xl border border-glass-border-2">
+        <h3 class="text-text-primary text-xl font-bold mb-4">👥 Users Management</h3>
+        <p class="text-text-secondary mb-4">Manage user accounts, roles, and permissions</p>
+        <%= link_to admin_users_path, class: "btn-hero-primary inline-flex items-center px-4 py-2 rounded-xl font-semibold transition-all duration-300 hover:scale-105" do %>
+          <span>Manage Users</span>
+          <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+          </svg>
+        <% end %>
+      </div>
+
+      <!-- Content Management -->
+      <div class="glass-surface-lg rounded-3xl p-6 shadow-soft-xl border border-glass-border-2">
+        <h3 class="text-text-primary text-xl font-bold mb-4">📝 Content Management</h3>
+        <p class="text-text-secondary mb-4">Manage posts, events, and other content</p>
+        <%= link_to admin_posts_path, class: "btn-hero-secondary inline-flex items-center px-4 py-2 rounded-xl font-semibold transition-all duration-300 hover:scale-105" do %>
+          <span>Manage Posts</span>
+          <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+          </svg>
+        <% end %>
+      </div>
+
+      <!-- Forum Management -->
+      <div class="glass-surface-lg rounded-3xl p-6 shadow-soft-xl border border-glass-border-2">
+        <h3 class="text-text-primary text-xl font-bold mb-4">💬 Forum Management</h3>
+        <p class="text-text-secondary mb-4">Manage forum categories and moderation</p>
+        <%= link_to admin_forum_categories_path, class: "btn-hero-accent inline-flex items-center px-4 py-2 rounded-xl font-semibold transition-all duration-300 hover:scale-105" do %>
+          <span>Manage Forum</span>
+          <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+          </svg>
+        <% end %>
+      </div>
+    </div>
+
+    <!-- Recent Activity -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <!-- Recent Users -->
+      <div class="glass-surface-lg rounded-3xl p-6 shadow-soft-xl border border-glass-border-2">
+        <h3 class="text-text-primary text-xl font-bold mb-4">👥 Recent Users</h3>
+        <div class="space-y-3">
+          <% @recent_users.each do |user| %>
+            <div class="flex items-center justify-between p-3 rounded-xl bg-glass-surface-1">
+              <div>
+                <p class="text-text-primary font-medium"><%= user.name %></p>
+                <p class="text-text-tertiary text-sm"><%= user.email %></p>
+              </div>
+              <span class="text-text-secondary text-xs">
+                <%= time_ago_in_words(user.created_at) %> ago
+              </span>
+            </div>
+          <% end %>
+        </div>
+      </div>
+
+      <!-- Recent Posts -->
+      <div class="glass-surface-lg rounded-3xl p-6 shadow-soft-xl border border-glass-border-2">
+        <h3 class="text-text-primary text-xl font-bold mb-4">📝 Recent Posts</h3>
+        <div class="space-y-3">
+          <% @recent_posts.each do |post| %>
+            <div class="flex items-center justify-between p-3 rounded-xl bg-glass-surface-1">
+              <div>
+                <p class="text-text-primary font-medium"><%= truncate(post.title, length: 30) %></p>
+                <p class="text-text-tertiary text-sm">by <%= post.user.name %></p>
+              </div>
+              <span class="text-text-secondary text-xs">
+                <%= time_ago_in_words(post.created_at) %> ago
+              </span>
+            </div>
+          <% end %>
+        </div>
+      </div>
+
+      <!-- Recent Events -->
+      <div class="glass-surface-lg rounded-3xl p-6 shadow-soft-xl border border-glass-border-2">
+        <h3 class="text-text-primary text-xl font-bold mb-4">📅 Recent Events</h3>
+        <div class="space-y-3">
+          <% @recent_events.each do |event| %>
+            <div class="flex items-center justify-between p-3 rounded-xl bg-glass-surface-1">
+              <div>
+                <p class="text-text-primary font-medium"><%= truncate(event.title, length: 30) %></p>
+                <p class="text-text-tertiary text-sm">by <%= event.user.name %></p>
+              </div>
+              <span class="text-text-secondary text-xs">
+                <%= time_ago_in_words(event.created_at) %> ago
+              </span>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

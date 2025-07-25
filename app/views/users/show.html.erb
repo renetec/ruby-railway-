@@ -1,0 +1,217 @@
+<!-- Modern Profile Page -->
+<div class="min-h-screen relative overflow-hidden">
+  <!-- Modern Background -->
+  <div class="absolute inset-0 bg-gradient-to-br from-primary-bg via-secondary-bg to-primary-bg"></div>
+  
+  <!-- Animated Background Elements -->
+  <div class="absolute inset-0 overflow-hidden">
+    <div class="absolute -top-40 -right-40 w-80 h-80 bg-vibrant-purple opacity-10 rounded-full blur-3xl animate-pulse"></div>
+    <div class="absolute -bottom-40 -left-40 w-80 h-80 bg-electric-blue opacity-10 rounded-full blur-3xl animate-pulse delay-700"></div>
+  </div>
+
+  <div class="relative z-10 max-w-6xl mx-auto px-6 py-8">
+    <!-- Profile Header -->
+    <div class="card-stunning p-8 mb-8">
+      <div class="flex flex-col lg:flex-row items-center lg:items-start gap-8">
+        <!-- Avatar -->
+        <div class="flex-shrink-0">
+          <div class="w-32 h-32 rounded-full border-4 border-electric-blue/30 shadow-stunning overflow-hidden">
+            <%= user_avatar(@user, size: 128, css_class: "border-0") %>
+          </div>
+        </div>
+        
+        <!-- Profile Info -->
+        <div class="flex-1 text-center lg:text-left">
+          <div class="flex flex-col lg:flex-row lg:justify-between lg:items-start mb-6">
+            <div>
+              <h1 class="font-display text-4xl font-black text-text-primary mb-2">
+                <%= @user.display_name %>
+              </h1>
+              <% if @user.nickname.present? && @user.nickname != @user.name %>
+                <p class="text-lg text-text-secondary mb-3">
+                  <span class="font-medium">Nom complet:</span> <%= @user.name %>
+                </p>
+              <% end %>
+              <div class="flex flex-col sm:flex-row sm:items-center gap-3 text-sm text-text-secondary mb-4">
+                <span class="flex items-center justify-center lg:justify-start gap-2">
+                  <span class="text-lg">📅</span>
+                  Membre depuis <%= @user_stats[:member_since] %>
+                </span>
+                <% if @user.respond_to?(:online?) && @user.online? %>
+                  <span class="flex items-center justify-center lg:justify-start gap-2 text-green-400">
+                    <div class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                    En ligne
+                  </span>
+                <% end %>
+              </div>
+            </div>
+            
+            <!-- Action Buttons -->
+            <div class="flex flex-wrap gap-3 justify-center lg:justify-end">
+              <% if @user == current_user %>
+                <%= link_to edit_user_path(@user), 
+                    class: "inline-flex items-center px-6 py-3 bg-gradient-to-r from-electric-blue to-vibrant-purple hover:from-blue-700 hover:to-purple-700 text-white font-bold rounded-xl shadow-stunning transform hover:scale-105 transition-all duration-300" do %>
+                  <span class="mr-2">✏️</span>
+                  <%= t('actions.edit_profile') %>
+                <% end %>
+              <% end %>
+              
+              <% if current_user&.admin? %>
+                <%= link_to "/admin", 
+                    class: "inline-flex items-center px-6 py-3 bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white font-bold rounded-xl shadow-stunning transform hover:scale-105 transition-all duration-300",
+                    target: "_blank" do %>
+                  <span class="mr-2">⚙️</span>
+                  Admin Dashboard
+                <% end %>
+              <% end %>
+              
+              <% if @user != current_user && current_user %>
+                <%= link_to conversations_path(recipient_id: @user.id), method: :post,
+                    class: "inline-flex items-center px-6 py-3 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white font-bold rounded-xl shadow-stunning transform hover:scale-105 transition-all duration-300" do %>
+                  <span class="mr-2">💬</span>
+                  Envoyer un message
+                <% end %>
+              <% end %>
+            </div>
+          </div>
+          
+          <!-- Stats -->
+          <div class="grid grid-cols-2 gap-6 max-w-md mx-auto lg:mx-0">
+            <div class="text-center lg:text-left">
+              <div class="text-3xl font-black text-text-primary mb-1"><%= @user_stats[:posts_count] %></div>
+              <div class="text-sm text-text-secondary">Publications</div>
+            </div>
+            <div class="text-center lg:text-left">
+              <div class="text-3xl font-black text-text-primary mb-1"><%= @user_stats[:events_count] %></div>
+              <div class="text-sm text-text-secondary">Événements</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Content Grid -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+      
+      <!-- Left Column - Recent Posts -->
+      <div class="space-y-6">
+        <div class="card-stunning p-6">
+          <h2 class="text-2xl font-bold text-text-primary mb-6 flex items-center gap-3">
+            <span class="text-2xl">📝</span>
+            Publications récentes
+          </h2>
+          
+          <% if @recent_posts&.any? %>
+            <div class="space-y-4">
+              <% @recent_posts.each do |post| %>
+                <div class="border-b border-glass-border pb-4 last:border-b-0 last:pb-0">
+                  <h3 class="font-bold text-text-primary mb-2 hover:text-electric-blue transition-colors">
+                    <%= link_to post.title, post_path(post) %>
+                  </h3>
+                  <p class="text-text-secondary text-sm mb-3 line-clamp-2">
+                    <%= truncate(strip_tags(post.content), length: 120) %>
+                  </p>
+                  <div class="text-xs text-text-secondary">
+                    <%= time_ago_in_words(post.created_at) %> ago
+                  </div>
+                </div>
+              <% end %>
+            </div>
+            
+            <div class="mt-6 text-center">
+              <%= link_to posts_user_path(@user), 
+                  class: "inline-flex items-center text-electric-blue hover:text-vibrant-purple font-semibold transition-colors" do %>
+                Voir toutes les publications
+                <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                </svg>
+              <% end %>
+            </div>
+          <% else %>
+            <div class="text-center py-12 text-text-secondary">
+              <div class="text-4xl mb-4">📝</div>
+              <p class="text-lg">Aucune publication pour le moment</p>
+              <% if @user == current_user %>
+                <p class="text-sm mt-2">Commencez à partager vos histoires !</p>
+              <% end %>
+            </div>
+          <% end %>
+        </div>
+      </div>
+      
+      <!-- Right Column - Recent Events -->
+      <div class="space-y-6">
+        <div class="card-stunning p-6">
+          <h2 class="text-2xl font-bold text-text-primary mb-6 flex items-center gap-3">
+            <span class="text-2xl">🎉</span>
+            Événements récents
+          </h2>
+          
+          <% if @recent_events&.any? %>
+            <div class="space-y-4">
+              <% @recent_events.each do |event| %>
+                <div class="border-b border-glass-border pb-4 last:border-b-0 last:pb-0">
+                  <div class="flex items-start gap-3">
+                    <div class="w-12 h-12 bg-gradient-to-br from-vibrant-purple to-electric-blue rounded-xl flex items-center justify-center flex-shrink-0">
+                      <span class="text-lg text-white">🎉</span>
+                    </div>
+                    <div class="flex-1">
+                      <h3 class="font-bold text-text-primary mb-2 hover:text-electric-blue transition-colors">
+                        <%= link_to event.title, event_path(event) %>
+                      </h3>
+                      <p class="text-text-secondary text-sm mb-2">
+                        📅 <%= l(event.date, format: :long) %>
+                      </p>
+                      <% if event.respond_to?(:event_rsvps) %>
+                        <p class="text-text-secondary text-sm mb-2">
+                          👥 <%= event.event_rsvps.confirmed.count %> inscrits
+                        </p>
+                      <% end %>
+                      <div class="flex items-center justify-between">
+                        <% if event.respond_to?(:category) %>
+                          <span class="text-xs bg-electric-blue/20 text-electric-blue px-2 py-1 rounded-full">
+                            <%= event.category.humanize %>
+                          </span>
+                        <% end %>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              <% end %>
+            </div>
+            
+            <div class="mt-6 text-center">
+              <%= link_to events_user_path(@user), 
+                  class: "inline-flex items-center text-electric-blue hover:text-vibrant-purple font-semibold transition-colors" do %>
+                Voir tous les événements
+                <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                </svg>
+              <% end %>
+            </div>
+          <% else %>
+            <div class="text-center py-12 text-text-secondary">
+              <div class="text-4xl mb-4">🎉</div>
+              <p class="text-lg">Aucun événement organisé pour le moment</p>
+              <% if @user == current_user %>
+                <p class="text-sm mt-2">Créez votre premier événement !</p>
+              <% end %>
+            </div>
+          <% end %>
+        </div>
+      </div>
+      
+    </div>
+
+    <!-- Additional Navigation -->
+    <div class="mt-8 text-center">
+      <%= link_to root_path, 
+          class: "inline-flex items-center text-text-secondary hover:text-electric-blue transition-colors font-semibold group" do %>
+        <svg class="w-5 h-5 mr-2 transform group-hover:-translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+        </svg>
+        Retour à l'accueil
+      <% end %>
+    </div>
+  </div>
+</div>

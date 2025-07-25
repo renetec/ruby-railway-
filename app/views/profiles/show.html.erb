@@ -1,0 +1,161 @@
+<!-- Profile Page - 2 Column Layout -->
+<div class="max-w-6xl mx-auto px-4 py-8">
+  <!-- Profile Header -->
+  <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6 mb-8">
+    <div class="flex items-center gap-6">
+      <!-- Avatar -->
+      <div class="w-24 h-24 bg-blue-100 dark:bg-blue-900 rounded-full flex items-center justify-center flex-shrink-0 ring-4 ring-blue-500/20 shadow-lg hover:ring-blue-500/40 transition-all">
+        <% if @user.avatar.attached? %>
+          <%= image_tag @user.avatar, alt: @user.display_name, class: "w-full h-full rounded-full object-cover shadow-inner" %>
+        <% else %>
+          <span class="text-3xl">👤</span>
+        <% end %>
+      </div>
+      
+      <!-- Profile Info -->
+      <div class="flex-1">
+        <div class="flex justify-between items-start mb-4">
+          <div>
+            <h1 class="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-2">
+              <%= @user.display_name %>
+            </h1>
+            <% if @user.nickname.present? && @user.nickname != @user.name %>
+              <p class="text-lg text-gray-600 dark:text-gray-400 mb-2">
+                <span class="font-medium">Nom complet:</span> <%= @user.name %>
+              </p>
+            <% end %>
+            <div class="flex items-center gap-4 text-sm text-gray-500 dark:text-gray-400">
+              <span class="flex items-center gap-1">
+                <span>📅</span>
+                Membre depuis <%= @user_stats[:member_since] %>
+              </span>
+              <% if @user.online? %>
+                <span class="flex items-center gap-1 text-green-600">
+                  <div class="w-2 h-2 bg-green-500 rounded-full"></div>
+                  En ligne
+                </span>
+              <% end %>
+            </div>
+          </div>
+          
+          <div class="flex gap-2">
+            <% if @user == current_user %>
+              <%= link_to "✏️ #{t('actions.edit_profile')}", edit_user_path(@user), 
+                          class: "px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg font-semibold" %>
+            <% end %>
+            <% if current_user&.admin? %>
+              <%= link_to "⚙️ Admin Dashboard", "/admin", 
+                          class: "px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg font-semibold",
+                          target: "_blank" %>
+            <% end %>
+          </div>
+        </div>
+        
+        <!-- Stats -->
+        <div class="flex gap-6">
+          <div class="text-center">
+            <div class="text-2xl font-bold text-gray-900 dark:text-gray-100"><%= @user_stats[:posts_count] %></div>
+            <div class="text-sm text-gray-600 dark:text-gray-400">Publications</div>
+          </div>
+          <div class="text-center">
+            <div class="text-2xl font-bold text-gray-900 dark:text-gray-100"><%= @user_stats[:events_count] %></div>
+            <div class="text-sm text-gray-600 dark:text-gray-400">Événements</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Content - 2 Column Layout -->
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+    
+    <!-- Left Column - Recent Posts -->
+    <div class="space-y-6">
+      <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+        <h2 class="text-xl font-bold text-gray-900 dark:text-gray-100 mb-4 flex items-center gap-2">
+          📝 Publications récentes
+        </h2>
+        
+        <% if @recent_posts.any? %>
+          <div class="space-y-4">
+            <% @recent_posts.each do |post| %>
+              <div class="border-b dark:border-gray-600 pb-4 last:border-b-0 last:pb-0">
+                <h3 class="font-semibold text-gray-900 dark:text-gray-100 mb-2">
+                  <%= link_to post.title, post_path(post), class: "hover:text-blue-600 dark:hover:text-blue-400" %>
+                </h3>
+                <p class="text-gray-600 dark:text-gray-400 text-sm mb-2">
+                  <%= truncate(post.content, length: 120) %>
+                </p>
+                <div class="text-xs text-gray-500 dark:text-gray-500">
+                  <%= localized_time_ago(post.created_at) %>
+                </div>
+              </div>
+            <% end %>
+          </div>
+          
+          <div class="mt-4">
+            <%= link_to "Voir toutes les publications", posts_path(user: @user), 
+                        class: "text-blue-600 hover:text-blue-800 dark:text-blue-400 text-sm font-medium" %>
+          </div>
+        <% else %>
+          <div class="text-center py-8 text-gray-500 dark:text-gray-400">
+            <div class="text-3xl mb-2">📝</div>
+            <p>Aucune publication pour le moment</p>
+          </div>
+        <% end %>
+      </div>
+    </div>
+    
+    <!-- Right Column - Recent Events -->
+    <div class="space-y-6">
+      <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+        <h2 class="text-xl font-bold text-gray-900 dark:text-gray-100 mb-4 flex items-center gap-2">
+          🎉 Événements récents
+        </h2>
+        
+        <% if @recent_events.any? %>
+          <div class="space-y-4">
+            <% @recent_events.each do |event| %>
+              <div class="border-b dark:border-gray-600 pb-4 last:border-b-0 last:pb-0">
+                <div class="flex items-start gap-3">
+                  <div class="w-12 h-12 bg-purple-100 dark:bg-purple-900 rounded-lg flex items-center justify-center flex-shrink-0">
+                    <span class="text-lg"><%= get_event_emoji(event.category) %></span>
+                  </div>
+                  <div class="flex-1">
+                    <h3 class="font-semibold text-gray-900 dark:text-gray-100 mb-1">
+                      <%= link_to event.title, event_path(event), class: "hover:text-blue-600 dark:hover:text-blue-400" %>
+                    </h3>
+                    <p class="text-gray-600 dark:text-gray-400 text-sm mb-2">
+                      📅 <%= event.date.strftime('%d/%m/%Y à %H:%M') %> • 
+                      👥 <%= event.event_rsvps.confirmed.count %> inscrits
+                    </p>
+                    <div class="flex items-center justify-between">
+                      <span class="text-xs bg-<%= event.category %>-100 text-<%= event.category %>-800 px-2 py-1 rounded">
+                        <%= event.category.humanize %>
+                      </span>
+                      <% if @user == current_user %>
+                        <%= link_to "📊 Tableau de bord", dashboard_event_path(event), 
+                                    class: "text-xs text-blue-600 hover:text-blue-800 dark:text-blue-400 font-medium" %>
+                      <% end %>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            <% end %>
+          </div>
+          
+          <div class="mt-4">
+            <%= link_to "Voir tous les événements", events_path(user: @user), 
+                        class: "text-blue-600 hover:text-blue-800 dark:text-blue-400 text-sm font-medium" %>
+          </div>
+        <% else %>
+          <div class="text-center py-8 text-gray-500 dark:text-gray-400">
+            <div class="text-3xl mb-2">🎉</div>
+            <p>Aucun événement organisé pour le moment</p>
+          </div>
+        <% end %>
+      </div>
+    </div>
+    
+  </div>
+</div>

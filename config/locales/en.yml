@@ -1,0 +1,513 @@
+en:
+  # Navigation
+  navigation:
+    home: "Home"
+    news: "News"
+    events: "Events"
+    forum: "Forum"
+    market: "Market"
+    business: "Business"
+    jobs: "Jobs"
+    volunteer: "Volunteer"
+    sign_in: "Sign In"
+    sign_up: "Sign Up"
+    profile: "Profile"
+    sign_out: "Sign Out"
+    main: "Main navigation"
+    main_content: "Main content"
+    home_logo: "Home page"
+    logo: "Pacomien logo"
+    skip_to_content: "Skip to main content"
+    language: "Language"
+
+  # General
+  general:
+    welcome_back: "Welcome back!"
+    loading: "Loading..."
+    save: "Save"
+    cancel: "Cancel"
+    delete: "Delete"
+    edit: "Edit"
+    create: "Create"
+    update: "Update"
+    search: "Search"
+    filter: "Filter"
+    back: "Back"
+    next: "Next"
+    previous: "Previous"
+    yes: "Yes"
+    no: "No"
+    or: "or"
+    and: "and"
+    read_more: "Read More"
+    learn_more: "Learn More"
+    get_started: "Get Started"
+    explore: "Explore"
+
+  # Avo Admin
+  avo:
+    dashboard: "Dashboard"
+    content_management: "Content Management"
+    analytics: "Analytics"
+    admin_dashboard: "Admin Dashboard"
+
+  # Profiles
+  profiles:
+    full_name: "Full Name"
+    member_since: "Member since"
+    online: "Online"
+    edit_profile: "Edit Profile"
+    admin_dashboard: "Admin Dashboard"
+    posts: "Posts"
+    events: "Events"
+    recent_posts: "Recent Posts"
+    view_all_posts: "View All Posts"
+    no_posts: "No posts yet"
+    recent_events: "Recent Events"
+    dashboard: "Dashboard"
+    view_all_events: "View All Events"
+    no_events: "No events organized yet"
+    edit_title: "Edit My Profile"
+    edit_subtitle: "Customize your information and avatar"
+    choose_avatar: "Choose Your Avatar"
+    save_changes: "Save Changes"
+    back_to_profile: "Back to Profile"
+    upload_custom_photo: "Upload Custom Photo"
+
+  # Devise
+  devise:
+    sessions:
+      sign_in: "Sign In"
+      sign_in_subtitle: "Sign in to access your personal space"
+      email_label: "Email Address"
+      password_label: "Password"
+      remember_me: "Remember me"
+      forgot_password: "Forgot password?"
+      sign_in_button: "SIGN IN"
+      no_account: "Don't have an account yet?"
+      create_account: "Create a free account"
+      back_home: "Back to home"
+    registrations:
+      sign_up: "Sign Up"
+      sign_up_subtitle: "Join our community in seconds"
+      full_name_label: "Your full name"
+      full_name_placeholder: "Enter your full name"
+      full_name_help: "This name will be displayed on your profile"
+      email_placeholder: "your@email.com"
+      email_help: "Your address will be used to sign in"
+      password_help: "Minimum %{count} characters"
+      confirm_password: "Confirm Password"
+      choose_avatar: "Choose Your Avatar"
+      avatar_help: "You can change your avatar later in your profile"
+      create_account_button: "CREATE MY ACCOUNT"
+      already_member: "Already a member?"
+      sign_in_link: "Sign in"
+
+  # Messages
+  messages:
+    comment_posted: "Comment posted! Thanks for your participation."
+    export_csv_todo: "CSV export feature to be implemented"
+    event_not_found: "Error: Could not find event."
+    rsvp_confirmed: "Registration confirmed! You will receive a confirmation email."
+    message_sent: "Message sent! The business will respond quickly."
+    application_sent: "Application sent! The employer will respond quickly."
+    access_denied: "Access denied. Admin privileges required."
+
+  # Home Page
+  home:
+    hero:
+      building_communities: "Building Amazing Communities"
+      connect_together: "Connect Together"
+      tagline: "Where neighbors become friends, ideas become reality, and every voice creates lasting impact in our vibrant digital community."
+      start_journey: "Start Your Journey"
+      explore_community: "Explore Community"
+      discover_events: "Discover Events"
+      join_discussions: "Join Discussions"
+    
+    services:
+      title: "Community Services"
+      subtitle: "Everything you need to connect, share, and grow together"
+      news:
+        title: "News & Stories"
+        description: "Stay informed with the latest news and stories from your local community."
+      events:
+        title: "Local Events"
+        description: "Discover and participate in exciting events happening near you."
+      forum:
+        title: "Community Discussions"
+        description: "Engage in meaningful conversations with your neighbors."
+      marketplace:
+        title: "Local Market"
+        description: "Buy, sell, and trade with members of your community."
+    
+    stats:
+      title: "Our Community in Numbers"
+      members: "Active Members"
+      posts: "Posts Shared"
+      events: "Events Organized"
+      discussions: "Active Discussions"
+    
+    community_feed:
+      title: "Community Activity"
+      subtitle: "Discover what's happening in your neighborhood"
+      recent_posts: "Recent Posts"
+      upcoming_events: "Upcoming Events"
+      active_discussions: "Active Discussions"
+      no_recent_activity: "No recent activity"
+      
+    final_cta:
+      title: "Ready to Join Us?"
+      subtitle: "Become part of this vibrant community today"
+      join_now: "Join Now"
+
+  # Events
+  events:
+    title: "Events"
+    amazing_events: "Amazing Events"
+    subtitle: "Discover incredible upcoming events, connect with your community, and create unforgettable memories together."
+    create_new: "Create New Event"
+    filter_events: "Filter Events"
+    view_details: "View Details"
+    view_full_details: "View Full Details"
+    close: "Close"
+    
+    filters:
+      all_events: "All Events"
+      upcoming: "Upcoming"
+      this_week: "This Week"
+      this_month: "This Month"
+      past: "Past"
+      all_categories: "All Categories"
+    
+    categories:
+      community: "Community"
+      business: "Business"
+      education: "Education"
+      entertainment: "Entertainment"
+      sports: "Sports"
+      health: "Health"
+      technology: "Technology"
+      culture: "Culture"
+      volunteer: "Volunteer"
+      other: "Other"
+    
+    details:
+      event_details: "Event Details"
+      date_time: "Date & Time"
+      location: "Location"
+      location_tbd: "Location TBD"
+      capacity: "Capacity"
+      price: "Price"
+      free: "Free"
+      event_host: "Event Host"
+      description: "Description"
+      recent_attendees: "Recent Attendees"
+      more: "more"
+      attending: "attending"
+      
+    rsvp:
+      title: "RSVP Status"
+      attending: "You're attending this event!"
+      status: "RSVP Status"
+      rsvp_to_event: "RSVP to Event"
+      cancel_rsvp: "Cancel RSVP"
+      event_full: "Event is Full"
+      no_spots: "No spots remaining"
+      sign_in_to_rsvp: "Sign in to RSVP"
+      
+    status:
+      upcoming: "Upcoming"
+      past_event: "Past Event"
+      
+    management:
+      title: "Event Management"
+      edit_event: "Edit Event"
+      delete_event: "Delete Event"
+      delete_confirm: "Are you sure you want to delete this event? This cannot be undone."
+      
+    empty:
+      title: "No Events Found"
+      subtitle_filtered: "Try adjusting your filters or browse all events."
+      subtitle_empty: "Be the first to organize an amazing community gathering."
+      create_first: "Create First Event"
+
+  # Posts/News
+  posts:
+    title: "News & Stories"
+    latest_stories: "Latest Stories"
+    subtitle: "Stay informed with the latest news, stories, and announcements from your vibrant community."
+    create_new: "Create New Story"
+    search_stories: "Search amazing stories..."
+    
+    categories:
+      all_categories: "All Categories"
+      community: "Community"
+      business: "Business"
+      education: "Education"
+      entertainment: "Entertainment"
+      sports: "Sports"
+      health: "Health"
+      technology: "Technology"
+      culture: "Culture"
+      volunteer: "Volunteer"
+      other: "Other"
+      
+    details:
+      community_story: "Community Story"
+      featured: "Featured"
+      featured_story: "Featured Story"
+      written_by: "Written by"
+      ago: "ago"
+      read_full_article: "Read Full Article"
+      
+    empty:
+      title: "No Stories Found"
+      subtitle_filtered: "Try adjusting your search criteria or browse all stories."
+      subtitle_empty: "Be the first to share an amazing story with the community."
+      create_first: "Create First Story"
+
+  # Footer
+  footer:
+    tagline: "Your local community, connected and engaged."
+    navigation: "Navigation"
+    services: "Services"
+    contact: "Contact"
+    copyright: "All rights reserved. Pacomien community platform."
+    made_with: "Made with"
+    for_community: "for the community"
+    back_to_top: "Back to top"
+    site_footer: "Site footer"
+    
+  # Time formats
+  time:
+    ago: "%{time} ago"
+    formats:
+      default: "%B %d, %Y"
+      long: "%B %d, %Y at %I:%M %p"
+      short: "%m/%d/%Y"
+
+  # Notifications & Flash Messages
+  notifications:
+    success: "Operation successful!"
+    error: "An error occurred."
+    warning: "Warning!"
+    info: "Information"
+    
+  flash:
+    event_created_success: "Event created successfully!"
+    access_denied: "Access denied."
+    access_denied_admin: "Access denied. Admin privileges required."
+    not_authorized: "Not authorized."
+    profile_updated: "Profile updated successfully!"
+    event_updated: "Event was successfully updated."
+    event_deleted: "Event was successfully deleted."
+    rsvp_success: "Successfully RSVP'd to event!"
+    cannot_rsvp: "Cannot RSVP to this event."
+    rsvp_cancelled: "RSVP cancelled successfully."
+    could_not_cancel_rsvp: "Could not cancel RSVP."
+    job_created: "Job posting created successfully!"
+    job_updated: "Job posting updated successfully!"
+    job_deleted: "Job posting deleted successfully."
+    application_submitted: "Application submitted successfully!"
+    cannot_apply: "Cannot apply to this job."
+    business_required: "Please create a business profile first."
+    business_created: "Business listing created successfully!"
+    business_updated: "Business listing updated successfully!"
+    business_deleted: "Business listing deleted successfully."
+    volunteer_created: "Volunteer opportunity created successfully!"
+    volunteer_updated: "Volunteer opportunity updated successfully!"
+    volunteer_deleted: "Volunteer opportunity deleted successfully."
+    cannot_apply_volunteer: "Cannot apply to this opportunity."
+    product_created: "Product listing created successfully!"
+    product_updated: "Product listing updated successfully!"
+    product_deleted: "Product listing deleted successfully!"
+    product_sold: "Product marked as sold!"
+    could_not_mark_sold: "Could not mark product as sold."
+    post_created: "Post was successfully created."
+    post_updated: "Post was successfully updated."
+    post_deleted: "Post was successfully deleted."
+    thread_created: "Thread created successfully!"
+    thread_updated: "Thread updated successfully!"
+    thread_deleted: "Thread deleted successfully."
+    thread_locked: "Thread locked."
+    thread_unlocked: "Thread unlocked."
+    thread_pinned: "Thread pinned."
+    thread_unpinned: "Thread unpinned."
+    reply_posted: "Reply posted successfully!"
+    reply_updated: "Reply updated successfully!"
+    reply_deleted: "Reply deleted successfully."
+    message_send_error: "Message could not be sent."
+    no_conversation_access: "You do not have access to this conversation."
+    left_conversation: "Left conversation successfully"
+    conversation_archived: "Conversation archived"
+
+  # Language switcher
+  language:
+    french: "Français"
+    english: "English"
+    switch_to: "Switch to %{language}"
+
+  # Theme toggle
+  theme:
+    toggle: "Toggle theme"
+    dark_mode: "Dark mode"
+    light_mode: "Light mode"
+    switch_to_dark: "Switch to dark mode"
+    switch_to_light: "Switch to light mode"
+
+  # Products/Marketplace
+  products:
+    title: "Community Marketplace"
+    subtitle: "Buy and sell with your community"
+    sell_product: "Sell a product"
+    
+    filters:
+      all_categories: "All categories"
+      all_conditions: "All conditions"
+      region: "Region"
+      search: "Search"
+      
+    categories:
+      electronics: "Electronics"
+      clothing: "Clothing" 
+      home: "Home"
+      sport: "Sports"
+      fashion: "Fashion"
+      
+    conditions:
+      new: "New"
+      like_new: "Like new"
+      good: "Good condition"
+      used: "Used"
+      excellent: "Excellent condition"
+      
+    details:
+      by: "By"
+      contact: "Contact"
+      contact_seller: "Contact the seller"
+      
+    contact_form:
+      your_name: "Your name"
+      your_full_name: "Your full name"
+      message: "Message"
+      interested_message: "I'm interested in your product..."
+      send_message: "Send message"
+      close: "Close"
+      
+    alerts:
+      cannot_contact_self: "You cannot contact yourself for your own product!"
+      interested_default: "Hello, I'm interested in your product"
+      must_login: "You must log in to send a message."
+      message_sent_success: "Message sent successfully! You can view the conversation in your messages."
+      message_sent_simple: "Message sent! The seller will respond soon."
+      message_send_error: "Error sending message. Please try again."
+      product_info_error: "Error: Could not find product information."
+      
+    sample_products:
+      phone_title: "iPhone 13 Pro - Perfect condition"
+      phone_desc: "Selling iPhone 13 Pro 256GB in excellent condition. Always used with protective case..."
+      bike_title: "Mountain bike all-terrain"
+      bike_desc: "26-inch mountain bike in good overall condition. Perfect for nature walks..."
+      jacket_title: "Vintage leather jacket"
+      jacket_desc: "Beautiful genuine leather jacket, vintage 80s style. Brown color, size M..."
+      table_title: "Solid wood coffee table"
+      table_desc: "Handcrafted solid oak coffee table. Dimensions: 120x60x45cm..."
+      ago_text: "ago"
+      by_seller: "By"
+      
+    time:
+      ago: "%{time} ago"
+
+  # Actions & Buttons
+  actions:
+    create: "Create"
+    create_event: "Create an event" 
+    create_story: "Create a story"
+    create_opportunity: "Create an opportunity"
+    add_business: "Add my business"
+    post_job: "Post a job"
+    publish: "Publish"
+    publish_comment: "Post comment"
+    publish_article: "Publish article"
+    send: "Send"
+    send_message: "Send message"
+    send_application: "Send application"
+    register: "Register"
+    sign_up_event: "Sign up"
+    join: "Join"
+    join_discussion: "Join discussion"
+    edit: "Edit"
+    edit_profile: "Edit profile"
+    modify: "Modify"
+    delete: "Delete"
+    search: "Search"
+    search_placeholder: "Search..."
+    type_message: "Type your message... (Enter to send)"
+    be_first_create: "Be the first to create"
+    close: "Close"
+    cancel: "Cancel"
+    confirm: "Confirm"
+    save: "Save"
+    save_changes: "Save Changes"
+    confirm_registration: "Confirm Registration"
+    refresh: "Refresh"
+    
+  # Common text
+  common:
+    or: "or"
+    first_to_create: "Be the first to create an event!"
+    join_event_modal: "Sign up for the event"
+    join_discussion_modal: "Join the discussion"
+    contact_business: "Contact business"
+    apply_job: "Apply for job"
+    apply_volunteer: "Apply for volunteer opportunity"
+    your_full_name: "Your full name"
+    your_comment: "Your comment..."
+    explain_motivation: "Explain your motivation..."
+    availability: "Ex: weekends, evenings..."
+    your_message: "Your message..."
+    
+  # Form labels
+  forms:
+    your_name: "Your name"
+    comment: "Comment"
+    motivation: "Motivation"
+    availability: "Availability"
+    message: "Message"
+
+  # Dropdown Options
+  dropdowns:
+    category: "Category"
+    all_categories: "All Categories"
+    news: "News"
+    local_news: "Local News" 
+    community: "Community"
+    practical_life: "Practical Life"
+    culture: "Culture"
+    sports: "Sports"
+    health: "Health"
+    education: "Education"
+    environment: "Environment"
+    social: "Social"
+    announcements: "Announcements"
+    questions: "Questions"
+    suggestions: "Suggestions"
+    time_required: "Time Required"
+    one_time: "One-time"
+    regular: "Regular"
+    flexible: "Flexible"
+    no_categories_yet: "No categories yet"
+    sector: "Sector"
+    tech: "Tech"
+    commerce: "Commerce"
+    marketing: "Marketing"
+    job_type: "Job Type"
+    permanent: "Permanent"
+    temporary: "Temporary"
+    freelance: "Freelance"
+    internship: "Internship"
+    part_time: "Part Time"
+
+  # Meta tags
+  meta:
+    default_description: "Pacomien - Your local community platform for connecting, sharing, and growing together."

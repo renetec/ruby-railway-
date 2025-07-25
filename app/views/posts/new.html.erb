@@ -1,0 +1,132 @@
+<div class="min-h-screen bg-gradient-to-br from-primary-bg via-secondary-bg to-primary-bg relative overflow-hidden">
+  <!-- Background Elements -->
+  <div class="absolute inset-0 overflow-hidden">
+    <div class="absolute -top-40 -right-40 w-80 h-80 bg-electric-blue opacity-10 rounded-full blur-3xl animate-pulse"></div>
+    <div class="absolute -bottom-40 -left-40 w-80 h-80 bg-vibrant-purple opacity-10 rounded-full blur-3xl animate-pulse delay-1000"></div>
+  </div>
+
+  <div class="relative z-10 p-8 max-w-4xl mx-auto">
+    <!-- Page Header -->
+    <%= render 'shared/page_header_with_logo', title: '📝 Créer un Nouvel Article' %>
+    
+    <!-- Form Card -->
+    <div class="glass-surface-lg rounded-3xl p-8 shadow-soft-xl border border-glass-border-2">
+      <%= form_with model: @post, local: true, multipart: true, html: { class: "space-y-6" } do |form| %>
+        <!-- Error Messages -->
+        <% if @post.errors.any? %>
+          <div class="bg-red-500/10 border border-red-500/30 rounded-xl p-4">
+            <div class="flex items-center mb-2">
+              <svg class="w-5 h-5 text-red-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+              </svg>
+              <h3 class="font-semibold text-red-500">Veuillez corriger les erreurs suivantes :</h3>
+            </div>
+            <ul class="text-sm text-red-400 space-y-1">
+              <% @post.errors.full_messages.each do |message| %>
+                <li>• <%= message %></li>
+              <% end %>
+            </ul>
+          </div>
+        <% end %>
+
+        <!-- Post Title -->
+        <div>
+          <%= form.label :title, "📝 Titre de l'Article", class: "block text-sm font-bold mb-3 text-text-primary" %>
+          <%= form.text_field :title, 
+              placeholder: "Saisissez un titre accrocheur pour votre article...",
+              class: "w-full px-4 py-4 bg-glass-surface-1 border border-glass-border-1 rounded-xl text-text-primary placeholder-text-tertiary focus:outline-none focus:border-electric-blue focus:ring-4 focus:ring-electric-blue/20 transition-all duration-300" %>
+          <p class="text-xs mt-2 text-text-tertiary">Rendez-le clair et convaincant pour attirer les lecteurs</p>
+        </div>
+
+        <!-- Category -->
+        <div>
+          <%= form.label :category, "🏷️ Catégorie", class: "block text-sm font-bold mb-3 text-text-primary" %>
+          <%= form.select :category, 
+                         options_for_select(Post::CATEGORIES.map { |cat| [cat.humanize, cat] }),
+                         { prompt: 'Sélectionnez une catégorie' },
+                         { class: "w-full px-4 py-4 bg-glass-surface-1 border border-glass-border-1 rounded-xl text-text-primary focus:outline-none focus:border-electric-blue focus:ring-4 focus:ring-electric-blue/20 transition-all duration-300" } %>
+          <p class="text-xs mt-2 text-text-tertiary">Choisissez la catégorie la plus pertinente pour votre article</p>
+        </div>
+
+        <!-- Content -->
+        <div>
+          <%= form.label :content, "✍️ Contenu", class: "block text-sm font-bold mb-3 text-text-primary" %>
+          <%= form.text_area :content, 
+              rows: 10,
+              placeholder: "Rédigez le contenu de votre article ici. Vous pouvez utiliser le formatage markdown...",
+              class: "w-full px-4 py-4 bg-glass-surface-1 border border-glass-border-1 rounded-xl text-text-primary placeholder-text-tertiary focus:outline-none focus:border-electric-blue focus:ring-4 focus:ring-electric-blue/20 transition-all duration-300 resize-none" %>
+          <p class="text-xs mt-2 text-text-tertiary">Partagez vos pensées, idées ou actualités avec la communauté</p>
+        </div>
+
+        <!-- Images -->
+        <div>
+          <%= form.label :images, "🖼️ Images", class: "block text-sm font-bold mb-3 text-text-primary" %>
+          <div class="relative">
+            <%= form.file_field :images, 
+                multiple: true, 
+                accept: "image/*",
+                class: "w-full px-4 py-4 bg-glass-surface-1 border border-glass-border-1 rounded-xl text-text-primary file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-electric-blue file:text-white hover:file:bg-electric-blue/90 focus:outline-none focus:border-electric-blue focus:ring-4 focus:ring-electric-blue/20 transition-all duration-300" %>
+          </div>
+          <p class="text-xs mt-2 text-text-tertiary">Téléchargez plusieurs images pour enrichir votre article (JPG, PNG, GIF)</p>
+        </div>
+
+        <!-- Status -->
+        <div>
+          <%= form.label :status, "📊 Statut de Publication", class: "block text-sm font-bold mb-3 text-text-primary" %>
+          <%= form.select :status, 
+                         options_for_select([['Brouillon', 'draft'], ['Publié', 'published']]),
+                         {},
+                         { class: "w-full px-4 py-4 bg-glass-surface-1 border border-glass-border-1 rounded-xl text-text-primary focus:outline-none focus:border-electric-blue focus:ring-4 focus:ring-electric-blue/20 transition-all duration-300" } %>
+          <p class="text-xs mt-2 text-text-tertiary">Choisissez de sauvegarder comme brouillon ou publier immédiatement</p>
+        </div>
+
+        <!-- Featured Post (for moderators) -->
+        <% if current_user&.moderator? %>
+          <div class="flex items-center space-x-3 p-4 bg-glass-surface-1 rounded-xl border border-glass-border-1">
+            <%= form.check_box :featured, 
+                class: "h-5 w-5 text-electric-blue focus:ring-electric-blue border-glass-border-2 rounded bg-glass-surface-1" %>
+            <%= form.label :featured, "⭐ Article en Vedette", 
+                class: "text-text-primary font-medium" %>
+            <p class="text-xs text-text-tertiary ml-2">Cet article sera mis en évidence sur la page d'accueil</p>
+          </div>
+        <% end %>
+
+        <!-- Action Buttons -->
+        <div class="flex flex-col sm:flex-row gap-4 pt-6">
+          <%= form.submit "🚀 Créer l'Article", 
+              class: "flex-1 py-4 px-6 bg-gradient-to-r from-electric-blue to-vibrant-purple hover:from-electric-blue/90 hover:to-vibrant-purple/90 text-white font-bold text-lg rounded-xl shadow-soft-lg transform hover:scale-105 hover:shadow-soft-xl transition-all duration-300 cursor-pointer" %>
+          
+          <%= link_to posts_path, 
+              class: "flex-1 py-4 px-6 bg-glass-surface-2 hover:bg-glass-surface-3 border border-glass-border-1 text-text-primary font-semibold text-lg rounded-xl text-center transition-all duration-300 hover:scale-105" do %>
+            Annuler
+          <% end %>
+        </div>
+      <% end %>
+    </div>
+
+    <!-- Writing Tips -->
+    <div class="mt-8 glass-surface-lg rounded-3xl p-6 shadow-soft-xl border border-glass-border-2">
+      <h3 class="text-text-primary text-lg font-bold mb-4">💡 Conseils de Rédaction</h3>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-text-secondary">
+        <div>
+          <h4 class="font-semibold text-text-primary mb-2">📝 Directives de Contenu</h4>
+          <ul class="space-y-1">
+            <li>• Rédigez des titres clairs et accrocheurs</li>
+            <li>• Utilisez des paragraphes pour aérer le texte</li>
+            <li>• Incluez des images pertinentes</li>
+            <li>• Relisez avant de publier</li>
+          </ul>
+        </div>
+        <div>
+          <h4 class="font-semibold text-text-primary mb-2">🎯 Bonnes Pratiques</h4>
+          <ul class="space-y-1">
+            <li>• Choisissez des catégories appropriées</li>
+            <li>• Apportez de la valeur aux lecteurs</li>
+            <li>• Respectez les règles de la communauté</li>
+            <li>• Interagissez avec les commentaires</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

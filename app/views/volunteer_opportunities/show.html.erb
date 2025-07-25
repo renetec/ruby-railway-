@@ -1,0 +1,335 @@
+<% content_for :title, @volunteer_opportunity.title %>
+
+<div class="min-h-screen bg-gradient-elegant">
+  <div class="container-elegant">
+    <div class="grid lg:grid-cols-3 gap-12">
+      <!-- Main Content -->
+      <div class="lg:col-span-2 space-y-8">
+        <div class="card-stunning">
+          <div class="flex justify-between items-start mb-8">
+            <div class="flex-1">
+              <div class="flex flex-wrap items-center gap-2 mb-4">
+                <% if @volunteer_opportunity.urgent? %>
+                  <span class="badge-error">
+                    <%= t('volunteer_opportunities.urgent', default: 'Urgent') %>
+                  </span>
+                <% end %>
+                <% if @volunteer_opportunity.featured? %>
+                  <span class="badge-warning">
+                    <%= t('volunteer_opportunities.featured', default: 'Featured') %>
+                  </span>
+                <% end %>
+                <% if @volunteer_opportunity.remote? %>
+                  <span class="badge-success">
+                    <%= t('volunteer_opportunities.remote', default: 'Remote') %>
+                  </span>
+                <% end %>
+              </div>
+              
+              <h1 class="heading-page text-primary-800 mb-4"><%= @volunteer_opportunity.title %></h1>
+              
+              <div class="flex flex-wrap items-center text-secondary-600 gap-6 mb-6">
+                <div class="flex items-center space-x-2">
+                  <div class="w-8 h-8 bg-primary-100 rounded-full flex items-center justify-center">
+                    <span class="text-primary-600 font-semibold text-sm">
+                      <%= @volunteer_opportunity.user.name.first.upcase %>
+                    </span>
+                  </div>
+                  <span><%= t('volunteer_opportunities.by', name: @volunteer_opportunity.user.name, 
+                            default: "by #{@volunteer_opportunity.user.name}") %></span>
+                </div>
+                <div class="flex items-center space-x-1">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                  <span><%= time_ago_in_words(@volunteer_opportunity.created_at) %> <%= t('common.ago', default: 'ago') %></span>
+                </div>
+                <div class="flex items-center space-x-1">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                  </svg>
+                  <span><%= pluralize(@volunteer_opportunity.volunteer_applications.count, 
+                                   t('volunteer_opportunities.application', default: 'application')) %></span>
+                </div>
+              </div>
+            </div>
+            
+            <% if user_signed_in? && (@volunteer_opportunity.user == current_user || current_user.moderator?) %>
+              <div class="flex space-x-3">
+                <%= link_to t('common.edit', default: 'Edit'), edit_volunteer_opportunity_path(@volunteer_opportunity), 
+                           class: "btn-secondary-sm" %>
+              </div>
+            <% end %>
+          </div>
+          
+          <div class="prose prose-lg max-w-none text-secondary-700 mb-8">
+            <%= simple_format(@volunteer_opportunity.description) %>
+          </div>
+          
+          <% if @volunteer_opportunity.requirements.present? %>
+            <div class="card-info">
+              <h3 class="info-title">
+                <%= t('volunteer_opportunities.requirements', default: 'Requirements') %>
+              </h3>
+              <div class="prose text-info-700">
+                <%= simple_format(@volunteer_opportunity.requirements) %>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      </div>
+      
+      <!-- Sidebar -->
+      <div class="lg:col-span-1 space-y-8">
+        <!-- Application Section -->
+        <div class="card-stunning">
+          <% if user_signed_in? %>
+            <% if @application %>
+              <div class="text-center">
+                <div class="application-status-success mb-6">
+                  <svg class="w-12 h-12 mx-auto mb-3" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                  </svg>
+                  <div class="font-semibold text-lg mb-2">
+                    <%= t('volunteer_opportunities.application_submitted', default: 'Application Submitted') %>
+                  </div>
+                  <div class="application-status mb-4">
+                    <span class="status-label"><%= t('volunteer_opportunities.status', default: 'Status') %>:</span>
+                    <span class="status-value"><%= t("volunteer_opportunities.statuses.#{@application.status}", 
+                                                     default: @application.status.humanize) %></span>
+                  </div>
+                  <div class="text-sm text-secondary-500">
+                    <%= t('volunteer_opportunities.applied_ago', 
+                          time: time_ago_in_words(@application.created_at),
+                          default: "Applied #{time_ago_in_words(@application.created_at)} ago") %>
+                  </div>
+                </div>
+              </div>
+            <% elsif @volunteer_opportunity.can_apply? %>
+              <div class="text-center">
+                <h3 class="text-xl font-semibold text-primary-700 mb-6">
+                  <%= t('volunteer_opportunities.apply_now_title', default: 'Join this opportunity') %>
+                </h3>
+                <%= link_to apply_volunteer_opportunity_path(@volunteer_opportunity), 
+                           method: :post,
+                           class: "btn-primary-gradient w-full text-lg py-4" do %>
+                  <svg class="w-5 h-5 mr-2 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                  </svg>
+                  <%= t('volunteer_opportunities.apply_now', default: 'Apply Now') %>
+                <% end %>
+                <p class="text-sm text-secondary-500 mt-3">
+                  <%= t('volunteer_opportunities.make_difference', default: 'Make a difference in your community') %>
+                </p>
+              </div>
+            <% else %>
+              <div class="application-status-closed text-center">
+                <svg class="w-12 h-12 mx-auto mb-3 text-secondary-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.732-.833-2.5 0L4.232 16.5c-.77.833.192 2.5 1.732 2.5z" />
+                </svg>
+                <div class="font-semibold text-lg mb-2">
+                  <%= t('volunteer_opportunities.applications_closed', default: 'Applications Closed') %>
+                </div>
+                <div class="text-sm text-secondary-500">
+                  <% if @volunteer_opportunity.application_deadline&.past? %>
+                    <%= t('volunteer_opportunities.deadline_passed', default: 'Deadline passed') %>
+                  <% elsif @volunteer_opportunity.volunteers_needed && @volunteer_opportunity.volunteer_applications.count >= @volunteer_opportunity.volunteers_needed %>
+                    <%= t('volunteer_opportunities.position_filled', default: 'Position filled') %>
+                  <% end %>
+                </div>
+              </div>
+            <% end %>
+          <% else %>
+            <div class="text-center">
+              <h3 class="text-xl font-semibold text-primary-700 mb-6">
+                <%= t('volunteer_opportunities.join_community', default: 'Join our community') %>
+              </h3>
+              <div class="space-y-3">
+                <%= link_to t('auth.sign_in_to_apply', default: 'Sign In to Apply'), new_user_session_path, 
+                           class: "btn-primary w-full" %>
+                <%= link_to t('auth.create_account', default: 'Create Account'), new_user_registration_path, 
+                           class: "btn-secondary w-full" %>
+              </div>
+            </div>
+          <% end %>
+        </div>
+        
+        <!-- Details -->
+        <div class="card-glass">
+          <h3 class="section-title mb-6"><%= t('volunteer_opportunities.details', default: 'Details') %></h3>
+          <div class="space-y-4">
+            <div class="detail-item">
+              <span class="detail-label"><%= t('volunteer_opportunities.category', default: 'Category') %>:</span>
+              <span class="detail-value badge-secondary">
+                <%= t("volunteer_opportunities.categories.#{@volunteer_opportunity.category}", 
+                      default: @volunteer_opportunity.category.humanize) %>
+              </span>
+            </div>
+            <div class="detail-item">
+              <span class="detail-label"><%= t('volunteer_opportunities.time_commitment', default: 'Time Commitment') %>:</span>
+              <span class="detail-value">
+                <%= t("volunteer_opportunities.time_commitments.#{@volunteer_opportunity.time_commitment}", 
+                      default: @volunteer_opportunity.time_commitment.humanize) %>
+              </span>
+            </div>
+            <% unless @volunteer_opportunity.remote? %>
+              <div class="detail-item">
+                <span class="detail-label"><%= t('volunteer_opportunities.location', default: 'Location') %>:</span>
+                <span class="detail-value flex items-center">
+                  <svg class="w-4 h-4 mr-2 text-secondary-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                  </svg>
+                  <%= @volunteer_opportunity.location %>
+                </span>
+              </div>
+            <% end %>
+            <% if @volunteer_opportunity.volunteers_needed %>
+              <div class="detail-item">
+                <span class="detail-label"><%= t('volunteer_opportunities.positions', default: 'Positions') %>:</span>
+                <span class="detail-value">
+                  <div class="flex items-center space-x-3">
+                    <span class="text-accent-600 font-semibold">
+                      <%= @volunteer_opportunity.volunteer_applications.count %>/<%= @volunteer_opportunity.volunteers_needed %>
+                    </span>
+                    <div class="flex-1 bg-secondary-200 rounded-full h-2">
+                      <div class="bg-accent-500 h-2 rounded-full transition-all duration-300" 
+                           style="width: <%= [(@volunteer_opportunity.volunteer_applications.count.to_f / @volunteer_opportunity.volunteers_needed * 100).round, 100].min %>%"></div>
+                    </div>
+                  </div>
+                </span>
+              </div>
+            <% end %>
+            <% if @volunteer_opportunity.start_date %>
+              <div class="detail-item">
+                <span class="detail-label"><%= t('volunteer_opportunities.start_date', default: 'Start Date') %>:</span>
+                <span class="detail-value"><%= @volunteer_opportunity.start_date.strftime("%B %d, %Y") %></span>
+              </div>
+            <% end %>
+            <% if @volunteer_opportunity.end_date %>
+              <div class="detail-item">
+                <span class="detail-label"><%= t('volunteer_opportunities.end_date', default: 'End Date') %>:</span>
+                <span class="detail-value"><%= @volunteer_opportunity.end_date.strftime("%B %d, %Y") %></span>
+              </div>
+            <% end %>
+            <% if @volunteer_opportunity.application_deadline %>
+              <div class="detail-item">
+                <span class="detail-label"><%= t('volunteer_opportunities.apply_by', default: 'Apply By') %>:</span>
+                <span class="detail-value text-warning-600 font-semibold">
+                  <%= @volunteer_opportunity.application_deadline.strftime("%B %d, %Y") %>
+                </span>
+              </div>
+            <% end %>
+          </div>
+        </div>
+        
+        <!-- Organization Info -->
+        <% if @volunteer_opportunity.organization %>
+          <div class="card-glass">
+            <h3 class="section-title mb-6"><%= t('volunteer_opportunities.organization', default: 'Organization') %></h3>
+            <div class="text-center">
+              <div class="mb-4">
+                <% if @volunteer_opportunity.organization.logo.attached? %>
+                  <div class="avatar-lg mx-auto mb-3">
+                    <%= image_tag @volunteer_opportunity.organization.logo, 
+                                  alt: @volunteer_opportunity.organization.name, 
+                                  class: "w-full h-full object-cover" %>
+                  </div>
+                <% else %>
+                  <div class="avatar-lg bg-primary-500 mx-auto mb-3 flex items-center justify-center">
+                    <span class="text-white font-bold text-2xl">
+                      <%= @volunteer_opportunity.organization.name.first.upcase %>
+                    </span>
+                  </div>
+                <% end %>
+              </div>
+              
+              <h4 class="text-xl font-semibold text-primary-800 mb-3">
+                <%= link_to @volunteer_opportunity.organization.name, 
+                           business_path(@volunteer_opportunity.organization), 
+                           class: "hover:text-accent-600 transition-colors" %>
+              </h4>
+              
+              <% if @volunteer_opportunity.organization.description.present? %>
+                <p class="text-secondary-600 text-sm leading-relaxed mb-4">
+                  <%= truncate(@volunteer_opportunity.organization.description, length: 120) %>
+                </p>
+              <% end %>
+              
+              <%= link_to t('volunteer_opportunities.view_organization', default: 'View Organization'), 
+                         business_path(@volunteer_opportunity.organization), 
+                         class: "btn-outline-sm" %>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    </div>
+    
+    <!-- Related Opportunities -->
+    <% if @related_opportunities.any? %>
+      <div class="mt-16">
+        <h2 class="heading-section text-center text-primary-800 mb-12">
+          <%= t('volunteer_opportunities.related_opportunities', default: 'Related Opportunities') %>
+        </h2>
+        <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+          <% @related_opportunities.each do |opportunity| %>
+            <div class="card-product group">
+              <div class="p-6">
+                <div class="flex items-center justify-between mb-4">
+                  <span class="badge-primary text-xs">
+                    <%= t("volunteer_opportunities.categories.#{opportunity.category}", 
+                          default: opportunity.category.humanize) %>
+                  </span>
+                  <% if opportunity.urgent? %>
+                    <span class="text-error-500 text-xs flex items-center">
+                      <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M12.395 2.553a1 1 0 00-1.45-.385c-.345.23-.614.558-.822.88-.214.33-.403.713-.57 1.116-.334.804-.614 1.768-.84 2.734a31.365 31.365 0 00-.613 3.58 2.64 2.64 0 01-.945-1.067c-.328-.68-.398-1.534-.398-2.654A1 1 0 005.05 6.05 6.981 6.981 0 003 11a7 7 0 1011.95-4.95c-.592-.591-.98-.985-1.348-1.467-.363-.476-.724-1.063-1.207-2.03zM12.12 15.12A3 3 0 017 13s.879.5 2.5.5c0-1 .5-4 1.25-4.5.5 1 .786 1.293 1.371 1.879A2.99 2.99 0 0113 13a2.99 2.99 0 01-.879 2.121z" clip-rule="evenodd" />
+                      </svg>
+                      <%= t('volunteer_opportunities.urgent', default: 'Urgent') %>
+                    </span>
+                  <% end %>
+                </div>
+                
+                <h3 class="font-semibold text-lg mb-3 line-clamp-2">
+                  <%= link_to opportunity.title, opportunity, 
+                             class: "text-primary-800 hover:text-accent-600 transition-colors group-hover:text-accent-600" %>
+                </h3>
+                
+                <p class="text-sm text-secondary-600 mb-4 line-clamp-3">
+                  <%= truncate(opportunity.description, length: 100) %>
+                </p>
+                
+                <div class="flex justify-between text-xs text-secondary-500">
+                  <div class="flex items-center">
+                    <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    <%= t("volunteer_opportunities.time_commitments.#{opportunity.time_commitment}", 
+                          default: opportunity.time_commitment.humanize) %>
+                  </div>
+                  <div class="flex items-center">
+                    <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                    </svg>
+                    <%= pluralize(opportunity.volunteer_applications.count, 
+                                 t('volunteer_opportunities.application', default: 'application')) %>
+                  </div>
+                </div>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+    
+    <!-- Navigation -->
+    <div class="text-center mt-16">
+      <%= link_to volunteer_opportunities_path, class: "btn-link-back" do %>
+        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+        </svg>
+        <%= t('volunteer_opportunities.back_to_opportunities', default: 'Back to Volunteer Opportunities') %>
+      <% end %>
+    </div>
+  </div>
+</div>
