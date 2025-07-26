@@ -33,9 +33,17 @@ class EventsController < ApplicationController
     @event = current_user.events.build(event_params)
     @event.status = :published # Always set status to published
     
-    if @event.save
-      redirect_to events_path, notice: t('flash.event_created_success')
-    else
+    begin
+      if @event.save
+        redirect_to events_path, notice: t('flash.event_created_success')
+      else
+        Rails.logger.error "Event validation errors: #{@event.errors.full_messages}"
+        render :new, status: :unprocessable_entity
+      end
+    rescue => e
+      Rails.logger.error "Event creation error: #{e.message}"
+      Rails.logger.error e.backtrace.join("\n")
+      @event.errors.add(:base, "An error occurred while creating the event. Please try again.")
       render :new, status: :unprocessable_entity
     end
   end
