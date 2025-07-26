@@ -12,8 +12,8 @@ class Event < ApplicationRecord
   validates :title, presence: true, length: { minimum: 5, maximum: 200 }
   validates :description, presence: true, length: { minimum: 10 }
   validates :date, presence: true
-  validates :location, presence: true
-  validates :capacity, presence: true, numericality: { greater_than: 0 }
+  validates :location, length: { maximum: 255 }, allow_blank: true
+  validates :capacity, numericality: { greater_than: 0 }, allow_blank: true
   validates :status, inclusion: { in: %w[draft published cancelled] }
   
   # Custom validations
@@ -45,10 +45,12 @@ class Event < ApplicationRecord
   
   # Methods
   def spots_remaining
+    return nil unless capacity.present?
     capacity - rsvp_count
   end
   
   def full?
+    return false unless capacity.present?
     spots_remaining <= 0
   end
   
