@@ -12,7 +12,8 @@
       "variables": {
         "NIXPACKS_NO_CACHE": "1",
         "NO_CACHE": "1",
-        "RAILS_ENV": "production"
+        "RAILS_ENV": "production",
+        "FORCE_REBUILD": "true"
       }
     }
   }
