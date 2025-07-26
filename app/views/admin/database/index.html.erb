@@ -96,13 +96,13 @@
       </div>
 
       <!-- Restore Backup Section -->
-      <div class="glass-surface-lg rounded-3xl p-8 shadow-soft-xl border border-glass-border-2">
+      <div class="bg-white dark:bg-gray-800 rounded-2xl p-8 shadow-lg border border-gray-200 dark:border-gray-700">
         <div class="text-center mb-6">
-          <div class="w-16 h-16 bg-gradient-to-r from-warm-gold to-vibrant-purple rounded-2xl mx-auto mb-4 flex items-center justify-center">
+          <div class="w-16 h-16 bg-gradient-to-r from-orange-500 to-red-600 rounded-2xl mx-auto mb-4 flex items-center justify-center">
             <span class="text-white text-2xl">🔄</span>
           </div>
-          <h3 class="text-text-primary text-2xl font-bold mb-2">Restore Backup</h3>
-          <p class="text-text-secondary">Upload and restore from a backup file</p>
+          <h3 class="text-gray-900 dark:text-gray-100 text-2xl font-bold mb-2">Restore Backup</h3>
+          <p class="text-gray-600 dark:text-gray-400">Upload and restore from a backup file</p>
         </div>
 
         <%= form_with url: restore_admin_database_index_path, method: :post, local: true, 
@@ -110,24 +110,24 @@
             class: "space-y-4",
             data: { confirm: "⚠️ WARNING: This will OVERWRITE your current database! Are you absolutely sure?" } do |form| %>
           
-          <div class="border-2 border-dashed border-glass-border-2 rounded-2xl p-6 text-center">
+          <div class="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-2xl p-8 text-center bg-gray-50 dark:bg-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors">
             <%= form.file_field :backup_file, 
                 accept: ".sql,.dump",
                 class: "hidden",
                 id: "backup_file_input" %>
             <label for="backup_file_input" class="cursor-pointer">
-              <div class="text-text-secondary mb-2">
-                <svg class="w-12 h-12 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <div class="text-gray-700 dark:text-gray-300">
+                <svg class="w-16 h-16 mx-auto mb-4 text-gray-400 dark:text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
                 </svg>
-                <p class="font-medium">Click to select backup file</p>
-                <p class="text-sm">Supports .sql and .dump files</p>
+                <p class="font-semibold text-lg text-gray-900 dark:text-gray-100 mb-2">Click to select backup file</p>
+                <p class="text-sm text-gray-600 dark:text-gray-400">Supports .sql and .dump files</p>
               </div>
             </label>
           </div>
 
           <%= form.button type: :submit, 
-              class: "w-full bg-gradient-to-r from-red-500 to-red-600 text-white py-4 text-lg font-semibold rounded-2xl transition-all duration-300 hover:scale-105 hover:from-red-600 hover:to-red-700" do %>
+              class: "w-full bg-red-600 hover:bg-red-700 text-white py-4 text-lg font-bold rounded-lg transition-all duration-200 hover:shadow-lg" do %>
             <svg class="w-5 h-5 mr-2 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path>
             </svg>
@@ -149,24 +149,30 @@
           </h3>
           
           <div class="overflow-x-auto">
-            <table class="w-full">
+            <table class="w-full min-w-full table-auto">
               <thead>
-                <tr class="border-b border-glass-border-1">
-                  <th class="text-left text-text-primary font-semibold py-3">Filename</th>
-                  <th class="text-left text-text-primary font-semibold py-3">Size</th>
-                  <th class="text-left text-text-primary font-semibold py-3">Created</th>
-                  <th class="text-left text-text-primary font-semibold py-3">Actions</th>
+                <tr class="border-b-2 border-gray-300 dark:border-gray-600 bg-gray-100 dark:bg-gray-700">
+                  <th class="text-left text-gray-900 dark:text-gray-100 font-bold py-4 px-4">Filename</th>
+                  <th class="text-left text-gray-900 dark:text-gray-100 font-bold py-4 px-4">Size</th>
+                  <th class="text-left text-gray-900 dark:text-gray-100 font-bold py-4 px-4">Created</th>
+                  <th class="text-left text-gray-900 dark:text-gray-100 font-bold py-4 px-4 min-w-[120px]">Actions</th>
                 </tr>
               </thead>
-              <tbody>
+              <tbody class="bg-white dark:bg-gray-800">
                 <% @backup_files.each do |backup| %>
-                  <tr class="border-b border-glass-border-1 hover:bg-glass-surface-1 transition-colors duration-200">
-                    <td class="py-4 text-text-primary font-medium"><%= backup[:name] %></td>
-                    <td class="py-4 text-text-secondary"><%= number_to_human_size(backup[:size]) %></td>
-                    <td class="py-4 text-text-secondary"><%= backup[:created_at].strftime('%Y-%m-%d %H:%M') %></td>
-                    <td class="py-4">
+                  <tr class="border-b border-gray-200 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-200">
+                    <td class="py-4 px-4 text-gray-900 dark:text-gray-100 font-medium font-mono text-sm">
+                      <%= backup[:name] %>
+                    </td>
+                    <td class="py-4 px-4 text-gray-700 dark:text-gray-300 font-semibold">
+                      <%= number_to_human_size(backup[:size]) %>
+                    </td>
+                    <td class="py-4 px-4 text-gray-700 dark:text-gray-300">
+                      <%= backup[:created_at].strftime('%Y-%m-%d %H:%M') %>
+                    </td>
+                    <td class="py-4 px-4">
                       <%= link_to download_backup_admin_database_index_path(filename: backup[:name]), 
-                          class: "inline-flex items-center px-4 py-2 bg-gradient-to-r from-electric-blue to-vibrant-purple text-white rounded-lg font-medium transition-all duration-300 hover:scale-105" do %>
+                          class: "inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-semibold text-sm transition-all duration-200 hover:shadow-lg" do %>
                         <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
                         </svg>

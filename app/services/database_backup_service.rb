@@ -9,11 +9,14 @@ class DatabaseBackupService
     filename = "leclub_backup_#{timestamp}.sql"
     backup_path = @backup_dir.join(filename)
 
-    if docker_environment?
+    success = if docker_environment?
       create_docker_backup(backup_path)
     else
       create_standard_backup(backup_path)
     end
+
+    # Return the backup file path if successful, nil if failed
+    success ? backup_path : nil
   end
 
   def restore_backup(uploaded_file)
