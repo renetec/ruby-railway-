@@ -124,6 +124,18 @@ fr:
       discover_events: "Découvrir les événements"
       join_discussions: "Rejoindre les discussions"
     
+    stats:
+      members: "Membres"
+      posts: "Articles"
+      events: "Événements"
+      discussions: "Discussions"
+    
+    sections:
+      recent_posts: "Articles récents"
+      upcoming_events: "Événements à venir"
+      featured_posts: "Articles en vedette"
+      forum_categories: "Catégories du forum"
+    
     services:
       title: "Services communautaires"
       subtitle: "Tout ce dont vous avez besoin pour vous connecter, partager et grandir ensemble"
@@ -293,6 +305,8 @@ fr:
     subtitle: "Restez informé avec les dernières nouvelles, histoires et annonces de votre communauté vibrante."
     create_new: "Créer une nouvelle histoire"
     search_stories: "Rechercher des histoires incroyables..."
+    by: "Par"
+    no_posts_found: "Aucun article trouvé."
     
     categories:
       all_categories: "Toutes les catégories"
@@ -314,6 +328,18 @@ fr:
       written_by: "Écrit par"
       ago: "il y a"
       read_full_article: "Lire l'article complet"
+      
+    show:
+      title: "%{title}"
+      featured: "En vedette"
+      community_story: "Histoire de la communauté"
+      written_by: "Écrit par"
+      manage_post: "Gérer l'article"
+      edit_post: "Modifier l'article"
+      delete_post: "Supprimer l'article"
+      related_stories: "Histoires connexes"
+      related_description: "Découvrez d'autres histoires qui pourraient vous intéresser"
+      back_to_news: "Retour aux actualités"
       
     empty:
       title: "Aucune histoire trouvée"
@@ -689,6 +715,9 @@ fr:
     your_reply: "Votre réponse"
     share_thoughts_placeholder: "Partagez vos pensées..."
     reply: "réponse"
+    threads_count:
+      one: "%{count} discussion"
+      other: "%{count} discussions"
     started_ago: "créé il y a %{time}"
     replied_ago: "répondu il y a %{time}"
     in_category: "dans"

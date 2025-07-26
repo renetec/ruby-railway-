@@ -1,313 +1,134 @@
 
-<!-- Community Listings - 2 Column Layout -->
+<!-- Community Dashboard - Dynamic Content -->
 <div class="max-w-6xl mx-auto px-4 py-8">
   <!-- Page Header with Logo -->
   <%= render 'shared/page_header_with_logo', 
       title: t('home.hero.building_communities'),
       subtitle: t('home.hero.tagline') %>
 
-  <!-- Filters Section -->
-  <div class="flex flex-col md:flex-row gap-4 mb-8 justify-center">
-    <select class="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100">
-      <option><%= t('home.filters.category') %></option>
-      <option><%= t('home.categories.animals') %></option>
-      <option><%= t('home.categories.events') %></option>
-      <option><%= t('home.categories.real_estate') %></option>
-      <option><%= t('home.categories.services') %></option>
-      <option><%= t('home.categories.education') %></option>
-      <option><%= t('home.categories.transport') %></option>
-    </select>
-    <button class="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 dark:bg-blue-600 dark:hover:bg-blue-700">
-      🔄 <%= t('actions.refresh') %>
-    </button>
+  <!-- Stats Section -->
+  <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+    <div class="bg-white dark:bg-gray-800 p-4 rounded-lg text-center">
+      <div class="text-2xl font-bold text-blue-600"><%= @stats[:users_count] %></div>
+      <div class="text-sm text-gray-600 dark:text-gray-400"><%= t('home.stats.members') %></div>
+    </div>
+    <div class="bg-white dark:bg-gray-800 p-4 rounded-lg text-center">
+      <div class="text-2xl font-bold text-green-600"><%= @stats[:posts_count] %></div>
+      <div class="text-sm text-gray-600 dark:text-gray-400"><%= t('home.stats.posts') %></div>
+    </div>
+    <div class="bg-white dark:bg-gray-800 p-4 rounded-lg text-center">
+      <div class="text-2xl font-bold text-purple-600"><%= @stats[:events_count] %></div>
+      <div class="text-sm text-gray-600 dark:text-gray-400"><%= t('home.stats.events') %></div>
+    </div>
+    <div class="bg-white dark:bg-gray-800 p-4 rounded-lg text-center">
+      <div class="text-2xl font-bold text-orange-600"><%= @stats[:forum_threads_count] %></div>
+      <div class="text-sm text-gray-600 dark:text-gray-400"><%= t('home.stats.discussions') %></div>
+    </div>
   </div>
 
-  <!-- 2-Column Listings Grid -->
-  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-    <!-- Listing 1 -->
-    <div class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow cursor-pointer" onclick="openModal('modal-1')">
-      <div class="flex gap-4">
-        <div class="w-24 h-24 bg-blue-100 dark:bg-blue-900 rounded-lg flex items-center justify-center flex-shrink-0">
-          <span class="text-3xl">🐱</span>
-        </div>
-        <div class="flex-1">
-          <div class="flex justify-between items-start mb-2">
-            <span class="bg-orange-500 text-white px-2 py-1 rounded text-xs"><%= t('home.categories.animals') %></span>
-            <span class="text-sm text-gray-500 dark:text-gray-400">Il y a 2h</span>
+  <!-- Recent Posts -->
+  <% if @recent_posts.any? %>
+    <div class="mb-8">
+      <h2 class="text-2xl font-bold mb-4"><%= t('home.sections.recent_posts') %></h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <% @recent_posts.each do |post| %>
+          <div class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow">
+            <div class="mb-3">
+              <h3 class="font-bold text-lg mb-2 text-gray-900 dark:text-gray-100"><%= post.title %></h3>
+              <p class="text-gray-600 dark:text-gray-400 text-sm mb-2"><%= truncate(strip_tags(post.content), length: 100) %></p>
+            </div>
+            <div class="flex justify-between items-center text-sm text-gray-500 dark:text-gray-400">
+              <span><%= t('common.by') %> <%= post.user.name %></span>
+              <span><%= time_ago_in_words(post.created_at) %> <%= t('common.ago') %></span>
+            </div>
+            <div class="mt-3">
+              <%= link_to t('actions.read_more'), post_path(post), 
+                  class: "text-blue-600 hover:text-blue-800 text-sm font-medium" %>
+            </div>
           </div>
-          <h3 class="font-bold text-lg mb-1 text-gray-900 dark:text-gray-100">Chat perdu - Récompense offerte</h3>
-          <p class="text-gray-600 dark:text-gray-400 text-sm mb-2">Mon chat Minou a disparu hier soir. Il est gris et blanc...</p>
-          <div class="flex justify-between items-center">
-            <span class="text-xs text-gray-500 dark:text-gray-400">Par Rene Tec</span>
-            <button class="text-blue-600 hover:text-blue-800 text-sm font-medium" onclick="event.stopPropagation(); openModal('modal-1')">
-              💬 Contacter
-            </button>
-          </div>
-        </div>
+        <% end %>
       </div>
     </div>
+  <% end %>
 
-    <!-- Listing 2 -->
-    <div class="bg-white border border-gray-200 rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow cursor-pointer" onclick="openModal('modal-2')">
-      <div class="flex gap-4">
-        <div class="w-24 h-24 bg-purple-100 rounded-lg flex items-center justify-center flex-shrink-0">
-          <span class="text-3xl">🏛️</span>
-        </div>
-        <div class="flex-1">
-          <div class="flex justify-between items-start mb-2">
-            <span class="bg-blue-500 text-white px-2 py-1 rounded text-xs"><%= t('home.categories.events') %></span>
-            <span class="text-sm text-gray-500">Il y a 4h</span>
+  <!-- Upcoming Events -->
+  <% if @upcoming_events.any? %>
+    <div class="mb-8">
+      <h2 class="text-2xl font-bold mb-4"><%= t('home.sections.upcoming_events') %></h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <% @upcoming_events.each do |event| %>
+          <div class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow">
+            <div class="flex items-start gap-4">
+              <div class="bg-blue-100 dark:bg-blue-900 rounded-lg p-3 flex-shrink-0">
+                <span class="text-2xl">📅</span>
+              </div>
+              <div class="flex-1">
+                <h3 class="font-bold text-lg mb-2 text-gray-900 dark:text-gray-100"><%= event.title %></h3>
+                <p class="text-gray-600 dark:text-gray-400 text-sm mb-2"><%= truncate(strip_tags(event.description), length: 80) %></p>
+                <div class="flex justify-between items-center text-sm text-gray-500 dark:text-gray-400">
+                  <span><%= event.start_time.strftime("%d/%m/%Y") %></span>
+                  <span><%= t('common.by') %> <%= event.user.name %></span>
+                </div>
+                <div class="mt-2">
+                  <%= link_to t('actions.view_details'), event_path(event), 
+                      class: "text-blue-600 hover:text-blue-800 text-sm font-medium" %>
+                </div>
+              </div>
+            </div>
           </div>
-          <h3 class="font-bold text-lg mb-1 text-gray-900">Marché de Noël - Place de la Mairie</h3>
-          <p class="text-gray-600 text-sm mb-2">Venez découvrir notre marché de Noël traditionnel...</p>
-          <div class="flex justify-between items-center">
-            <span class="text-xs text-gray-500">Par Mairie Local</span>
-            <button class="text-blue-600 hover:text-blue-800 text-sm font-medium" onclick="event.stopPropagation(); openModal('modal-2')">
-              💬 Contacter
-            </button>
-          </div>
-        </div>
+        <% end %>
       </div>
     </div>
+  <% end %>
 
-    <!-- Listing 3 -->
-    <div class="bg-white border border-gray-200 rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow cursor-pointer" onclick="openModal('modal-3')">
-      <div class="flex gap-4">
-        <div class="w-24 h-24 bg-green-100 rounded-lg flex items-center justify-center flex-shrink-0">
-          <span class="text-3xl">🏡</span>
-        </div>
-        <div class="flex-1">
-          <div class="flex justify-between items-start mb-2">
-            <span class="bg-green-500 text-white px-2 py-1 rounded text-xs"><%= t('home.categories.real_estate') %></span>
-            <span class="text-sm text-gray-500">Il y a 6h</span>
+  <!-- Featured Posts -->
+  <% if @featured_posts.any? %>
+    <div class="mb-8">
+      <h2 class="text-2xl font-bold mb-4"><%= t('home.sections.featured_posts') %></h2>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <% @featured_posts.each do |post| %>
+          <div class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow">
+            <div class="bg-yellow-100 dark:bg-yellow-900 rounded-lg p-3 mb-3">
+              <span class="text-2xl">⭐</span>
+            </div>
+            <h3 class="font-bold text-lg mb-2 text-gray-900 dark:text-gray-100"><%= post.title %></h3>
+            <p class="text-gray-600 dark:text-gray-400 text-sm mb-3"><%= truncate(strip_tags(post.content), length: 100) %></p>
+            <div class="flex justify-between items-center text-sm text-gray-500 dark:text-gray-400">
+              <span><%= t('common.by') %> <%= post.user.name %></span>
+              <span><%= time_ago_in_words(post.created_at) %> <%= t('common.ago') %></span>
+            </div>
+            <div class="mt-3">
+              <%= link_to t('actions.read_more'), post_path(post), 
+                  class: "text-blue-600 hover:text-blue-800 text-sm font-medium" %>
+            </div>
           </div>
-          <h3 class="font-bold text-lg mb-1 text-gray-900">Appartement 3 pièces à louer</h3>
-          <p class="text-gray-600 text-sm mb-2">Bel appartement de 65m² avec balcon, proche transports...</p>
-          <div class="flex justify-between items-center">
-            <span class="text-xs text-gray-500">Par Jean Martin</span>
-            <button class="text-blue-600 hover:text-blue-800 text-sm font-medium" onclick="event.stopPropagation(); openModal('modal-3')">
-              💬 Contacter
-            </button>
-          </div>
-        </div>
+        <% end %>
       </div>
     </div>
+  <% end %>
 
-    <!-- Listing 4 -->
-    <div class="bg-white border border-gray-200 rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow cursor-pointer" onclick="openModal('modal-4')">
-      <div class="flex gap-4">
-        <div class="w-24 h-24 bg-yellow-100 rounded-lg flex items-center justify-center flex-shrink-0">
-          <span class="text-3xl">🔧</span>
-        </div>
-        <div class="flex-1">
-          <div class="flex justify-between items-start mb-2">
-            <span class="bg-purple-500 text-white px-2 py-1 rounded text-xs"><%= t('home.categories.services') %></span>
-            <span class="text-sm text-gray-500">Il y a 8h</span>
+  <!-- Forum Categories -->
+  <% if @forum_categories.any? %>
+    <div class="mb-8">
+      <h2 class="text-2xl font-bold mb-4"><%= t('home.sections.forum_categories') %></h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <% @forum_categories.each do |category| %>
+          <div class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-4 hover:shadow-md transition-shadow">
+            <div class="flex items-center gap-3 mb-2">
+              <div class="bg-indigo-100 dark:bg-indigo-900 rounded-lg p-2">
+                <span class="text-xl">💬</span>
+              </div>
+              <div>
+                <h3 class="font-bold text-gray-900 dark:text-gray-100"><%= category.name %></h3>
+                <p class="text-sm text-gray-600 dark:text-gray-400"><%= category.description %></p>
+              </div>
+            </div>
+            <div class="text-sm text-gray-500 dark:text-gray-400">
+              <%= t('forum.threads_count', count: category.forum_threads.count) %>
+            </div>
           </div>
-          <h3 class="font-bold text-lg mb-1 text-gray-900">Plombier - Intervention rapide</h3>
-          <p class="text-gray-600 text-sm mb-2">Services de plomberie 7j/7. Réparations, installations...</p>
-          <div class="flex justify-between items-center">
-            <span class="text-xs text-gray-500">Par ServicePlus</span>
-            <button class="text-blue-600 hover:text-blue-800 text-sm font-medium" onclick="event.stopPropagation(); openModal('modal-4')">
-              💬 Contacter
-            </button>
-          </div>
-        </div>
+        <% end %>
       </div>
     </div>
-
-    <!-- Listing 5 -->
-    <div class="bg-white border border-gray-200 rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow cursor-pointer" onclick="openModal('modal-5')">
-      <div class="flex gap-4">
-        <div class="w-24 h-24 bg-indigo-100 rounded-lg flex items-center justify-center flex-shrink-0">
-          <span class="text-3xl">📚</span>
-        </div>
-        <div class="flex-1">
-          <div class="flex justify-between items-start mb-2">
-            <span class="bg-indigo-500 text-white px-2 py-1 rounded text-xs"><%= t('home.categories.education') %></span>
-            <span class="text-sm text-gray-500">Il y a 12h</span>
-          </div>
-          <h3 class="font-bold text-lg mb-1 text-gray-900">Cours de français - Tous niveaux</h3>
-          <p class="text-gray-600 text-sm mb-2">Professeure certifiée propose cours particuliers...</p>
-          <div class="flex justify-between items-center">
-            <span class="text-xs text-gray-500">Par Marie Dubois</span>
-            <button class="text-blue-600 hover:text-blue-800 text-sm font-medium" onclick="event.stopPropagation(); openModal('modal-5')">
-              💬 Contacter
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Listing 6 -->
-    <div class="bg-white border border-gray-200 rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow cursor-pointer" onclick="openModal('modal-6')">
-      <div class="flex gap-4">
-        <div class="w-24 h-24 bg-red-100 rounded-lg flex items-center justify-center flex-shrink-0">
-          <span class="text-3xl">🚗</span>
-        </div>
-        <div class="flex-1">
-          <div class="flex justify-between items-start mb-2">
-            <span class="bg-red-500 text-white px-2 py-1 rounded text-xs"><%= t('home.categories.transport') %></span>
-            <span class="text-sm text-gray-500">Il y a 1j</span>
-          </div>
-          <h3 class="font-bold text-lg mb-1 text-gray-900">Covoiturage Paris-Lyon</h3>
-          <p class="text-gray-600 text-sm mb-2">Départ vendredi 25 juillet 8h. 3 places disponibles...</p>
-          <div class="flex justify-between items-center">
-            <span class="text-xs text-gray-500">Par Alex Rousseau</span>
-            <button class="text-blue-600 hover:text-blue-800 text-sm font-medium" onclick="event.stopPropagation(); openModal('modal-6')">
-              💬 Contacter
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-
-  </div>
+  <% end %>
 </div>
-
-<!-- Detail Modal -->
-<div id="detail-modal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black bg-opacity-50">
-  <div class="bg-white max-w-2xl w-full mx-4 rounded-lg overflow-hidden max-h-[80vh] overflow-y-auto">
-    <div class="p-6">
-      <!-- Modal Header -->
-      <div class="flex justify-between items-start mb-6">
-        <div id="modal-category" class="bg-blue-500 text-white px-4 py-2 rounded-full text-sm font-medium"></div>
-        <button onclick="closeModal()" class="text-gray-500 hover:text-gray-700 text-2xl font-bold">×</button>
-      </div>
-      
-      <!-- Modal Content -->
-      <div class="flex gap-6 mb-6">
-        <div id="modal-image" class="w-32 h-32 bg-gray-100 rounded-lg flex items-center justify-center flex-shrink-0">
-          <span id="modal-emoji" class="text-4xl"></span>
-        </div>
-        <div class="flex-1">
-          <h2 id="modal-title" class="text-2xl font-bold text-gray-900 mb-4"></h2>
-          <p id="modal-description" class="text-gray-600 mb-4"></p>
-          <div class="flex justify-between items-center">
-            <div id="modal-author" class="text-sm text-gray-500"></div>
-            <div id="modal-time" class="text-sm text-gray-500"></div>
-          </div>
-        </div>
-      </div>
-      
-      <!-- Contact Form -->
-      <div class="border-t pt-6">
-        <h3 class="text-lg font-bold text-gray-900 mb-4">Contacter le créateur</h3>
-        <form class="space-y-4" onsubmit="handleContactSubmit(event)">
-          <div>
-            <label class="block text-gray-700 font-medium mb-2">Votre nom</label>
-            <input type="text" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:border-blue-500 focus:outline-none" placeholder="<%= t('common.your_full_name') %>" required>
-          </div>
-          <div>
-            <label class="block text-gray-700 font-medium mb-2">Message</label>
-            <textarea rows="4" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:border-blue-500 focus:outline-none resize-none" placeholder="<%= t('common.your_message') %>" required></textarea>
-          </div>
-          <div class="flex gap-4 pt-4">
-            <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white flex-1 py-3 px-6 rounded-lg font-semibold">
-              📤 <%= t('actions.send_message') %>
-            </button>
-            <button type="button" onclick="closeModal()" class="bg-gray-500 hover:bg-gray-600 text-white py-3 px-6 rounded-lg font-semibold">
-              <%= t('actions.close') %>
-            </button>
-          </div>
-        </form>
-      </div>
-    </div>
-  </div>
-</div>
-
-
-<script>
-// Modal data  
-const modalData = {
-  'modal-1': {
-    category: '<%= t('home.categories.animals') %>',
-    title: 'Chat perdu - Récompense offerte',
-    description: 'Mon chat Minou a disparu hier soir dans le quartier des Lilas. Il est gris et blanc avec un collier bleu. Très affectueux et répond à son nom. Si vous l\'avez vu, merci de me contacter. Récompense de 50€ offerte pour toute information.',
-    author: 'Par Rene Tec',
-    time: 'Il y a 2h',
-    emoji: '🐱',
-    userId: 'user-1'
-  },
-  'modal-2': {
-    category: '<%= t('home.categories.events') %>',
-    title: 'Marché de Noël - Place de la Mairie',
-    description: 'Venez découvrir notre marché de Noël traditionnel avec des artisans locaux et des spécialités régionales. Animation pour enfants, vin chaud et nombreux stands. Ouvert du 15 au 24 décembre de 10h à 20h.',
-    author: 'Par Mairie Local',
-    time: 'Il y a 4h',
-    emoji: '🏛️',
-    userId: 'user-2'
-  },
-  'modal-3': {
-    category: '<%= t('home.categories.real_estate') %>', 
-    title: 'Appartement 3 pièces à louer',
-    description: 'Bel appartement de 65m² au 2ème étage avec ascenseur. 2 chambres, salon, cuisine équipée, salle de bain. Balcon de 8m². Proche métro ligne 9, commerces et écoles. Libre immédiatement. Loyer 1200€/mois charges comprises.',
-    author: 'Par Jean Martin',
-    time: 'Il y a 6h',
-    emoji: '🏡',
-    userId: 'user-3'
-  },
-  'modal-4': {
-    category: '<%= t('home.categories.services') %>',
-    title: 'Plombier - Intervention rapide',
-    description: 'Artisan plombier qualifié propose tous services de plomberie : réparations, installations, urgences 7j/7. Spécialisé dans les fuites, débouchage, installation sanitaires. Devis gratuit, tarifs compétitifs.',
-    author: 'Par ServicePlus',
-    time: 'Il y a 8h',
-    emoji: '🔧',
-    userId: 'user-4'
-  },
-  'modal-5': {
-    category: '<%= t('home.categories.education') %>',
-    title: 'Cours de français - Tous niveaux',
-    description: 'Professeure certifiée avec 10 ans d\'expérience propose cours particuliers de français. Préparation aux examens, remise à niveau, conversation. Tous âges et tous niveaux. Première séance d\'évaluation gratuite.',
-    author: 'Par Marie Dubois',
-    time: 'Il y a 12h',
-    emoji: '📚',
-    userId: 'user-5'
-  },
-  'modal-6': {
-    category: '<%= t('home.categories.transport') %>',
-    title: 'Covoiturage Paris-Lyon',
-    description: 'Conducteur expérimenté propose covoiturage Paris-Lyon. Départ vendredi 25 juillet à 8h du matin depuis Porte de Bercy. 3 places disponibles. Trajet direct, pause prévue. Partage des frais d\'essence et péage.',
-    author: 'Par Alex Rousseau',
-    time: 'Il y a 1j',
-    emoji: '🚗',
-    userId: 'user-6'
-  }
-};
-
-// Modal functions
-function openModal(modalId) {
-  const data = modalData[modalId];
-  if (data) {
-    document.getElementById('modal-category').textContent = data.category;
-    document.getElementById('modal-title').textContent = data.title;
-    document.getElementById('modal-description').textContent = data.description;
-    document.getElementById('modal-author').textContent = data.author;
-    document.getElementById('modal-time').textContent = data.time;
-    document.getElementById('modal-emoji').textContent = data.emoji;
-    
-    document.getElementById('detail-modal').style.display = 'flex';
-    document.getElementById('detail-modal').classList.remove('hidden');
-  }
-}
-
-function closeModal() {
-  document.getElementById('detail-modal').style.display = 'none';
-  document.getElementById('detail-modal').classList.add('hidden');
-}
-
-function handleContactSubmit(event) {
-  event.preventDefault();
-  alert('Message envoyé! Le créateur vous répondra bientôt.');
-  closeModal();
-}
-
-// Close modals when clicking outside
-document.getElementById('detail-modal').addEventListener('click', function(e) {
-  if (e.target === document.getElementById('detail-modal')) {
-    closeModal();
-  }
-});
-
-</script>
