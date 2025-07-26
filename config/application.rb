@@ -18,6 +18,9 @@ module Leclub
     #
     # config.time_zone = "Central Time (US & Canada)"
     # config.eager_load_paths << Rails.root.join("extras")
+    
+    # Add services directory to autoload path
+    config.autoload_paths << Rails.root.join("app", "services")
 
     # Permitted locales available for the application
     config.i18n.available_locales = [:fr, :en]

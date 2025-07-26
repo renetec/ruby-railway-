@@ -155,6 +155,17 @@ fr:
       active_discussions: "Discussions actives"
       no_recent_activity: "Aucune activité récente"
       
+    filters:
+      category: "Catégorie"
+      
+    categories:
+      animals: "Animaux"
+      events: "Événements"
+      real_estate: "Immobilier"
+      services: "Services"
+      education: "Éducation"
+      transport: "Transport"
+      
     final_cta:
       title: "Prêt à vous joindre à nous ?"
       subtitle: "Devenez partie intégrante de cette communauté dynamique dès aujourd'hui"
@@ -178,6 +189,19 @@ fr:
       this_month: "Ce mois"
       past: "Passés"
       all_categories: "Toutes les catégories"
+      period: "Période"
+      event_type: "Type d'événement"
+    
+    view:
+      list: "Vue Liste"
+      calendar: "Vue Calendrier"
+    
+    types:
+      festivals: "Festivals"
+      concerts: "Concerts"
+      exhibitions: "Expositions"
+      conferences: "Conférences"
+      sports: "Sports"
     
     categories:
       community: "Communauté"
@@ -625,6 +649,29 @@ fr:
     no_conversation_access: "Vous n'avez pas accès à cette conversation."
     left_conversation: "Conversation quittée avec succès"
     conversation_archived: "Conversation archivée"
+
+  # Forum
+  forum:
+    post_reply: "Répondre à cette discussion"
+    post_reply_button: "Répondre"
+    your_reply: "Votre réponse"
+    share_thoughts_placeholder: "Partagez vos pensées..."
+    reply: "réponse"
+    started_ago: "créé il y a %{time}"
+    replied_ago: "répondu il y a %{time}"
+    in_category: "dans"
+    no_replies_yet: "Aucune réponse pour le moment"
+    must_signin_to_reply: "Connectez-vous pour répondre"
+    thread_locked_message: "Cette discussion est verrouillée"
+    back_to_category: "Retour à %{category}"
+    back_to_forum: "Retour au Forum"
+    edit: "Modifier"
+    delete: "Supprimer"
+    confirm_delete: "Êtes-vous sûr de vouloir supprimer cette réponse ?"
+    lock: "Verrouiller"
+    unlock: "Déverrouiller"
+    pin: "Épingler"
+    unpin: "Désépingler"
 
   # Meta tags
   meta:

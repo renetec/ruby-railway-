@@ -17,10 +17,10 @@
   <div class="flex justify-center mb-8">
     <div class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-1 flex">
       <button id="list-view-btn" onclick="showListView()" class="px-6 py-2 rounded-md font-semibold transition-all duration-200 bg-blue-500 text-white">
-        📋 Vue Liste
+        📋 <%= t('events.view.list') %>
       </button>
       <button id="calendar-view-btn" onclick="showCalendarView()" class="px-6 py-2 rounded-md font-semibold transition-all duration-200 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100">
-        📅 Vue Calendrier
+        📅 <%= t('events.view.calendar') %>
       </button>
     </div>
   </div>
@@ -28,19 +28,19 @@
   <!-- Filters Section -->
   <div class="flex flex-col md:flex-row gap-4 mb-8 justify-center">
     <select class="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100">
-      <option>Période</option>
-      <option>Cette semaine</option>
-      <option>Ce mois</option>
-      <option>Prochains événements</option>
-      <option>Événements passés</option>
+      <option><%= t('events.filters.period') %></option>
+      <option><%= t('events.filters.this_week') %></option>
+      <option><%= t('events.filters.this_month') %></option>
+      <option><%= t('events.filters.upcoming') %></option>
+      <option><%= t('events.filters.past') %></option>
     </select>
     <select class="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100">
-      <option>Type d'événement</option>
-      <option>Festivals</option>
-      <option>Concerts</option>
-      <option>Expositions</option>
-      <option>Conférences</option>
-      <option>Sports</option>
+      <option><%= t('events.filters.event_type') %></option>
+      <option><%= t('events.types.festivals') %></option>
+      <option><%= t('events.types.concerts') %></option>
+      <option><%= t('events.types.exhibitions') %></option>
+      <option><%= t('events.types.conferences') %></option>
+      <option><%= t('events.types.sports') %></option>
     </select>
     <button class="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 dark:bg-blue-600 dark:hover:bg-blue-700">
       🔄 <%= t('actions.refresh') %>

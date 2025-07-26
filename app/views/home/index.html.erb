@@ -9,16 +9,13 @@
   <!-- Filters Section -->
   <div class="flex flex-col md:flex-row gap-4 mb-8 justify-center">
     <select class="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100">
-      <option>Catégorie</option>
-      <option>Animaux</option>
-      <option>Événements</option>
-      <option>Immobilier</option>
-      <option>Services</option>
-    </select>
-    <select class="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100">
-      <option>Région</option>
-      <option>Île-de-France</option>
-      <option>Provence-Alpes-Côte d'Azur</option>
+      <option><%= t('home.filters.category') %></option>
+      <option><%= t('home.categories.animals') %></option>
+      <option><%= t('home.categories.events') %></option>
+      <option><%= t('home.categories.real_estate') %></option>
+      <option><%= t('home.categories.services') %></option>
+      <option><%= t('home.categories.education') %></option>
+      <option><%= t('home.categories.transport') %></option>
     </select>
     <button class="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 dark:bg-blue-600 dark:hover:bg-blue-700">
       🔄 <%= t('actions.refresh') %>
@@ -35,7 +32,7 @@
         </div>
         <div class="flex-1">
           <div class="flex justify-between items-start mb-2">
-            <span class="bg-orange-500 text-white px-2 py-1 rounded text-xs">Animaux</span>
+            <span class="bg-orange-500 text-white px-2 py-1 rounded text-xs"><%= t('home.categories.animals') %></span>
             <span class="text-sm text-gray-500 dark:text-gray-400">Il y a 2h</span>
           </div>
           <h3 class="font-bold text-lg mb-1 text-gray-900 dark:text-gray-100">Chat perdu - Récompense offerte</h3>
@@ -58,7 +55,7 @@
         </div>
         <div class="flex-1">
           <div class="flex justify-between items-start mb-2">
-            <span class="bg-blue-500 text-white px-2 py-1 rounded text-xs">Événement</span>
+            <span class="bg-blue-500 text-white px-2 py-1 rounded text-xs"><%= t('home.categories.events') %></span>
             <span class="text-sm text-gray-500">Il y a 4h</span>
           </div>
           <h3 class="font-bold text-lg mb-1 text-gray-900">Marché de Noël - Place de la Mairie</h3>
@@ -81,7 +78,7 @@
         </div>
         <div class="flex-1">
           <div class="flex justify-between items-start mb-2">
-            <span class="bg-green-500 text-white px-2 py-1 rounded text-xs">Immobilier</span>
+            <span class="bg-green-500 text-white px-2 py-1 rounded text-xs"><%= t('home.categories.real_estate') %></span>
             <span class="text-sm text-gray-500">Il y a 6h</span>
           </div>
           <h3 class="font-bold text-lg mb-1 text-gray-900">Appartement 3 pièces à louer</h3>
@@ -104,7 +101,7 @@
         </div>
         <div class="flex-1">
           <div class="flex justify-between items-start mb-2">
-            <span class="bg-purple-500 text-white px-2 py-1 rounded text-xs">Services</span>
+            <span class="bg-purple-500 text-white px-2 py-1 rounded text-xs"><%= t('home.categories.services') %></span>
             <span class="text-sm text-gray-500">Il y a 8h</span>
           </div>
           <h3 class="font-bold text-lg mb-1 text-gray-900">Plombier - Intervention rapide</h3>
@@ -127,7 +124,7 @@
         </div>
         <div class="flex-1">
           <div class="flex justify-between items-start mb-2">
-            <span class="bg-indigo-500 text-white px-2 py-1 rounded text-xs">Éducation</span>
+            <span class="bg-indigo-500 text-white px-2 py-1 rounded text-xs"><%= t('home.categories.education') %></span>
             <span class="text-sm text-gray-500">Il y a 12h</span>
           </div>
           <h3 class="font-bold text-lg mb-1 text-gray-900">Cours de français - Tous niveaux</h3>
@@ -150,7 +147,7 @@
         </div>
         <div class="flex-1">
           <div class="flex justify-between items-start mb-2">
-            <span class="bg-red-500 text-white px-2 py-1 rounded text-xs">Transport</span>
+            <span class="bg-red-500 text-white px-2 py-1 rounded text-xs"><%= t('home.categories.transport') %></span>
             <span class="text-sm text-gray-500">Il y a 1j</span>
           </div>
           <h3 class="font-bold text-lg mb-1 text-gray-900">Covoiturage Paris-Lyon</h3>
@@ -221,10 +218,10 @@
 
 
 <script>
-// Modal data
+// Modal data  
 const modalData = {
   'modal-1': {
-    category: 'Animaux',
+    category: '<%= t('home.categories.animals') %>',
     title: 'Chat perdu - Récompense offerte',
     description: 'Mon chat Minou a disparu hier soir dans le quartier des Lilas. Il est gris et blanc avec un collier bleu. Très affectueux et répond à son nom. Si vous l\'avez vu, merci de me contacter. Récompense de 50€ offerte pour toute information.',
     author: 'Par Rene Tec',
@@ -233,7 +230,7 @@ const modalData = {
     userId: 'user-1'
   },
   'modal-2': {
-    category: 'Événement',
+    category: '<%= t('home.categories.events') %>',
     title: 'Marché de Noël - Place de la Mairie',
     description: 'Venez découvrir notre marché de Noël traditionnel avec des artisans locaux et des spécialités régionales. Animation pour enfants, vin chaud et nombreux stands. Ouvert du 15 au 24 décembre de 10h à 20h.',
     author: 'Par Mairie Local',
@@ -242,7 +239,7 @@ const modalData = {
     userId: 'user-2'
   },
   'modal-3': {
-    category: 'Immobilier', 
+    category: '<%= t('home.categories.real_estate') %>', 
     title: 'Appartement 3 pièces à louer',
     description: 'Bel appartement de 65m² au 2ème étage avec ascenseur. 2 chambres, salon, cuisine équipée, salle de bain. Balcon de 8m². Proche métro ligne 9, commerces et écoles. Libre immédiatement. Loyer 1200€/mois charges comprises.',
     author: 'Par Jean Martin',
@@ -251,7 +248,7 @@ const modalData = {
     userId: 'user-3'
   },
   'modal-4': {
-    category: 'Services',
+    category: '<%= t('home.categories.services') %>',
     title: 'Plombier - Intervention rapide',
     description: 'Artisan plombier qualifié propose tous services de plomberie : réparations, installations, urgences 7j/7. Spécialisé dans les fuites, débouchage, installation sanitaires. Devis gratuit, tarifs compétitifs.',
     author: 'Par ServicePlus',
@@ -260,7 +257,7 @@ const modalData = {
     userId: 'user-4'
   },
   'modal-5': {
-    category: 'Éducation',
+    category: '<%= t('home.categories.education') %>',
     title: 'Cours de français - Tous niveaux',
     description: 'Professeure certifiée avec 10 ans d\'expérience propose cours particuliers de français. Préparation aux examens, remise à niveau, conversation. Tous âges et tous niveaux. Première séance d\'évaluation gratuite.',
     author: 'Par Marie Dubois',
@@ -269,7 +266,7 @@ const modalData = {
     userId: 'user-5'
   },
   'modal-6': {
-    category: 'Transport',
+    category: '<%= t('home.categories.transport') %>',
     title: 'Covoiturage Paris-Lyon',
     description: 'Conducteur expérimenté propose covoiturage Paris-Lyon. Départ vendredi 25 juillet à 8h du matin depuis Porte de Bercy. 3 places disponibles. Trajet direct, pause prévue. Partage des frais d\'essence et péage.',
     author: 'Par Alex Rousseau',

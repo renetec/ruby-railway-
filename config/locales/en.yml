@@ -155,6 +155,17 @@ en:
       active_discussions: "Active Discussions"
       no_recent_activity: "No recent activity"
       
+    filters:
+      category: "Category"
+      
+    categories:
+      animals: "Animals"
+      events: "Events"
+      real_estate: "Real Estate"
+      services: "Services"
+      education: "Education"
+      transport: "Transport"
+      
     final_cta:
       title: "Ready to Join Us?"
       subtitle: "Become part of this vibrant community today"
@@ -178,6 +189,19 @@ en:
       this_month: "This Month"
       past: "Past"
       all_categories: "All Categories"
+      period: "Period"
+      event_type: "Event Type"
+    
+    view:
+      list: "List View"
+      calendar: "Calendar View"
+    
+    types:
+      festivals: "Festivals"
+      concerts: "Concerts"
+      exhibitions: "Exhibitions"
+      conferences: "Conferences"
+      sports: "Sports"
     
     categories:
       community: "Community"
@@ -507,6 +531,29 @@ en:
     freelance: "Freelance"
     internship: "Internship"
     part_time: "Part Time"
+
+  # Forum
+  forum:
+    post_reply: "Reply to this thread"
+    post_reply_button: "Reply"
+    your_reply: "Your reply"
+    share_thoughts_placeholder: "Share your thoughts..."
+    reply: "reply"
+    started_ago: "started %{time} ago"
+    replied_ago: "replied %{time} ago"
+    in_category: "in"
+    no_replies_yet: "No replies yet"
+    must_signin_to_reply: "Sign in to post a reply"
+    thread_locked_message: "This thread is locked"
+    back_to_category: "Back to %{category}"
+    back_to_forum: "Back to Forum"
+    edit: "Edit"
+    delete: "Delete"
+    confirm_delete: "Are you sure you want to delete this reply?"
+    lock: "Lock"
+    unlock: "Unlock"
+    pin: "Pin"
+    unpin: "Unpin"
 
   # Meta tags
   meta:

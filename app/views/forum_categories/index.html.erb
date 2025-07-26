@@ -108,27 +108,34 @@
         </div>
       </div>
       
-      <!-- Join/Create Thread Form -->
+      <!-- Thread Messages -->
       <div class="border-t dark:border-gray-600 pt-6">
-        <h3 class="text-lg font-bold text-gray-900 dark:text-gray-100 mb-4"><%= t('common.join_discussion_modal') %></h3>
-        <form class="space-y-4" onsubmit="handleForumJoin(event)">
-          <div>
-            <label class="block text-gray-700 dark:text-gray-300 font-medium mb-2">Titre de votre discussion</label>
-            <input type="text" class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded-lg focus:border-blue-500 focus:outline-none" placeholder="Sujet de discussion..." required>
-          </div>
-          <div>
-            <label class="block text-gray-700 dark:text-gray-300 font-medium mb-2">Votre message</label>
-            <textarea rows="4" class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded-lg focus:border-blue-500 focus:outline-none resize-none" placeholder="Votre message..." required></textarea>
-          </div>
-          <div class="flex gap-4 pt-4">
-            <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white flex-1 py-3 px-6 rounded-lg font-semibold">
-              💬 <%= t('actions.publish') %>
-            </button>
-            <button type="button" onclick="closeModal()" class="bg-gray-500 hover:bg-gray-600 text-white py-3 px-6 rounded-lg font-semibold">
-              <%= t('actions.close') %>
-            </button>
-          </div>
-        </form>
+        <h3 class="text-lg font-bold text-gray-900 dark:text-gray-100 mb-4">Recent Discussion</h3>
+        
+        <!-- Thread Messages Container -->
+        <div id="thread-messages" class="space-y-4 mb-6 max-h-96 overflow-y-auto">
+          <!-- Sample messages will be populated by JavaScript -->
+        </div>
+        
+        <!-- Quick Reply Form -->
+        <div class="border-t dark:border-gray-600 pt-4">
+          <form class="space-y-3" onsubmit="handleQuickReply(event)">
+            <div>
+              <textarea rows="3" 
+                       class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded-lg focus:border-blue-500 focus:outline-none resize-none" 
+                       placeholder="<%= t('forum.share_thoughts_placeholder') %>" 
+                       required></textarea>
+            </div>
+            <div class="flex gap-3">
+              <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white flex-1 py-2 px-4 rounded-lg font-semibold">
+                💬 <%= t('forum.post_reply_button') %>
+              </button>
+              <button type="button" onclick="closeModal()" class="bg-gray-500 hover:bg-gray-600 text-white py-2 px-4 rounded-lg font-semibold">
+                <%= t('actions.close') %>
+              </button>
+            </div>
+          </form>
+        </div>
       </div>
     </div>
   </div>
@@ -206,7 +213,7 @@
 </div>
 
 <script>
-// Modal data for forum categories
+// Modal data for forum categories with sample thread messages
 const modalData = {
   <% @forum_categories.each_with_index do |category, index| %>
   'modal-<%= index + 1 %>': {
@@ -215,7 +222,24 @@ const modalData = {
     description: '<%= j category.description %>',
     emoji: '💬',
     threads: '<%= pluralize(category.forum_threads.count, 'discussion') %>',
-    activity: '<% if category.forum_threads.recent.first %>Dernière activité: <%= time_ago_in_words(category.forum_threads.recent.first.updated_at) %><% else %>Aucune activité récente<% end %>'
+    activity: '<% if category.forum_threads.recent.first %>Dernière activité: <%= time_ago_in_words(category.forum_threads.recent.first.updated_at) %><% else %>Aucune activité récente<% end %>',
+    messages: [
+      {
+        author: 'Marie Dubois',
+        time: 'il y a 2h',
+        content: 'Bonjour tout le monde ! Quelqu\'un aurait-il des recommandations pour ce sujet ?'
+      },
+      {
+        author: 'Jean Martin',
+        time: 'il y a 1h',
+        content: 'Salut Marie ! J\'ai quelques idées à partager. Je pense que nous devrions d\'abord considérer...'
+      },
+      {
+        author: 'Sophie Laurent',
+        time: 'il y a 30min',
+        content: 'Excellentes suggestions ! J\'ajouterais aussi que l\'expérience utilisateur est très importante.'
+      }
+    ]
   }<%= ',' unless index == @forum_categories.count - 1 %>
   <% end %>
 };
@@ -231,6 +255,39 @@ function openModal(modalId) {
     document.getElementById('modal-threads').textContent = data.threads;
     document.getElementById('modal-activity').textContent = data.activity;
     
+    // Populate thread messages
+    const messagesContainer = document.getElementById('thread-messages');
+    messagesContainer.innerHTML = '';
+    
+    if (data.messages && data.messages.length > 0) {
+      data.messages.forEach((message, index) => {
+        const messageDiv = document.createElement('div');
+        messageDiv.className = 'bg-gray-50 dark:bg-gray-700 rounded-lg p-4 border border-gray-200 dark:border-gray-600';
+        messageDiv.innerHTML = `
+          <div class="flex items-start gap-3">
+            <div class="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center flex-shrink-0">
+              <span class="text-white text-sm font-semibold">${message.author.charAt(0).toUpperCase()}</span>
+            </div>
+            <div class="flex-1">
+              <div class="flex items-center gap-2 mb-1">
+                <span class="font-semibold text-gray-900 dark:text-gray-100">${message.author}</span>
+                <span class="text-xs text-gray-500 dark:text-gray-400">${message.time}</span>
+              </div>
+              <p class="text-gray-700 dark:text-gray-300 text-sm leading-relaxed">${message.content}</p>
+            </div>
+          </div>
+        `;
+        messagesContainer.appendChild(messageDiv);
+      });
+    } else {
+      messagesContainer.innerHTML = `
+        <div class="text-center py-8 text-gray-500 dark:text-gray-400">
+          <div class="text-2xl mb-2">💬</div>
+          <p>Aucun message pour le moment. Soyez le premier à commencer la discussion!</p>
+        </div>
+      `;
+    }
+    
     document.getElementById('detail-modal').style.display = 'flex';
     document.getElementById('detail-modal').classList.remove('hidden');
   }
@@ -241,10 +298,66 @@ function closeModal() {
   document.getElementById('detail-modal').classList.add('hidden');
 }
 
-function handleForumJoin(event) {
+function handleQuickReply(event) {
   event.preventDefault();
-  alert('Discussion publiée! Vous pouvez maintenant participer au forum.');
-  closeModal();
+  
+  const form = event.target;
+  const textarea = form.querySelector('textarea');
+  const replyContent = textarea.value.trim();
+  
+  if (!replyContent) {
+    alert('Veuillez saisir votre message avant de publier.');
+    return;
+  }
+  
+  // Create new message object
+  const newMessage = {
+    author: 'Vous', // In real implementation, get from current user
+    time: 'à l\'instant',
+    content: replyContent
+  };
+  
+  // Add message to the current modal's messages container
+  const messagesContainer = document.getElementById('thread-messages');
+  const messageDiv = document.createElement('div');
+  messageDiv.className = 'bg-blue-50 dark:bg-blue-900 rounded-lg p-4 border border-blue-200 dark:border-blue-700';
+  messageDiv.innerHTML = `
+    <div class="flex items-start gap-3">
+      <div class="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center flex-shrink-0">
+        <span class="text-white text-sm font-semibold">V</span>
+      </div>
+      <div class="flex-1">
+        <div class="flex items-center gap-2 mb-1">
+          <span class="font-semibold text-gray-900 dark:text-gray-100">${newMessage.author}</span>
+          <span class="text-xs text-gray-500 dark:text-gray-400">${newMessage.time}</span>
+        </div>
+        <p class="text-gray-700 dark:text-gray-300 text-sm leading-relaxed">${newMessage.content}</p>
+      </div>
+    </div>
+  `;
+  
+  // If no messages exist, clear the empty state first
+  if (messagesContainer.querySelector('.text-center')) {
+    messagesContainer.innerHTML = '';
+  }
+  
+  messagesContainer.appendChild(messageDiv);
+  
+  // Clear the textarea
+  textarea.value = '';
+  
+  // Scroll to the new message
+  messageDiv.scrollIntoView({ behavior: 'smooth', block: 'end' });
+  
+  // Show success message
+  const successMsg = document.createElement('div');
+  successMsg.className = 'fixed top-4 right-4 bg-green-500 text-white px-4 py-2 rounded-lg shadow-lg z-50';
+  successMsg.innerHTML = '💬 Réponse publiée avec succès!';
+  document.body.appendChild(successMsg);
+  
+  setTimeout(() => {
+    successMsg.remove();
+  }, 3000);
 }
 
 // New Thread Modal Functions
