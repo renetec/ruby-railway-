@@ -51,41 +51,151 @@
                              style: "background-color: white !important; color: black !important;" %>
         </div>
 
-        <!-- Category and Status Row -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div>
-            <%= form.label :category, t('events.form.category', default: 'Category'), 
-                           class: "block text-sm font-medium text-gray-200 mb-2" %>
-            <%= form.select :category, 
-                           options_for_select(Event.categories.keys.map { |cat| [t("events.categories.#{cat}", default: cat.humanize), cat] }),
-                           { prompt: t('events.form.category_prompt', default: 'Select a category') },
-                           { class: "w-full px-4 py-3 bg-white border border-gray-300 rounded-lg text-black focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent",
-                             style: "background-color: white !important; color: black !important;" } %>
-          </div>
-          <div>
-            <%= form.label :status, t('events.form.status', default: 'Status'), 
-                           class: "block text-sm font-medium text-gray-200 mb-2" %>
-            <%= form.select :status, 
-                           options_for_select([
-                             [t('events.status.draft', default: 'Draft'), 'draft'], 
-                             [t('events.status.published', default: 'Published'), 'published']
-                           ]),
-                           {},
-                           { class: "w-full px-4 py-3 bg-white border border-gray-300 rounded-lg text-black focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent",
-                             style: "background-color: white !important; color: black !important;" } %>
-          </div>
+        <!-- Category -->
+        <div>
+          <%= form.label :category, t('events.form.category', default: 'Category'), 
+                         class: "block text-sm font-medium text-gray-200 mb-2" %>
+          <%= form.select :category, 
+                         options_for_select(Event.categories.keys.map { |cat| [t("events.categories.#{cat}", default: cat.humanize), cat] }),
+                         { prompt: t('events.form.category_prompt', default: 'Select a category') },
+                         { class: "w-full px-4 py-3 bg-white border border-gray-300 rounded-lg text-black focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent",
+                           style: "background-color: white !important; color: black !important;" } %>
         </div>
 
         <!-- Description -->
         <div>
           <%= form.label :description, t('events.form.description', default: 'Event Description'), 
                          class: "block text-sm font-medium text-gray-200 mb-2" %>
-          <%= form.text_area :description, 
-                            rows: 6, 
-                            placeholder: t('events.form.description_placeholder', default: 'Describe your event in detail. What can attendees expect?'), 
-                            class: "w-full px-4 py-3 bg-white border border-gray-300 rounded-lg text-black placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none",
-                            style: "background-color: white !important; color: black !important;" %>
+          <div class="bg-gray-700 rounded-lg p-1">
+            <div class="flex flex-wrap gap-1 mb-1 p-2 bg-gray-600 rounded-t-lg">
+              <button type="button" class="text-gray-200 hover:bg-gray-500 px-2 py-1 rounded text-sm font-bold" onclick="document.execCommand('bold')" title="Bold">B</button>
+              <button type="button" class="text-gray-200 hover:bg-gray-500 px-2 py-1 rounded text-sm italic" onclick="document.execCommand('italic')" title="Italic">I</button>
+              <button type="button" class="text-gray-200 hover:bg-gray-500 px-2 py-1 rounded text-sm underline" onclick="document.execCommand('underline')" title="Underline">U</button>
+              <span class="text-gray-400 mx-2">|</span>
+              <button type="button" class="text-gray-200 hover:bg-gray-500 px-2 py-1 rounded text-sm" onclick="document.execCommand('insertUnorderedList')" title="Bullet List">• List</button>
+              <button type="button" class="text-gray-200 hover:bg-gray-500 px-2 py-1 rounded text-sm" onclick="document.execCommand('insertOrderedList')" title="Numbered List">1. List</button>
+              <span class="text-gray-400 mx-2">|</span>
+              <button type="button" class="text-gray-200 hover:bg-gray-500 px-2 py-1 rounded text-sm" onclick="document.getElementById('description_image_input').click()" title="Insert Image">
+                <svg class="w-4 h-4 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                </svg>
+              </button>
+              <input type="file" id="description_image_input" accept="image/*" style="display: none;" onchange="insertImage(this)">
+              <span class="text-gray-400 mx-2">|</span>
+              <button type="button" class="text-gray-200 hover:bg-gray-500 px-2 py-1 rounded text-sm text-lg" onclick="insertEmoji('😊')" title="Happy">😊</button>
+              <button type="button" class="text-gray-200 hover:bg-gray-500 px-2 py-1 rounded text-sm text-lg" onclick="insertEmoji('🎉')" title="Celebration">🎉</button>
+              <button type="button" class="text-gray-200 hover:bg-gray-500 px-2 py-1 rounded text-sm text-lg" onclick="insertEmoji('📍')" title="Location">📍</button>
+              <button type="button" class="text-gray-200 hover:bg-gray-500 px-2 py-1 rounded text-sm text-lg" onclick="insertEmoji('⏰')" title="Time">⏰</button>
+              <button type="button" class="text-gray-200 hover:bg-gray-500 px-2 py-1 rounded text-sm text-lg" onclick="insertEmoji('🍕')" title="Food">🍕</button>
+              <button type="button" class="text-gray-200 hover:bg-gray-500 px-2 py-1 rounded text-sm text-lg" onclick="insertEmoji('🎵')" title="Music">🎵</button>
+              <button type="button" class="text-gray-200 hover:bg-gray-500 px-2 py-1 rounded text-sm text-lg" onclick="insertEmoji('💡')" title="Idea">💡</button>
+              <button type="button" class="text-gray-200 hover:bg-gray-500 px-2 py-1 rounded text-sm text-lg" onclick="insertEmoji('🚀')" title="Launch">🚀</button>
+            </div>
+            <div contenteditable="true" 
+                 id="event_description_editor"
+                 class="w-full px-4 py-3 bg-white border border-gray-300 rounded-b-lg text-black placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent overflow-y-auto"
+                 style="background-color: white !important; color: black !important; height: 400px; font-size: 16px; line-height: 1.6;"
+                 placeholder="<%= t('events.form.description_placeholder', default: 'Describe your event in detail. What can attendees expect?') %>"></div>
+            <%= form.hidden_field :description, id: "event_description_hidden" %>
+          </div>
         </div>
+
+        <style>
+          #event_description_editor:empty:before {
+            content: attr(placeholder);
+            color: #9ca3af;
+            pointer-events: none;
+            display: block;
+          }
+          #event_description_editor:focus {
+            outline: none;
+          }
+        </style>
+        
+        <script>
+          // Function to insert emoji at cursor position
+          function insertEmoji(emoji) {
+            const editor = document.getElementById('event_description_editor');
+            editor.focus();
+            document.execCommand('insertText', false, emoji);
+          }
+          
+          // Function to insert image
+          function insertImage(input) {
+            if (input.files && input.files[0]) {
+              const reader = new FileReader();
+              reader.onload = function(e) {
+                const editor = document.getElementById('event_description_editor');
+                editor.focus();
+                
+                // Create image element
+                const img = document.createElement('img');
+                img.src = e.target.result;
+                img.style.maxWidth = '100%';
+                img.style.height = 'auto';
+                img.style.marginTop = '10px';
+                img.style.marginBottom = '10px';
+                img.style.borderRadius = '8px';
+                
+                // Insert at cursor position
+                const selection = window.getSelection();
+                const range = selection.getRangeAt(0);
+                range.insertNode(img);
+                range.collapse(false);
+                
+                // Update hidden field
+                const hiddenField = document.getElementById('event_description_hidden');
+                hiddenField.value = editor.innerHTML;
+              };
+              reader.readAsDataURL(input.files[0]);
+            }
+          }
+
+          // Sync content to hidden field
+          document.addEventListener('DOMContentLoaded', function() {
+            const editor = document.getElementById('event_description_editor');
+            const hiddenField = document.getElementById('event_description_hidden');
+            
+            // Set initial content if editing
+            if (hiddenField.value) {
+              editor.innerHTML = hiddenField.value;
+            }
+            
+            // Update hidden field on input
+            editor.addEventListener('input', function() {
+              hiddenField.value = editor.innerHTML;
+            });
+            
+            // Allow image paste
+            editor.addEventListener('paste', function(e) {
+              const items = e.clipboardData.items;
+              for (let i = 0; i < items.length; i++) {
+                if (items[i].type.indexOf('image') !== -1) {
+                  e.preventDefault();
+                  const blob = items[i].getAsFile();
+                  const reader = new FileReader();
+                  reader.onload = function(event) {
+                    const img = document.createElement('img');
+                    img.src = event.target.result;
+                    img.style.maxWidth = '100%';
+                    img.style.height = 'auto';
+                    img.style.marginTop = '10px';
+                    img.style.marginBottom = '10px';
+                    img.style.borderRadius = '8px';
+                    
+                    const selection = window.getSelection();
+                    const range = selection.getRangeAt(0);
+                    range.insertNode(img);
+                    range.collapse(false);
+                    
+                    hiddenField.value = editor.innerHTML;
+                  };
+                  reader.readAsDataURL(blob);
+                }
+              }
+            });
+          });
+        </script>
 
         <!-- Date and Location Row -->
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -97,7 +207,7 @@
                                         style: "background-color: white !important; color: black !important;" %>
           </div>
           <div>
-            <%= form.label :location, t('events.form.location', default: 'Location'), 
+            <%= form.label :location, t('events.form.location', default: 'Location (Optional)'), 
                            class: "block text-sm font-medium text-gray-200 mb-2" %>
             <%= form.text_field :location, 
                                placeholder: t('events.form.location_placeholder', default: 'Where will this event take place?'), 
@@ -106,33 +216,19 @@
           </div>
         </div>
 
-        <!-- Capacity and Price Row -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div>
-            <%= form.label :capacity, t('events.form.capacity', default: 'Maximum Attendees'), 
-                           class: "block text-sm font-medium text-gray-200 mb-2" %>
-            <%= form.number_field :capacity, 
-                                 min: 1, 
-                                 placeholder: t('events.form.capacity_placeholder', default: 'e.g., 50'), 
-                                 class: "w-full px-4 py-3 bg-white border border-gray-300 rounded-lg text-black placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent",
-                                 style: "background-color: white !important; color: black !important;" %>
-            <p class="text-xs text-gray-400 mt-1">
-              <%= t('events.form.capacity_hint', default: 'Leave blank for unlimited capacity') %>
-            </p>
-          </div>
-          <div>
-            <%= form.label :price, t('events.form.price', default: 'Price ($)'), 
-                           class: "block text-sm font-medium text-gray-200 mb-2" %>
-            <%= form.number_field :price, 
-                                 min: 0, 
-                                 step: 0.01, 
-                                 placeholder: "0.00", 
-                                 class: "w-full px-4 py-3 bg-white border border-gray-300 rounded-lg text-black placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent",
-                                 style: "background-color: white !important; color: black !important;" %>
-            <p class="text-xs text-gray-400 mt-1">
-              <%= t('events.form.price_hint', default: 'Leave blank or 0 for free events') %>
-            </p>
-          </div>
+        <!-- Price -->
+        <div>
+          <%= form.label :price, t('events.form.price', default: 'Price ($)'), 
+                         class: "block text-sm font-medium text-gray-200 mb-2" %>
+          <%= form.number_field :price, 
+                               min: 0, 
+                               step: 0.01, 
+                               placeholder: "0.00", 
+                               class: "w-full px-4 py-3 bg-white border border-gray-300 rounded-lg text-black placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent",
+                               style: "background-color: white !important; color: black !important;" %>
+          <p class="text-xs text-gray-400 mt-1">
+            <%= t('events.form.price_hint', default: 'Leave blank or 0 for free events') %>
+          </p>
         </div>
 
         <!-- Image Upload -->

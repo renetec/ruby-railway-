@@ -1,4 +1,4 @@
-<% content_for :title, @event.title %>
+<% content_for :title, @event.translated_title(I18n.locale) %>
 
 <div class="min-h-screen relative overflow-hidden">
   <!-- Modern Background -->
@@ -8,7 +8,7 @@
     <div class="card-stunning overflow-hidden">
     <% if @event.images.attached? %>
       <div class="relative">
-        <%= image_tag @event.images.first, alt: @event.title, class: "w-full h-40 object-cover" %>
+        <%= image_tag @event.images.first, alt: @event.translated_title(I18n.locale), class: "w-full h-40 object-cover" %>
         <div class="absolute bottom-6 left-6 glass-surface p-4 rounded-2xl">
           <div class="text-lg font-bold text-text-primary font-display"><%= @event.date.strftime("%B %d, %Y") %></div>
           <div class="text-sm text-text-secondary"><%= @event.date.strftime("%I:%M %p") %></div>
@@ -33,7 +33,7 @@
         <% end %>
       </div>
       
-      <h1 class="font-display text-4xl lg:text-5xl font-black text-text-primary mb-8 leading-tight"><%= @event.title %></h1>
+      <h1 class="font-display text-4xl lg:text-5xl font-black text-text-primary mb-8 leading-tight"><%= @event.translated_title(I18n.locale) %></h1>
       
       <div class="grid lg:grid-cols-2 gap-8 mb-8">
         <div class="glass-surface-sm p-6 rounded-2xl">
@@ -55,7 +55,7 @@
               <span class="text-2xl mr-4"></span>
               <div>
                 <div class="font-bold text-text-primary">Location</div>
-                <div class="text-text-secondary"><%= @event.location || "Location TBD" %></div>
+                <div class="text-text-secondary"><%= @event.translated_location(I18n.locale) || t('events.details.location_tbd') %></div>
               </div>
             </div>
             <% if @event.capacity.present? %>
@@ -169,7 +169,7 @@
           <%= t('events.details.description') %>
         </h3>
         <div class="font-content text-text-secondary text-lg leading-relaxed">
-          <%= simple_format(@event.description) %>
+          <%= simple_format(@event.translated_description(I18n.locale)) %>
         </div>
       </div>
       

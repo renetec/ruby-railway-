@@ -1702,9 +1702,17 @@
             <% end %>
             
             <!-- Language Switcher -->
-            <%= link_to url_for(locale: I18n.locale == :fr ? :en : :fr), class: "nav-link" do %>
-              <%= I18n.locale == :fr ? "En" : "Fr" %>
-            <% end %>
+            <div class="flex items-center space-x-1 bg-gray-100 dark:bg-gray-700 rounded-lg p-1">
+              <%= link_to url_for(locale: :fr), class: "px-2 py-1 rounded text-xs font-medium transition-colors #{'bg-blue-500 text-white' if I18n.locale == :fr} #{'hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300' unless I18n.locale == :fr}" do %>
+                🇫🇷
+              <% end %>
+              <%= link_to url_for(locale: :en), class: "px-2 py-1 rounded text-xs font-medium transition-colors #{'bg-blue-500 text-white' if I18n.locale == :en} #{'hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300' unless I18n.locale == :en}" do %>
+                🇺🇸
+              <% end %>
+              <%= link_to url_for(locale: :es), class: "px-2 py-1 rounded text-xs font-medium transition-colors #{'bg-blue-500 text-white' if I18n.locale == :es} #{'hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300' unless I18n.locale == :es}" do %>
+                🇪🇸
+              <% end %>
+            </div>
             
             <!-- Theme Toggle -->
             <button id="theme-toggle" class="nav-link" aria-label="Theme Toggle" onclick="toggleDarkMode()">
@@ -1746,12 +1754,15 @@
             <!-- Mobile Language Switcher -->
             <div class="border-t border-glass-border pt-4 mt-4">
               <p class="text-sm font-medium text-text-secondary mb-2"><%= t('navigation.language') %></p>
-              <div class="flex space-x-2">
-                <%= link_to url_for(locale: :fr), class: "flex-1 text-center py-2 px-3 rounded-lg text-sm #{'bg-electric-blue/20 text-electric-blue border border-electric-blue/30' if I18n.locale == :fr} hover:bg-glass-surface-2 transition-all duration-300" do %>
-                  Fr
+              <div class="grid grid-cols-3 gap-2">
+                <%= link_to url_for(locale: :fr), class: "text-center py-2 px-3 rounded-lg text-sm #{'bg-electric-blue/20 text-electric-blue border border-electric-blue/30' if I18n.locale == :fr} hover:bg-glass-surface-2 transition-all duration-300" do %>
+                  FR
                 <% end %>
-                <%= link_to url_for(locale: :en), class: "flex-1 text-center py-2 px-3 rounded-lg text-sm #{'bg-electric-blue/20 text-electric-blue border border-electric-blue/30' if I18n.locale == :en} hover:bg-glass-surface-2 transition-all duration-300" do %>
-                  En
+                <%= link_to url_for(locale: :en), class: "text-center py-2 px-3 rounded-lg text-sm #{'bg-electric-blue/20 text-electric-blue border border-electric-blue/30' if I18n.locale == :en} hover:bg-glass-surface-2 transition-all duration-300" do %>
+                  EN
+                <% end %>
+                <%= link_to url_for(locale: :es), class: "text-center py-2 px-3 rounded-lg text-sm #{'bg-electric-blue/20 text-electric-blue border border-electric-blue/30' if I18n.locale == :es} hover:bg-glass-surface-2 transition-all duration-300" do %>
+                  ES
                 <% end %>
               </div>
             </div>

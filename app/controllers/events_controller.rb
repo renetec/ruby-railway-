@@ -31,6 +31,7 @@ class EventsController < ApplicationController
   
   def create
     @event = current_user.events.build(event_params)
+    @event.status = :published # Always set status to published
     
     if @event.save
       redirect_to events_path, notice: t('flash.event_created_success')
@@ -102,7 +103,7 @@ class EventsController < ApplicationController
   
   def event_params
     params.require(:event).permit(:title, :description, :date, :location, :capacity, 
-                                  :category, :status, :price, images: [])
+                                  :category, :price, images: [])
   end
   
   def authorize_event

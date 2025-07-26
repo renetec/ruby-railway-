@@ -23,7 +23,7 @@ module Leclub
     config.autoload_paths << Rails.root.join("app", "services")
 
     # Permitted locales available for the application
-    config.i18n.available_locales = [:fr, :en]
+    config.i18n.available_locales = [:fr, :en, :es]
     config.i18n.default_locale = :fr
 
     # Allow Active Storage to accept uploads from all hosts

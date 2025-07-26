@@ -12,13 +12,17 @@ class Event < ApplicationRecord
   validates :title, presence: true, length: { minimum: 5, maximum: 200 }
   validates :description, presence: true, length: { minimum: 10 }
   validates :date, presence: true
-  validates :location, presence: true
-  validates :capacity, presence: true, numericality: { greater_than: 0 }
+  validates :location, length: { maximum: 255 }, allow_blank: true
+  validates :capacity, numericality: { greater_than: 0 }, allow_blank: true
   validates :status, inclusion: { in: %w[draft published cancelled] }
   
   # Custom validations
   validate :date_cannot_be_in_the_past, on: :create
   validate :capacity_not_exceeded
+  
+  # Callbacks
+  after_create :enqueue_translation_job
+  after_update :enqueue_translation_job, if: :saved_change_to_title_or_description?
   
   # Scopes
   scope :published, -> { where(status: 'published') }
@@ -45,10 +49,12 @@ class Event < ApplicationRecord
   
   # Methods
   def spots_remaining
+    return nil unless capacity.present?
     capacity - rsvp_count
   end
   
   def full?
+    return false unless capacity.present?
     spots_remaining <= 0
   end
   
@@ -80,6 +86,32 @@ class Event < ApplicationRecord
     title_changed? || super
   end
   
+  # Translation methods
+  def translated_title(locale = I18n.locale)
+    locale = locale.to_s
+    return title if locale == original_language
+    
+    translations.dig(locale, 'title') || title
+  end
+  
+  def translated_description(locale = I18n.locale)
+    locale = locale.to_s
+    return description if locale == original_language
+    
+    translations.dig(locale, 'description') || description
+  end
+  
+  def translated_location(locale = I18n.locale)
+    locale = locale.to_s
+    return location if locale == original_language
+    
+    translations.dig(locale, 'location') || location
+  end
+  
+  def translate_content!
+    LibreTranslateService.translate_event_content(self)
+  end
+  
   # Search scope
   scope :search_by_term, ->(term) do
     return all if term.blank?
@@ -99,5 +131,13 @@ class Event < ApplicationRecord
     return unless capacity.present? && rsvp_count > capacity
     
     errors.add(:capacity, "cannot be less than current RSVP count")
+  end
+  
+  def enqueue_translation_job
+    EventTranslationJob.perform_later(self)
+  end
+  
+  def saved_change_to_title_or_description?
+    saved_change_to_title? || saved_change_to_description? || saved_change_to_location?
   end
 end

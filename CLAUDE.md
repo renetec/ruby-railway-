@@ -5,8 +5,12 @@ Rails community platform with user management, posts, events, forums, marketplac
 
 ## Railway Deployment Setup
 - **Production URL**: https://ruby-production-4cc9.up.railway.app
-- **Auto-deployment**: Railway automatically deploys from `main` branch on GitHub
+- **Main development repo**: `renetec/ruby` (where we work)
+- **Railway deployment repo**: `renetec/ruby-railway-` (what Railway monitors)
 - **Admin credentials**: admin@leclub.com / password123
+
+### CRITICAL: Railway Deployment Process
+Railway does NOT automatically deploy from the main `renetec/ruby` repository. You MUST push to the `ruby-railway-` repository for deployment to occur.
 
 ## Development Workflow (Option 2: Development Branch)
 
@@ -36,9 +40,12 @@ git checkout main
 git merge development
 git push origin main
 
-# 5. Railway automatically deploys (1-2 minutes)
+# 5. CRITICAL: Push to Railway repository for deployment
+git push railway main
 
-# 6. Switch back to development for next changes
+# 6. Railway deploys (1-2 minutes)
+
+# 7. Switch back to development for next changes
 git checkout development
 ```
 
@@ -53,8 +60,9 @@ git checkout development
 - **main branch** = Railway production (never work directly on main)
 - **development branch** = Your local development work
 - Always test locally before merging to main
-- Railway only deploys what's pushed to main branch
-- Local Docker changes won't affect Railway until you push to main
+- **CRITICAL**: Railway only deploys from `ruby-railway-` repo, not the main `renetec/ruby` repo
+- You MUST run `git push railway main` for Railway deployment to occur
+- Local Docker changes won't affect Railway until you push to railway remote
 
 ## Project Structure
 - Rails 7.2 application
@@ -80,11 +88,20 @@ git checkout development # Switch to development
 git checkout main        # Switch to main
 ```
 
+## Translation System ✅ FULLY WORKING
+The application supports automatic multi-language translation using MyMemory API:
+- **Supported Languages**: French (fr), English (en), Spanish (es)
+- **API**: MyMemory - completely free with no API key required
+- **Automatic Translation**: ✅ Event content automatically translates within seconds
+- **Background Processing**: ✅ Sidekiq worker processes translation jobs
+- **Example**: "Cours de Cuisine Française" → "French Cooking Class" (EN) & "Curso de Cocina Francesa" (ES)
+
 ## Troubleshooting
 - If Railway deployment fails, check Railway logs
 - If admin users page shows HTTP 500, the simplified view should prevent this
 - For database issues, check DATABASE_URL environment variable
 - Health check endpoint: /health
+- If translations not working, check MyMemory API connectivity or run manual translation
 
 ---
 *Last updated: $(date)*

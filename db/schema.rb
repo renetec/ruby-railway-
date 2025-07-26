@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_07_21_220203) do
+ActiveRecord::Schema[7.2].define(version: 2025_07_26_080017) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -118,21 +118,25 @@ ActiveRecord::Schema[7.2].define(version: 2025_07_21_220203) do
     t.string "title", null: false
     t.text "description", null: false
     t.datetime "date", null: false
-    t.string "location", null: false
-    t.integer "capacity", null: false
+    t.string "location"
+    t.integer "capacity"
     t.integer "rsvp_count", default: 0
     t.integer "category", default: 0
-    t.integer "status", default: 0
+    t.integer "status", default: 1
     t.decimal "price", precision: 8, scale: 2, default: "0.0"
     t.string "slug"
     t.bigint "user_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "original_language", default: "fr"
+    t.jsonb "translations", default: {}
     t.index ["category"], name: "index_events_on_category"
     t.index ["date", "status"], name: "index_events_on_date_and_status"
     t.index ["date"], name: "index_events_on_date"
+    t.index ["original_language"], name: "index_events_on_original_language"
     t.index ["slug"], name: "index_events_on_slug", unique: true
     t.index ["status"], name: "index_events_on_status"
+    t.index ["translations"], name: "index_events_on_translations", using: :gin
     t.index ["user_id", "created_at"], name: "index_events_on_user_id_and_created_at"
     t.index ["user_id"], name: "index_events_on_user_id"
   end
