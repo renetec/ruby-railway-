@@ -249,6 +249,37 @@ fr:
       delete_event: "Supprimer l'événement"
       delete_confirm: "Êtes-vous sûr de vouloir supprimer cet événement ? Cette action ne peut pas être annulée."
       
+    form:
+      title: "Titre de l'événement"
+      title_placeholder: "Entrez un titre accrocheur pour l'événement"
+      category: "Catégorie"
+      category_prompt: "Sélectionnez une catégorie"
+      description: "Description de l'événement"
+      description_placeholder: "Décrivez votre événement en détail. À quoi les participants peuvent-ils s'attendre ?"
+      date_time: "Date et heure"
+      location: "Lieu (Optionnel)"
+      location_placeholder: "Où cet événement aura-t-il lieu ?"
+      price: "Prix ($)"
+      price_hint: "Laissez vide ou 0 pour les événements gratuits"
+      images: "Images de l'événement"
+      images_upload_title: "Cliquez pour télécharger ou glissez-déposez"
+      images_upload_subtitle: "PNG, JPG, GIF jusqu'à 10MB chacun (plusieurs fichiers autorisés)"
+      create_button: "Créer l'événement"
+      errors:
+        header: 
+          one: "%{count} erreur a empêché cet événement d'être sauvegardé :"
+          other: "%{count} erreurs ont empêché cet événement d'être sauvegardé :"
+          
+    new:
+      page_title: "Créer un nouvel événement"
+      title: "Créer un nouvel événement"
+      subtitle: "Partagez votre événement communautaire et rassemblez les gens"
+      tips_title: "💡 Conseils pour un excellent événement"
+      tip_1: "Utilisez des titres clairs et descriptifs"
+      tip_2: "Ajoutez des photos engageantes"
+      tip_3: "Fournissez des détails précis de localisation"
+      tip_4: "Définissez des attentes de temps réalistes"
+      
     empty:
       title: "Aucun événement trouvé"
       subtitle_filtered: "Essayez d'ajuster vos filtres ou parcourez tous les événements."
@@ -485,6 +516,7 @@ fr:
   # Common text
   common:
     or: "ou"
+    cancel: "Annuler"
     first_to_create: "Soyez le premier à créer un événement!"
     join_event_modal: "S'inscrire à l'événement"
     join_discussion_modal: "Rejoindre la discussion"
