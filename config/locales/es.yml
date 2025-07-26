@@ -399,7 +399,7 @@ es:
     reset: "Restablecer"
     publish: "Publicar"
     search_placeholder: "Buscar..."
-    publish_article: "Publicar Artículo"
+    publish_article: "Publicar Artículo" # Force Railway rebuild
     unpublish: "Despublicar"
     draft: "Borrador"
     view: "Ver"
