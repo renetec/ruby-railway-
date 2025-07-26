@@ -419,6 +419,51 @@ es:
       featured_posts: "Publicaciones Destacadas"
       forum_categories: "Categorías del Foro"
 
+  # Posts/News
+  posts:
+    title: "Noticias y historias"
+    latest_stories: "Últimas historias"
+    subtitle: "Mantente informado con las últimas noticias, historias y anuncios de tu vibrante comunidad."
+    create_new: "Crear nueva historia"
+    search_stories: "Buscar historias increíbles..."
+    by: "Por"
+    no_posts_found: "No se encontraron publicaciones."
+    
+    categories:
+      all_categories: "Todas las categorías"
+      community: "Comunidad"
+      business: "Negocios"
+      education: "Educación"
+      entertainment: "Entretenimiento"
+      sports: "Deportes"
+      
+    details:
+      community_story: "Historia de la comunidad"
+      featured: "Destacado"
+      featured_story: "Historia destacada"
+      written_by: "Escrito por"
+      ago: "hace"
+      read_full_article: "Leer artículo completo"
+      
+    show:
+      title: "%{title}"
+      featured: "Destacado"
+      community_story: "Historia de la comunidad"
+      written_by: "Escrito por"
+      content: "Contenido"
+      manage_post: "Gestionar publicación"
+      edit_post: "Editar publicación"
+      delete_post: "Eliminar publicación"
+      related_stories: "Historias relacionadas"
+      related_description: "Descubre más historias que podrían interesarte"
+      back_to_news: "Volver a noticias"
+      
+    empty:
+      title: "No se encontraron historias"
+      subtitle_filtered: "Intenta ajustar tus criterios de búsqueda o navega por todas las historias."
+      subtitle_empty: "Sé el primero en compartir una historia increíble con la comunidad."
+      create_first: "Crear primera historia"
+
   # Actions
   actions:
     create: "Crear"

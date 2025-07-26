@@ -102,7 +102,7 @@
         <!-- Volunteer Description -->
         <div class="mb-8">
           <h3 class="heading-3 mb-4">
-            <span class="translation missing: es.volunteer.show.description">Description</span>
+            <%= t('volunteer.show.description', default: 'Description') %>
           </h3>
           <div id="modal-volunteer-description" class="prose-elegant text-text-secondary"></div>
         </div>
@@ -110,7 +110,7 @@
         <!-- Skills Required -->
         <div class="glass-surface p-6 rounded-2xl mb-8">
           <h3 class="heading-3 mb-4">
-            <span class="translation missing: es.volunteer.show.skills_needed">Skills Needed</span>
+            <%= t('volunteer.show.skills_needed', default: 'Skills Needed') %>
           </h3>
           <div id="modal-volunteer-skills" class="text-text-secondary">
             <!-- Skills will be populated here -->

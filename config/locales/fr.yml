@@ -334,6 +334,7 @@ fr:
       featured: "En vedette"
       community_story: "Histoire de la communauté"
       written_by: "Écrit par"
+      content: "Contenu"
       manage_post: "Gérer l'article"
       edit_post: "Modifier l'article"
       delete_post: "Supprimer l'article"

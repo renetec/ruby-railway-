@@ -92,7 +92,7 @@
         <!-- Job Description -->
         <div class="mb-8">
           <h3 class="heading-3 mb-4">
-            <span class="translation missing: es.jobs.show.description">Description</span>
+            <%= t('jobs.show.description', default: 'Description') %>
           </h3>
           <div id="modal-job-description" class="prose-elegant text-text-secondary"></div>
         </div>
@@ -100,7 +100,7 @@
         <!-- Requirements -->
         <div class="glass-surface p-6 rounded-2xl mb-8">
           <h3 class="heading-3 mb-4">
-            <span class="translation missing: es.jobs.show.requirements">Requirements</span>
+            <%= t('jobs.show.requirements', default: 'Requirements') %>
           </h3>
           <div id="modal-job-requirements" class="text-text-secondary">
             <!-- Requirements will be populated here -->
