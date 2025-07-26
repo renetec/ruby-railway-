@@ -20,6 +20,21 @@ fr:
     skip_to_content: "Aller au contenu principal"
     language: "Langue"
 
+  # Common translations  
+  common:
+    by: "Par"
+    ago: "il y a"
+    
+  # Date/time distance translations
+  datetime:
+    distance_in_words:
+      less_than_x_minutes:
+        one: "moins d'une minute"
+        other: "moins de %{count} minutes"
+      x_minutes:
+        one: "1 minute"
+        other: "%{count} minutes"
+    
   # General
   general:
     welcome_back: "Bon retour !"
