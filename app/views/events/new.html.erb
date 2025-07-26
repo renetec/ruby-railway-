@@ -68,27 +68,43 @@
                          class: "block text-sm font-medium text-gray-200 mb-2" %>
           <div class="bg-gray-700 rounded-lg p-1">
             <div class="flex flex-wrap gap-1 mb-1 p-2 bg-gray-600 rounded-t-lg">
-              <button type="button" class="text-gray-200 hover:bg-gray-500 px-2 py-1 rounded text-sm" onclick="document.execCommand('bold')"><b>B</b></button>
-              <button type="button" class="text-gray-200 hover:bg-gray-500 px-2 py-1 rounded text-sm" onclick="document.execCommand('italic')"><i>I</i></button>
-              <button type="button" class="text-gray-200 hover:bg-gray-500 px-2 py-1 rounded text-sm" onclick="document.execCommand('underline')"><u>U</u></button>
+              <button type="button" class="text-gray-200 hover:bg-gray-500 px-2 py-1 rounded text-sm font-bold" onclick="document.execCommand('bold')" title="Bold">B</button>
+              <button type="button" class="text-gray-200 hover:bg-gray-500 px-2 py-1 rounded text-sm italic" onclick="document.execCommand('italic')" title="Italic">I</button>
+              <button type="button" class="text-gray-200 hover:bg-gray-500 px-2 py-1 rounded text-sm underline" onclick="document.execCommand('underline')" title="Underline">U</button>
               <span class="text-gray-400 mx-2">|</span>
-              <button type="button" class="text-gray-200 hover:bg-gray-500 px-2 py-1 rounded text-sm" onclick="document.execCommand('insertUnorderedList')">• List</button>
-              <button type="button" class="text-gray-200 hover:bg-gray-500 px-2 py-1 rounded text-sm" onclick="document.execCommand('insertOrderedList')">1. List</button>
+              <button type="button" class="text-gray-200 hover:bg-gray-500 px-2 py-1 rounded text-sm" onclick="document.execCommand('insertUnorderedList')" title="Bullet List">• List</button>
+              <button type="button" class="text-gray-200 hover:bg-gray-500 px-2 py-1 rounded text-sm" onclick="document.execCommand('insertOrderedList')" title="Numbered List">1. List</button>
               <span class="text-gray-400 mx-2">|</span>
-              <button type="button" class="text-gray-200 hover:bg-gray-500 px-2 py-1 rounded text-sm" onclick="insertEmoji('😊')">😊</button>
-              <button type="button" class="text-gray-200 hover:bg-gray-500 px-2 py-1 rounded text-sm" onclick="insertEmoji('🎉')">🎉</button>
-              <button type="button" class="text-gray-200 hover:bg-gray-500 px-2 py-1 rounded text-sm" onclick="insertEmoji('📍')">📍</button>
-              <button type="button" class="text-gray-200 hover:bg-gray-500 px-2 py-1 rounded text-sm" onclick="insertEmoji('⏰')">⏰</button>
+              <button type="button" class="text-gray-200 hover:bg-gray-500 px-2 py-1 rounded text-sm text-lg" onclick="insertEmoji('😊')" title="Happy">😊</button>
+              <button type="button" class="text-gray-200 hover:bg-gray-500 px-2 py-1 rounded text-sm text-lg" onclick="insertEmoji('🎉')" title="Celebration">🎉</button>
+              <button type="button" class="text-gray-200 hover:bg-gray-500 px-2 py-1 rounded text-sm text-lg" onclick="insertEmoji('📍')" title="Location">📍</button>
+              <button type="button" class="text-gray-200 hover:bg-gray-500 px-2 py-1 rounded text-sm text-lg" onclick="insertEmoji('⏰')" title="Time">⏰</button>
+              <button type="button" class="text-gray-200 hover:bg-gray-500 px-2 py-1 rounded text-sm text-lg" onclick="insertEmoji('🍕')" title="Food">🍕</button>
+              <button type="button" class="text-gray-200 hover:bg-gray-500 px-2 py-1 rounded text-sm text-lg" onclick="insertEmoji('🎵')" title="Music">🎵</button>
+              <button type="button" class="text-gray-200 hover:bg-gray-500 px-2 py-1 rounded text-sm text-lg" onclick="insertEmoji('💡')" title="Idea">💡</button>
+              <button type="button" class="text-gray-200 hover:bg-gray-500 px-2 py-1 rounded text-sm text-lg" onclick="insertEmoji('🚀')" title="Launch">🚀</button>
             </div>
             <div contenteditable="true" 
                  id="event_description_editor"
-                 class="w-full min-h-[150px] px-4 py-3 bg-white border border-gray-300 rounded-b-lg text-black placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                 style="background-color: white !important; color: black !important;"
+                 class="w-full min-h-[250px] px-4 py-3 bg-white border border-gray-300 rounded-b-lg text-black placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent overflow-y-auto"
+                 style="background-color: white !important; color: black !important; max-height: 400px;"
                  placeholder="<%= t('events.form.description_placeholder', default: 'Describe your event in detail. What can attendees expect?') %>"></div>
             <%= form.hidden_field :description, id: "event_description_hidden" %>
           </div>
         </div>
 
+        <style>
+          #event_description_editor:empty:before {
+            content: attr(placeholder);
+            color: #9ca3af;
+            pointer-events: none;
+            display: block;
+          }
+          #event_description_editor:focus {
+            outline: none;
+          }
+        </style>
+        
         <script>
           // Function to insert emoji at cursor position
           function insertEmoji(emoji) {
@@ -110,21 +126,6 @@
             // Update hidden field on input
             editor.addEventListener('input', function() {
               hiddenField.value = editor.innerHTML;
-            });
-            
-            // Handle placeholder
-            editor.addEventListener('focus', function() {
-              if (this.textContent.trim() === '') {
-                this.classList.add('placeholder-shown');
-              }
-            });
-            
-            editor.addEventListener('blur', function() {
-              if (this.textContent.trim() === '') {
-                this.classList.add('placeholder-shown');
-              } else {
-                this.classList.remove('placeholder-shown');
-              }
             });
           });
         </script>
