@@ -1,514 +1,205 @@
-<!-- Jobs - 2 Column Layout -->
+<!-- Jobs - Dynamic 2 Column Layout -->
 <div class="max-w-6xl mx-auto px-4 py-8">
   <!-- Page Header with Logo -->
   <%= render 'shared/page_header_with_logo', 
-      title: "Offres d'Emploi",
-      subtitle: "Découvrez les opportunités professionnelles de votre région" %>
+      title: t('navigation.jobs', default: 'Job Opportunities'),
+      subtitle: t('jobs.subtitle', default: 'Discover career opportunities in your area') %>
 
   <!-- Action Buttons -->
   <% if user_signed_in? %>
     <div class="flex flex-col sm:flex-row gap-4 mb-8 justify-center">
-      <%= link_to "💼 #{t('actions.post_job')}", new_job_path, 
+      <%= link_to "💼 #{t('actions.post_job', default: 'Post a Job')}", new_job_path, 
                   class: "px-6 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg font-semibold" %>
-      <%= link_to "📋 Mes candidatures", my_applications_jobs_path, 
-                  class: "px-6 py-2 bg-green-500 hover:bg-green-600 text-white rounded-lg font-semibold" %>
-      <%= link_to "📊 Mes offres", my_jobs_jobs_path, 
-                  class: "px-6 py-2 bg-purple-500 hover:bg-purple-600 text-white rounded-lg font-semibold" %>
     </div>
   <% end %>
 
-  <!-- Filters Section -->
-  <div class="flex flex-col md:flex-row gap-4 mb-8 justify-center">
-    <select class="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100">
-      <option><%= t('dropdowns.job_type') %></option>
-      <option><%= t('dropdowns.permanent') %></option>
-      <option><%= t('dropdowns.temporary') %></option>
-      <option><%= t('dropdowns.freelance') %></option>
-      <option><%= t('dropdowns.internship') %></option>
-      <option><%= t('dropdowns.part_time') %></option>
-    </select>
-    <select class="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100">
-      <option><%= t('dropdowns.sector') %></option>
-      <option><%= t('dropdowns.tech') %></option>
-      <option><%= t('dropdowns.commerce') %></option>
-      <option><%= t('dropdowns.health') %></option>
-      <option><%= t('dropdowns.education') %></option>
-      <option><%= t('dropdowns.marketing') %></option>
-    </select>
-    <button class="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 dark:bg-blue-600 dark:hover:bg-blue-700">
-      🔄 <%= t('actions.refresh') %>
-    </button>
-  </div>
-
-  <!-- 2-Column Jobs Grid -->
+  <!-- Dynamic Jobs Grid -->
   <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-    <!-- Job 1 -->
-    <div class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow cursor-pointer" onclick="openModal('modal-1')">
-      <div class="flex gap-4">
-        <div class="w-24 h-24 bg-blue-100 dark:bg-blue-900 rounded-lg flex items-center justify-center flex-shrink-0">
-          <span class="text-3xl">💻</span>
-        </div>
-        <div class="flex-1">
-          <div class="flex justify-between items-start mb-2">
-            <span class="bg-blue-500 text-white px-2 py-1 rounded text-xs">Tech</span>
-            <span class="text-sm text-gray-500 dark:text-gray-400">Il y a 2h</span>
+    <% @jobs.each do |job| %>
+      <div class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow cursor-pointer" onclick="openJobModal('job-<%= job.id %>')">
+        <div class="flex gap-4">
+          <div class="w-24 h-24 bg-blue-100 dark:bg-blue-900 rounded-lg flex items-center justify-center flex-shrink-0">
+            <span class="text-3xl">💼</span>
           </div>
-          <h3 class="font-bold text-lg mb-1 text-gray-900 dark:text-gray-100">Développeur Full Stack - CDI</h3>
-          <p class="text-gray-600 dark:text-gray-400 text-sm mb-2">Startup innovante recherche développeur expérimenté...</p>
-          <div class="flex justify-between items-center">
-            <span class="text-xs text-gray-500 dark:text-gray-400">Par TechCorp</span>
-            <div class="flex items-center gap-2">
-              <span class="text-xs font-semibold text-green-600">45-55k€</span>
-              <button class="text-blue-600 hover:text-blue-800 text-sm font-medium" onclick="event.stopPropagation(); openModal('modal-1')">
-                📤 Postuler
-              </button>
+          <div class="flex-1">
+            <div class="flex justify-between items-start mb-2">
+              <span class="bg-blue-500 text-white px-2 py-1 rounded text-xs"><%= job.job_type.humanize %></span>
+              <span class="text-sm text-gray-500 dark:text-gray-400"><%= time_ago_in_words(job.created_at) %> <%= t('common.ago', default: 'ago') %></span>
+            </div>
+            <h3 class="font-bold text-lg mb-1 text-gray-900 dark:text-gray-100"><%= job.translated_title(I18n.locale) %></h3>
+            <p class="text-gray-600 dark:text-gray-400 text-sm mb-2"><%= truncate(job.translated_description(I18n.locale), length: 80) %></p>
+            <div class="flex justify-between items-center">
+              <span class="text-xs text-gray-500 dark:text-gray-400"><%= t('jobs.by', default: 'By') %> <%= job.business.name %></span>
+              <div class="flex items-center gap-2">
+                <span class="text-green-600 font-medium text-sm">
+                  <%= number_to_currency(job.salary_min, unit: "$") %> - <%= number_to_currency(job.salary_max, unit: "$") %>
+                </span>
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
-
-    <!-- Job 2 -->
-    <div class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow cursor-pointer" onclick="openModal('modal-2')">
-      <div class="flex gap-4">
-        <div class="w-24 h-24 bg-green-100 dark:bg-green-900 rounded-lg flex items-center justify-center flex-shrink-0">
-          <span class="text-3xl">🛍️</span>
-        </div>
-        <div class="flex-1">
-          <div class="flex justify-between items-start mb-2">
-            <span class="bg-green-500 text-white px-2 py-1 rounded text-xs">Commerce</span>
-            <span class="text-sm text-gray-500 dark:text-gray-400">Il y a 4h</span>
-          </div>
-          <h3 class="font-bold text-lg mb-1 text-gray-900 dark:text-gray-100">Responsable Boutique - CDI</h3>
-          <p class="text-gray-600 dark:text-gray-400 text-sm mb-2">Gérez notre magasin centre-ville, équipe de 5 personnes...</p>
-          <div class="flex justify-between items-center">
-            <span class="text-xs text-gray-500 dark:text-gray-400">Par Mode & Style</span>
-            <div class="flex items-center gap-2">
-              <span class="text-xs font-semibold text-green-600">35-40k€</span>
-              <button class="text-blue-600 hover:text-blue-800 text-sm font-medium" onclick="event.stopPropagation(); openModal('modal-2')">
-                📤 Postuler
-              </button>
-            </div>
-          </div>
-        </div>
+    <% end %>
+    
+    <% if @jobs.empty? %>
+      <div class="col-span-2 text-center py-12">
+        <p class="text-gray-500 dark:text-gray-400 text-lg"><%= t('jobs.no_jobs_found', default: 'No job postings found.') %></p>
+        <% if user_signed_in? && current_user.businesses.any? %>
+          <%= link_to new_job_path, class: "mt-4 inline-block px-6 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg font-semibold" do %>
+            💼 <%= t('jobs.create_first', default: 'Post the first job') %>
+          <% end %>
+        <% end %>
       </div>
-    </div>
-
-    <!-- Job 3 -->
-    <div class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow cursor-pointer" onclick="openModal('modal-3')">
-      <div class="flex gap-4">
-        <div class="w-24 h-24 bg-red-100 dark:bg-red-900 rounded-lg flex items-center justify-center flex-shrink-0">
-          <span class="text-3xl">🩺</span>
-        </div>
-        <div class="flex-1">
-          <div class="flex justify-between items-start mb-2">
-            <span class="bg-red-500 text-white px-2 py-1 rounded text-xs">Santé</span>
-            <span class="text-sm text-gray-500 dark:text-gray-400">Il y a 1j</span>
-          </div>
-          <h3 class="font-bold text-lg mb-1 text-gray-900 dark:text-gray-100">Infirmier(ère) - CDD 6 mois</h3>
-          <p class="text-gray-600 dark:text-gray-400 text-sm mb-2">Remplacement congé maternité, service gériatrie...</p>
-          <div class="flex justify-between items-center">
-            <span class="text-xs text-gray-500 dark:text-gray-400">Par Clinique du Parc</span>
-            <div class="flex items-center gap-2">
-              <span class="text-xs font-semibold text-green-600">2800€/mois</span>
-              <button class="text-blue-600 hover:text-blue-800 text-sm font-medium" onclick="event.stopPropagation(); openModal('modal-3')">
-                📤 Postuler
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Job 4 -->
-    <div class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow cursor-pointer" onclick="openModal('modal-4')">
-      <div class="flex gap-4">
-        <div class="w-24 h-24 bg-purple-100 dark:bg-purple-900 rounded-lg flex items-center justify-center flex-shrink-0">
-          <span class="text-3xl">📚</span>
-        </div>
-        <div class="flex-1">
-          <div class="flex justify-between items-start mb-2">
-            <span class="bg-purple-500 text-white px-2 py-1 rounded text-xs">Éducation</span>
-            <span class="text-sm text-gray-500 dark:text-gray-400">Il y a 3h</span>
-          </div>
-          <h3 class="font-bold text-lg mb-1 text-gray-900 dark:text-gray-100">Professeur de Mathématiques</h3>
-          <p class="text-gray-600 dark:text-gray-400 text-sm mb-2">Collège privé, classes de 4ème et 3ème, à la rentrée...</p>
-          <div class="flex justify-between items-center">
-            <span class="text-xs text-gray-500 dark:text-gray-400">Par Collège Sainte-Marie</span>
-            <div class="flex items-center gap-2">
-              <span class="text-xs font-semibold text-green-600">Selon grille</span>
-              <button class="text-blue-600 hover:text-blue-800 text-sm font-medium" onclick="event.stopPropagation(); openModal('modal-4')">
-                📤 Postuler
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Job 5 -->
-    <div class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow cursor-pointer" onclick="openModal('modal-5')">
-      <div class="flex gap-4">
-        <div class="w-24 h-24 bg-yellow-100 dark:bg-yellow-900 rounded-lg flex items-center justify-center flex-shrink-0">
-          <span class="text-3xl">📈</span>
-        </div>
-        <div class="flex-1">
-          <div class="flex justify-between items-start mb-2">
-            <span class="bg-yellow-500 text-white px-2 py-1 rounded text-xs">Marketing</span>
-            <span class="text-sm text-gray-500 dark:text-gray-400">Il y a 6h</span>
-          </div>
-          <h3 class="font-bold text-lg mb-1 text-gray-900 dark:text-gray-100">Chef de Projet Digital</h3>
-          <p class="text-gray-600 dark:text-gray-400 text-sm mb-2">Agence créative, gestion projets web et mobile...</p>
-          <div class="flex justify-between items-center">
-            <span class="text-xs text-gray-500 dark:text-gray-400">Par Digital Agency</span>
-            <div class="flex items-center gap-2">
-              <span class="text-xs font-semibold text-green-600">40-50k€</span>
-              <button class="text-blue-600 hover:text-blue-800 text-sm font-medium" onclick="event.stopPropagation(); openModal('modal-5')">
-                📤 Postuler
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Job 6 -->
-    <div class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow cursor-pointer" onclick="openModal('modal-6')">
-      <div class="flex gap-4">
-        <div class="w-24 h-24 bg-indigo-100 dark:bg-indigo-900 rounded-lg flex items-center justify-center flex-shrink-0">
-          <span class="text-3xl">🎓</span>
-        </div>
-        <div class="flex-1">
-          <div class="flex justify-between items-start mb-2">
-            <span class="bg-indigo-500 text-white px-2 py-1 rounded text-xs">Stage</span>
-            <span class="text-sm text-gray-500 dark:text-gray-400">Il y a 12h</span>
-          </div>
-          <h3 class="font-bold text-lg mb-1 text-gray-900 dark:text-gray-100">Stage Communication - 6 mois</h3>
-          <p class="text-gray-600 dark:text-gray-400 text-sm mb-2">Assistance marketing et communication digitale...</p>
-          <div class="flex justify-between items-center">
-            <span class="text-xs text-gray-500 dark:text-gray-400">Par StartupFrench</span>
-            <div class="flex items-center gap-2">
-              <span class="text-xs font-semibold text-green-600">600€/mois</span>
-              <button class="text-blue-600 hover:text-blue-800 text-sm font-medium" onclick="event.stopPropagation(); openModal('modal-6')">
-                📤 Postuler
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
+    <% end %>
   </div>
+  
+  <!-- Pagination -->
+  <% if @jobs.respond_to?(:current_page) %>
+    <div class="flex justify-center mt-8">
+      <%= paginate @jobs %>
+    </div>
+  <% end %>
 </div>
 
-<!-- Detail Modal -->
-<div id="detail-modal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black bg-opacity-50">
-  <div class="bg-white dark:bg-gray-800 max-w-3xl w-full mx-4 rounded-lg overflow-hidden max-h-[80vh] overflow-y-auto">
-    <div class="p-6">
-      <!-- Modal Header -->
-      <div class="flex justify-between items-start mb-6">
-        <div id="modal-category" class="bg-blue-500 text-white px-4 py-2 rounded-full text-sm font-medium"></div>
-        <button onclick="closeModal()" class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 text-2xl font-bold">×</button>
-      </div>
-      
-      <!-- Modal Content -->
-      <div class="flex gap-6 mb-6">
-        <div id="modal-image" class="w-32 h-32 bg-gray-100 dark:bg-gray-700 rounded-lg flex items-center justify-center flex-shrink-0">
-          <span id="modal-emoji" class="text-4xl"></span>
-        </div>
-        <div class="flex-1">
-          <h2 id="modal-title" class="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-2"></h2>
-          <div id="modal-company" class="text-lg text-gray-700 dark:text-gray-300 mb-3"></div>
-          <div class="flex items-center gap-4 mb-4">
-            <div id="modal-salary" class="text-lg font-semibold text-green-600"></div>
-            <div id="modal-contract" class="px-3 py-1 bg-gray-200 dark:bg-gray-600 rounded text-sm"></div>
-          </div>
-          <div class="flex justify-between items-center">
-            <div id="modal-time" class="text-sm text-gray-500 dark:text-gray-400"></div>
-            <div id="modal-location" class="text-sm text-gray-600 dark:text-gray-400"></div>
-          </div>
+<!-- Job Detail Modal -->
+<div id="job-modal" class="fixed inset-0 bg-black/80 backdrop-filter backdrop-blur-sm hidden z-50">
+  <div class="flex items-center justify-center min-h-screen p-4">
+    <div class="card-stunning max-w-4xl w-full animate-slide-up max-h-[90vh] overflow-y-auto">
+      <div class="backdrop-filter backdrop-blur-sm px-6 py-4 border-b" style="background: linear-gradient(to right, color-mix(in srgb, var(--electric-blue) 10%, transparent), color-mix(in srgb, var(--vibrant-purple) 10%, transparent)); border-color: var(--glass-border-1);">
+        <div class="flex justify-between items-start">
+          <div id="modal-job-type" class="tag tag-primary"></div>
+          <button onclick="closeJobModal()" class="text-2xl font-bold transition-colors" style="color: var(--text-secondary);" onmouseover="this.style.color='var(--text-primary)'" onmouseout="this.style.color='var(--text-secondary)'">×</button>
         </div>
       </div>
       
-      <!-- Job Description -->
-      <div class="mb-6">
-        <h3 class="text-lg font-bold text-gray-900 dark:text-gray-100 mb-3">Description du poste</h3>
-        <div id="modal-description" class="text-gray-600 dark:text-gray-400 space-y-2"></div>
-      </div>
-      
-      <!-- Requirements -->
-      <div class="mb-6">
-        <h3 class="text-lg font-bold text-gray-900 dark:text-gray-100 mb-3">Profil recherché</h3>
-        <div id="modal-requirements" class="text-gray-600 dark:text-gray-400"></div>
-      </div>
-      
-      <!-- Application Form -->
-      <div class="border-t dark:border-gray-600 pt-6">
-        <h3 class="text-lg font-bold text-gray-900 dark:text-gray-100 mb-4">Postuler pour ce poste</h3>
-        <form class="space-y-4" onsubmit="handleJobApplicationSubmit(event)">
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <label class="block text-gray-700 dark:text-gray-300 font-medium mb-2">Nom complet</label>
-              <input type="text" class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded-lg focus:border-blue-500 focus:outline-none" placeholder="Prénom Nom" required>
+      <div class="p-8">
+        <!-- Job Header -->
+        <div class="flex items-start mb-8">
+          <div class="w-24 h-24 rounded-3xl flex items-center justify-center mr-6 shadow-2xl border-4" style="background: linear-gradient(to bottom right, var(--electric-blue), var(--vibrant-purple)); border-color: var(--glass-border-1);">
+            <span class="text-white font-bold text-3xl">💼</span>
+          </div>
+          <div class="flex-1">
+            <h2 id="modal-job-title" class="heading-1 mb-4"></h2>
+            <div class="flex items-center mb-4">
+              <span id="modal-job-business" class="text-text-secondary font-medium mr-4"></span>
+              <span id="modal-job-experience" class="tag tag-secondary mr-4"></span>
+              <span id="modal-job-remote" class="tag tag-success hidden"></span>
             </div>
-            <div>
-              <label class="block text-gray-700 dark:text-gray-300 font-medium mb-2">Email</label>
-              <input type="email" class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded-lg focus:border-blue-500 focus:outline-none" placeholder="votre@email.com" required>
-            </div>
+            <div id="modal-job-salary" class="font-bold text-xl" style="color: var(--emerald-green);"></div>
           </div>
-          
-          <div>
-            <label class="block text-gray-700 dark:text-gray-300 font-medium mb-2">Lettre de motivation</label>
-            <textarea rows="4" class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded-lg focus:border-blue-500 focus:outline-none resize-none" placeholder="Expliquez votre motivation et vos qualifications..." required></textarea>
+        </div>
+        
+        <!-- Job Description -->
+        <div class="mb-8">
+          <h3 class="heading-3 mb-4">
+            <span class="translation missing: es.jobs.show.description">Description</span>
+          </h3>
+          <div id="modal-job-description" class="prose-elegant text-text-secondary"></div>
+        </div>
+        
+        <!-- Requirements -->
+        <div class="glass-surface p-6 rounded-2xl mb-8">
+          <h3 class="heading-3 mb-4">
+            <span class="translation missing: es.jobs.show.requirements">Requirements</span>
+          </h3>
+          <div id="modal-job-requirements" class="text-text-secondary">
+            <!-- Requirements will be populated here -->
           </div>
-          
-          <div>
-            <label class="block text-gray-700 dark:text-gray-300 font-medium mb-2">CV (optionnel)</label>
-            <input type="file" accept=".pdf,.doc,.docx" class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded-lg focus:border-blue-500 focus:outline-none">
-          </div>
-          
-          <div class="flex gap-4 pt-4">
-            <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white flex-1 py-3 px-6 rounded-lg font-semibold">
-              📤 <%= t('actions.send_application') %>
-            </button>
-            <button type="button" onclick="closeModal()" class="bg-gray-500 hover:bg-gray-600 text-white py-3 px-6 rounded-lg font-semibold">
-              <%= t('actions.close') %>
-            </button>
-          </div>
-        </form>
+        </div>
+        
+        <!-- Action Buttons -->
+        <div class="flex gap-4 pt-6 border-t" style="border-color: var(--glass-border-1);">
+          <button onclick="closeJobModal()" class="btn btn-primary-gradient flex-1">
+            <%= t('actions.close', default: 'Close') %>
+          </button>
+        </div>
       </div>
     </div>
   </div>
 </div>
 
 <script>
-// Modal data for job opportunities
-const modalData = {
-  'modal-1': {
-    category: 'Tech',
-    title: 'Développeur Full Stack - CDI',
-    company: 'TechCorp - Startup innovante',
-    salary: '45 000 - 55 000€ /an',
-    contract: 'CDI',
-    location: 'Paris, France',
-    time: 'Il y a 2h',
-    emoji: '💻',
-    description: `
-      <p>Nous recherchons un développeur Full Stack expérimenté pour rejoindre notre équipe dynamique. Vous travaillerez sur des projets innovants utilisant les dernières technologies.</p>
-      <p><strong>Missions principales :</strong></p>
-      <ul class="list-disc ml-5">
-        <li>Développement d'applications web modernes (React, Node.js)</li>
-        <li>Conception et optimisation de bases de données</li>
-        <li>Collaboration avec l'équipe produit et design</li>
-        <li>Maintenance et évolution du code existant</li>
-      </ul>
-    `,
-    requirements: `
-      <ul class="list-disc ml-5">
-        <li>5+ années d'expérience en développement web</li>
-        <li>Maîtrise de JavaScript, React, Node.js</li>
-        <li>Connaissance des bases de données (PostgreSQL, MongoDB)</li>
-        <li>Expérience avec Git et méthodologies agiles</li>
-        <li>Anglais technique requis</li>
-      </ul>
-    `
-  },
-  'modal-2': {
-    category: 'Commerce',
-    title: 'Responsable Boutique - CDI',
-    company: 'Mode & Style - Boutique de vêtements',
-    salary: '35 000 - 40 000€ /an',
-    contract: 'CDI',
-    location: 'Lyon, France',
-    time: 'Il y a 4h',
-    emoji: '🛍️',
-    description: `
-      <p>Rejoignez notre équipe et gérez notre magasin en centre-ville. Vous serez responsable d'une équipe de 5 personnes dans un environnement dynamique.</p>
-      <p><strong>Responsabilités :</strong></p>
-      <ul class="list-disc ml-5">
-        <li>Management d'équipe et formation du personnel</li>
-        <li>Gestion des stocks et commandes</li>
-        <li>Accueil client et conseil en vente</li>
-        <li>Analyse des performances et reporting</li>
-      </ul>
-    `,
-    requirements: `
-      <ul class="list-disc ml-5">
-        <li>3+ années d'expérience en management retail</li>
-        <li>Excellent relationnel et sens commercial</li>
-        <li>Maîtrise des outils de gestion (caisse, stock)</li>
-        <li>Leadership et capacités d'organisation</li>
-        <li>Passion pour la mode et les tendances</li>
-      </ul>
-    `
-  },
-  'modal-3': {
-    category: 'Santé',
-    title: 'Infirmier(ère) - CDD 6 mois',
-    company: 'Clinique du Parc - Établissement de santé',
-    salary: '2 800€ /mois',
-    contract: 'CDD 6 mois',
-    location: 'Marseille, France',
-    time: 'Il y a 1j',
-    emoji: '🩺',
-    description: `
-      <p>Remplacement congé maternité dans notre service de gériatrie. Rejoignez une équipe bienveillante dans un cadre de travail moderne.</p>
-      <p><strong>Missions :</strong></p>
-      <ul class="list-disc ml-5">
-        <li>Soins infirmiers en service de gériatrie</li>
-        <li>Administration des traitements</li>
-        <li>Surveillance des patients et transmissions</li>
-        <li>Collaboration avec l'équipe médicale</li>
-      </ul>
-    `,
-    requirements: `
-      <ul class="list-disc ml-5">
-        <li>Diplôme d'État d'infirmier(ère)</li>
-        <li>Expérience souhaitée en gériatrie</li>
-        <li>Empathie et relation d'aide</li>
-        <li>Travail en équipe et adaptabilité</li>
-        <li>Disponibilité pour horaires variables</li>
-      </ul>
-    `
-  },
-  'modal-4': {
-    category: 'Éducation',
-    title: 'Professeur de Mathématiques',
-    company: 'Collège Sainte-Marie - Enseignement privé',
-    salary: 'Selon grille nationale',
-    contract: 'CDI',
-    location: 'Toulouse, France',
-    time: 'Il y a 3h',
-    emoji: '📚',
-    description: `
-      <p>Enseignement des mathématiques en classes de 4ème et 3ème dans notre collège privé sous contrat. Poste à pourvoir à la rentrée prochaine.</p>
-      <p><strong>Missions :</strong></p>
-      <ul class="list-disc ml-5">
-        <li>Enseigner les mathématiques niveau collège</li>
-        <li>Préparation des cours et évaluations</li>
-        <li>Suivi pédagogique des élèves</li>
-        <li>Participation aux conseils de classe</li>
-      </ul>
-    `,
-    requirements: `
-      <ul class="list-disc ml-5">
-        <li>Master en mathématiques ou équivalent</li>
-        <li>CAPES ou expérience d'enseignement</li>
-        <li>Pédagogie et patience</li>
-        <li>Adhésion au projet éducatif</li>
-        <li>Esprit d'équipe et communication</li>
-      </ul>
-    `
-  },
-  'modal-5': {
-    category: 'Marketing',
-    title: 'Chef de Projet Digital',
-    company: 'Digital Agency - Agence créative',
-    salary: '40 000 - 50 000€ /an',
-    contract: 'CDI',
-    location: 'Nantes, France',
-    time: 'Il y a 6h',
-    emoji: '📈',
-    description: `
-      <p>Rejoignez notre agence créative en pleine croissance. Vous piloterez des projets web et mobile pour nos clients grands comptes.</p>
-      <p><strong>Missions :</strong></p>
-      <ul class="list-disc ml-5">
-        <li>Gestion de projets digitaux de A à Z</li>
-        <li>Coordination des équipes créatives et techniques</li>
-        <li>Relation client et suivi budgétaire</li>
-        <li>Veille technologique et innovation</li>
-      </ul>
-    `,
-    requirements: `
-      <ul class="list-disc ml-5">
-        <li>3+ années en gestion de projet digital</li>
-        <li>Connaissance techniques web/mobile</li>
-        <li>Maîtrise des outils de gestion de projet</li>
-        <li>Excellent relationnel client</li>
-        <li>Créativité et sens de l'innovation</li>
-      </ul>
-    `
-  },
-  'modal-6': {
-    category: 'Stage',
-    title: 'Stage Communication - 6 mois',
-    company: 'StartupFrench - Startup tech française',
-    salary: '600€ /mois + tickets resto',
-    contract: 'Stage 6 mois',
-    location: 'Bordeaux, France',
-    time: 'Il y a 12h',
-    emoji: '🎓',
-    description: `
-      <p>Stage de fin d'études en communication et marketing digital. Intégrez une startup innovante et participez à notre croissance !</p>
-      <p><strong>Missions :</strong></p>
-      <ul class="list-disc ml-5">
-        <li>Gestion des réseaux sociaux</li>
-        <li>Création de contenu marketing</li>
-        <li>Support événementiel</li>
-        <li>Analyse des performances digitales</li>
-      </ul>
-    `,
-    requirements: `
-      <ul class="list-disc ml-5">
-        <li>Étudiant(e) Bac+4/5 en communication</li>
-        <li>Maîtrise des réseaux sociaux</li>
-        <li>Créativité et autonomie</li>
-        <li>Outils Adobe appréciés</li>
-        <li>Anglais courant souhaité</li>
-      </ul>
-    `
-  }
+// Job modal functionality
+let currentJobId = null;
+
+// Job data from Rails
+const jobsData = {
+  <% @jobs.each_with_index do |job, index| %>
+    'job-<%= job.id %>': {
+      id: <%= job.id %>,
+      title: '<%= j job.translated_title(I18n.locale) %>',
+      jobType: '<%= j job.job_type.humanize %>',
+      description: '<%= j job.translated_description(I18n.locale) %>',
+      requirements: '<%= j job.translated_requirements(I18n.locale) %>',
+      experienceLevel: '<%= j job.experience_level.humanize %>',
+      salaryMin: <%= job.salary_min || 0 %>,
+      salaryMax: <%= job.salary_max || 0 %>,
+      remote: <%= job.remote? %>,
+      businessName: '<%= j job.business.name %>',
+      location: '<%= j job.location %>'
+    }<%= ',' unless index == @jobs.count - 1 %>
+  <% end %>
 };
 
-// Modal functions
-function openModal(modalId) {
-  const data = modalData[modalId];
+function openJobModal(jobId) {
+  currentJobId = jobId;
+  const data = jobsData[jobId];
+  
   if (data) {
-    document.getElementById('modal-category').textContent = data.category;
-    document.getElementById('modal-title').textContent = data.title;
-    document.getElementById('modal-company').textContent = data.company;
-    document.getElementById('modal-salary').textContent = data.salary;
-    document.getElementById('modal-contract').textContent = data.contract;
-    document.getElementById('modal-location').textContent = data.location;
-    document.getElementById('modal-time').textContent = data.time;
-    document.getElementById('modal-emoji').textContent = data.emoji;
-    document.getElementById('modal-description').innerHTML = data.description;
-    document.getElementById('modal-requirements').innerHTML = data.requirements;
+    // Update modal content
+    document.getElementById('modal-job-type').textContent = data.jobType;
+    document.getElementById('modal-job-title').textContent = data.title;
+    document.getElementById('modal-job-business').textContent = `<%= t('jobs.by', default: 'By') %> ${data.businessName}`;
+    document.getElementById('modal-job-experience').textContent = data.experienceLevel;
+    document.getElementById('modal-job-description').textContent = data.description;
     
-    // Set category color based on type
-    const categoryElement = document.getElementById('modal-category');
-    const categoryColors = {
-      'Tech': 'bg-blue-500',
-      'Commerce': 'bg-green-500',
-      'Santé': 'bg-red-500',
-      'Éducation': 'bg-purple-500',
-      'Marketing': 'bg-yellow-500',
-      'Stage': 'bg-indigo-500'
-    };
+    // Update salary
+    if (data.salaryMin > 0 && data.salaryMax > 0) {
+      document.getElementById('modal-job-salary').textContent = 
+        `$${data.salaryMin.toLocaleString()} - $${data.salaryMax.toLocaleString()}`;
+    } else {
+      document.getElementById('modal-job-salary').textContent = '<%= t('jobs.show.salary_negotiable', default: 'Salary negotiable') %>';
+    }
     
-    // Reset classes and add appropriate color
-    categoryElement.className = `text-white px-4 py-2 rounded-full text-sm font-medium ${categoryColors[data.category] || 'bg-blue-500'}`;
+    // Update requirements
+    const requirementsElement = document.getElementById('modal-job-requirements');
+    if (data.requirements && data.requirements.trim() !== '') {
+      requirementsElement.innerHTML = `<p>${data.requirements}</p>`;
+    } else {
+      requirementsElement.innerHTML = '<p><%= t('jobs.show.no_specific_requirements', default: 'No specific requirements listed.') %></p>';
+    }
     
-    document.getElementById('detail-modal').style.display = 'flex';
-    document.getElementById('detail-modal').classList.remove('hidden');
+    // Show/hide remote badge
+    const remoteBadge = document.getElementById('modal-job-remote');
+    if (data.remote) {
+      remoteBadge.textContent = '<%= t('jobs.show.remote_ok', default: 'Remote OK') %>';
+      remoteBadge.classList.remove('hidden');
+    } else {
+      remoteBadge.classList.add('hidden');
+    }
+    
+    // Show modal
+    document.getElementById('job-modal').classList.remove('hidden');
   }
 }
 
-function closeModal() {
-  document.getElementById('detail-modal').style.display = 'none';
-  document.getElementById('detail-modal').classList.add('hidden');
+function closeJobModal() {
+  document.getElementById('job-modal').classList.add('hidden');
+  currentJobId = null;
 }
 
-function handleJobApplicationSubmit(event) {
-  event.preventDefault();
-  alert('Candidature envoyée! L\'employeur vous répondra rapidement.');
-  closeModal();
-}
 
 // Close modal when clicking outside
-document.getElementById('detail-modal').addEventListener('click', function(e) {
-  if (e.target === document.getElementById('detail-modal')) {
-    closeModal();
+document.getElementById('job-modal').addEventListener('click', function(e) {
+  if (e.target === document.getElementById('job-modal')) {
+    closeJobModal();
+  }
+});
+
+// Close modal with escape key
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape' && currentJobId) {
+    closeJobModal();
   }
 });
 </script>

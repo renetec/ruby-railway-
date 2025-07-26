@@ -368,6 +368,7 @@ es:
   common:
     or: "o"
     cancel: "Cancelar"
+    ago: "hace"
     first_to_create: "¡Sé el primero en crear un evento!"
     join_event_modal: "Inscribirse al evento"
     join_discussion_modal: "Unirse a la discusión"
@@ -378,6 +379,22 @@ es:
     your_comment: "Tu comentario..."
     explain_motivation: "Explica tu motivación..."
     availability: "Ej: fines de semana, noches..."
+
+  # Rails standard datetime translations
+  datetime:
+    distance_in_words:
+      x_minutes:
+        one: "%{count} minuto"
+        other: "%{count} minutos"
+      about_x_hours:
+        one: "alrededor de %{count} hora"
+        other: "alrededor de %{count} horas"
+
+  # Pagination translations  
+  views:
+    pagination:
+      next: "Siguiente"
+      last: "Último"
 
   # Actions
   actions:
@@ -392,6 +409,7 @@ es:
     back: "Atrás"
     next: "Siguiente"
     previous: "Anterior"
+    read_more: "Leer más"
     close: "Cerrar"
     refresh: "Actualizar"
     search: "Buscar"
@@ -496,6 +514,21 @@ es:
     comments: "Comentarios"
     shares: "Compartidos"
     likes: "Me gusta"
+    by: "Por"
+    no_posts_found: "No se encontraron artículos."
+    
+    show:
+      title: "%{title}"
+      featured: "Destacado"
+      community_story: "Historia de la comunidad"
+      written_by: "Escrito por"
+      manage_post: "Gestionar artículo"
+      edit_post: "Editar artículo"
+      delete_post: "Eliminar artículo"
+      related_stories: "Historias relacionadas"
+      related_description: "Descubre más historias que podrían interesarte"
+      back_to_news: "Volver a las noticias"
+    
     categories:
       announcement: "Anuncio"
       community: "Comunidad"
@@ -545,6 +578,7 @@ es:
       oldest_first: "Más Antiguos Primero"
       price_low_high: "Precio: Menor a Mayor"
       price_high_low: "Precio: Mayor a Menor"
+      search: "Buscar"
       
     categories:
       electronics: "Electrónicos"

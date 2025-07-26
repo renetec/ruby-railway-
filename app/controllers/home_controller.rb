@@ -1,5 +1,5 @@
 class HomeController < ApplicationController
-  skip_before_action :authenticate_user!, only: [:index]
+  skip_before_action :authenticate_user!
   
   def index
     @featured_posts = Post.published.featured.includes(:user).limit(3)

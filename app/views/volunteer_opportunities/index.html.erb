@@ -1,339 +1,216 @@
-<!-- Volunteer Opportunities - 2 Column Layout -->
+<!-- Volunteer Opportunities - Dynamic 2 Column Layout -->
 <div class="max-w-6xl mx-auto px-4 py-8">
   <!-- Page Header with Logo -->
   <%= render 'shared/page_header_with_logo', 
-      title: "Opportunités de Bénévolat",
-      subtitle: "Découvrez des moyens de contribuer à votre communauté" %>
+      title: t('navigation.volunteer', default: 'Volunteer Opportunities'),
+      subtitle: t('volunteer.subtitle', default: 'Discover ways to contribute to your community') %>
 
   <!-- Action Buttons -->
   <% if user_signed_in? %>
     <div class="flex flex-col sm:flex-row gap-4 mb-8 justify-center">
-      <%= link_to "📝 #{t('actions.create_opportunity')}", new_volunteer_opportunity_path, 
+      <%= link_to "📝 #{t('actions.create_opportunity', default: 'Create Opportunity')}", new_volunteer_opportunity_path, 
                   class: "px-6 py-2 bg-green-500 hover:bg-green-600 text-white rounded-lg font-semibold" %>
-      <%= link_to "📋 Mes candidatures", my_applications_volunteer_opportunities_path, 
-                  class: "px-6 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg font-semibold" %>
-      <%= link_to "📊 Mes opportunités", my_opportunities_volunteer_opportunities_path, 
-                  class: "px-6 py-2 bg-purple-500 hover:bg-purple-600 text-white rounded-lg font-semibold" %>
     </div>
   <% end %>
 
-  <!-- Filters Section -->
-  <div class="flex flex-col md:flex-row gap-4 mb-8 justify-center">
-    <select class="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100">
-      <option><%= t('dropdowns.category') %></option>
-      <option><%= t('dropdowns.education') %></option>
-      <option><%= t('dropdowns.environment') %></option>
-      <option><%= t('dropdowns.social') %></option>
-      <option><%= t('dropdowns.health') %></option>
-      <option><%= t('dropdowns.culture') %></option>
-    </select>
-    <select class="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100">
-      <option><%= t('dropdowns.time_required') %></option>
-      <option><%= t('dropdowns.one_time') %></option>
-      <option><%= t('dropdowns.regular') %></option>
-      <option><%= t('dropdowns.flexible') %></option>
-    </select>
-    <button class="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 dark:bg-blue-600 dark:hover:bg-blue-700">
-      🔄 <%= t('actions.refresh') %>
-    </button>
-  </div>
-
-  <!-- 2-Column Opportunities Grid -->
+  <!-- Dynamic Opportunities Grid -->
   <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-    <!-- Opportunity 1 -->
-    <div class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow cursor-pointer" onclick="openModal('modal-1')">
-      <div class="flex gap-4">
-        <div class="w-24 h-24 bg-green-100 dark:bg-green-900 rounded-lg flex items-center justify-center flex-shrink-0">
-          <span class="text-3xl">📚</span>
-        </div>
-        <div class="flex-1">
-          <div class="flex justify-between items-start mb-2">
-            <span class="bg-green-500 text-white px-2 py-1 rounded text-xs">Éducation</span>
-            <span class="text-sm text-gray-500 dark:text-gray-400">Il y a 1h</span>
+    <% @volunteer_opportunities.each do |opportunity| %>
+      <div class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow cursor-pointer" onclick="openVolunteerModal('volunteer-<%= opportunity.id %>')">
+        <div class="flex gap-4">
+          <div class="w-24 h-24 bg-green-100 dark:bg-green-900 rounded-lg flex items-center justify-center flex-shrink-0">
+            <span class="text-3xl">🤝</span>
           </div>
-          <h3 class="font-bold text-lg mb-1 text-gray-900 dark:text-gray-100">Aide aux devoirs - École primaire</h3>
-          <p class="text-gray-600 dark:text-gray-400 text-sm mb-2">Recherchons bénévoles pour accompagner les enfants...</p>
-          <div class="flex justify-between items-center">
-            <span class="text-xs text-gray-500 dark:text-gray-400">Par École Centrale</span>
-            <button class="text-blue-600 hover:text-blue-800 text-sm font-medium" onclick="event.stopPropagation(); openModal('modal-1')">
-              💬 Postuler
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Opportunity 2 -->
-    <div class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow cursor-pointer" onclick="openModal('modal-2')">
-      <div class="flex gap-4">
-        <div class="w-24 h-24 bg-blue-100 dark:bg-blue-900 rounded-lg flex items-center justify-center flex-shrink-0">
-          <span class="text-3xl">🌱</span>
-        </div>
-        <div class="flex-1">
-          <div class="flex justify-between items-start mb-2">
-            <span class="bg-blue-500 text-white px-2 py-1 rounded text-xs">Environnement</span>
-            <span class="text-sm text-gray-500 dark:text-gray-400">Il y a 3h</span>
-          </div>
-          <h3 class="font-bold text-lg mb-1 text-gray-900 dark:text-gray-100">Nettoyage du parc municipal</h3>
-          <p class="text-gray-600 dark:text-gray-400 text-sm mb-2">Journée de nettoyage du parc avec équipement fourni...</p>
-          <div class="flex justify-between items-center">
-            <span class="text-xs text-gray-500 dark:text-gray-400">Par Mairie Locale</span>
-            <button class="text-blue-600 hover:text-blue-800 text-sm font-medium" onclick="event.stopPropagation(); openModal('modal-2')">
-              💬 Postuler
-            </button>
+          <div class="flex-1">
+            <div class="flex justify-between items-start mb-2">
+              <span class="bg-green-500 text-white px-2 py-1 rounded text-xs"><%= opportunity.category.humanize %></span>
+              <% if opportunity.urgent? %>
+                <span class="bg-red-500 text-white px-2 py-1 rounded text-xs">Urgent</span>
+              <% else %>
+                <span class="text-sm text-gray-500 dark:text-gray-400"><%= time_ago_in_words(opportunity.created_at) %> <%= t('common.ago', default: 'ago') %></span>
+              <% end %>
+            </div>
+            <h3 class="font-bold text-lg mb-1 text-gray-900 dark:text-gray-100"><%= opportunity.translated_title(I18n.locale) %></h3>
+            <p class="text-gray-600 dark:text-gray-400 text-sm mb-2"><%= truncate(opportunity.translated_description(I18n.locale), length: 80) %></p>
+            <div class="flex justify-between items-center">
+              <span class="text-xs text-gray-500 dark:text-gray-400">
+                <% if opportunity.organization %>
+                  <%= t('volunteer.by', default: 'By') %> <%= opportunity.organization.name %>
+                <% else %>
+                  📍 <%= opportunity.location %>
+                <% end %>
+              </span>
+              <span class="text-blue-600 text-sm font-medium">
+                🤝 <%= t('volunteer.help_needed', default: 'Help needed') %>
+              </span>
+            </div>
           </div>
         </div>
       </div>
-    </div>
-
-    <!-- Opportunity 3 -->
-    <div class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow cursor-pointer" onclick="openModal('modal-3')">
-      <div class="flex gap-4">
-        <div class="w-24 h-24 bg-purple-100 dark:bg-purple-900 rounded-lg flex items-center justify-center flex-shrink-0">
-          <span class="text-3xl">👥</span>
-        </div>
-        <div class="flex-1">
-          <div class="flex justify-between items-start mb-2">
-            <span class="bg-purple-500 text-white px-2 py-1 rounded text-xs">Social</span>
-            <span class="text-sm text-gray-500 dark:text-gray-400">Il y a 5h</span>
-          </div>
-          <h3 class="font-bold text-lg mb-1 text-gray-900 dark:text-gray-100">Accompagnement personnes âgées</h3>
-          <p class="text-gray-600 dark:text-gray-400 text-sm mb-2">Visites et accompagnement pour rompre l'isolement...</p>
-          <div class="flex justify-between items-center">
-            <span class="text-xs text-gray-500 dark:text-gray-400">Par Aide Seniors</span>
-            <button class="text-blue-600 hover:text-blue-800 text-sm font-medium" onclick="event.stopPropagation(); openModal('modal-3')">
-              💬 Postuler
-            </button>
-          </div>
-        </div>
+    <% end %>
+    
+    <% if @volunteer_opportunities.empty? %>
+      <div class="col-span-2 text-center py-12">
+        <p class="text-gray-500 dark:text-gray-400 text-lg"><%= t('volunteer.no_opportunities_found', default: 'No volunteer opportunities found.') %></p>
+        <% if user_signed_in? %>
+          <%= link_to new_volunteer_opportunity_path, class: "mt-4 inline-block px-6 py-2 bg-green-500 hover:bg-green-600 text-white rounded-lg font-semibold" do %>
+            📝 <%= t('volunteer.create_first', default: 'Create the first opportunity') %>
+          <% end %>
+        <% end %>
       </div>
-    </div>
-
-    <!-- Opportunity 4 -->
-    <div class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow cursor-pointer" onclick="openModal('modal-4')">
-      <div class="flex gap-4">
-        <div class="w-24 h-24 bg-red-100 dark:bg-red-900 rounded-lg flex items-center justify-center flex-shrink-0">
-          <span class="text-3xl">🩺</span>
-        </div>
-        <div class="flex-1">
-          <div class="flex justify-between items-start mb-2">
-            <span class="bg-red-500 text-white px-2 py-1 rounded text-xs">Santé</span>
-            <span class="text-sm text-gray-500 dark:text-gray-400">Il y a 8h</span>
-          </div>
-          <h3 class="font-bold text-lg mb-1 text-gray-900 dark:text-gray-100">Collecte de sang - Urgence</h3>
-          <p class="text-gray-600 dark:text-gray-400 text-sm mb-2">Aide à l'organisation de la collecte de sang...</p>
-          <div class="flex justify-between items-center">
-            <span class="text-xs text-gray-500 dark:text-gray-400">Par Croix Rouge</span>
-            <button class="text-blue-600 hover:text-blue-800 text-sm font-medium" onclick="event.stopPropagation(); openModal('modal-4')">
-              💬 Postuler
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Opportunity 5 -->
-    <div class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow cursor-pointer" onclick="openModal('modal-5')">
-      <div class="flex gap-4">
-        <div class="w-24 h-24 bg-yellow-100 dark:bg-yellow-900 rounded-lg flex items-center justify-center flex-shrink-0">
-          <span class="text-3xl">🎭</span>
-        </div>
-        <div class="flex-1">
-          <div class="flex justify-between items-start mb-2">
-            <span class="bg-yellow-500 text-white px-2 py-1 rounded text-xs">Culture</span>
-            <span class="text-sm text-gray-500 dark:text-gray-400">Il y a 12h</span>
-          </div>
-          <h3 class="font-bold text-lg mb-1 text-gray-900 dark:text-gray-100">Festival des Arts - Assistance</h3>
-          <p class="text-gray-600 dark:text-gray-400 text-sm mb-2">Aide à l'organisation du festival culturel...</p>
-          <div class="flex justify-between items-center">
-            <span class="text-xs text-gray-500 dark:text-gray-400">Par Centre Culturel</span>
-            <button class="text-blue-600 hover:text-blue-800 text-sm font-medium" onclick="event.stopPropagation(); openModal('modal-5')">
-              💬 Postuler
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Opportunity 6 -->
-    <div class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow cursor-pointer" onclick="openModal('modal-6')">
-      <div class="flex gap-4">
-        <div class="w-24 h-24 bg-indigo-100 dark:bg-indigo-900 rounded-lg flex items-center justify-center flex-shrink-0">
-          <span class="text-3xl">🐕</span>
-        </div>
-        <div class="flex-1">
-          <div class="flex justify-between items-start mb-2">
-            <span class="bg-indigo-500 text-white px-2 py-1 rounded text-xs">Animaux</span>
-            <span class="text-sm text-gray-500 dark:text-gray-400">Il y a 1j</span>
-          </div>
-          <h3 class="font-bold text-lg mb-1 text-gray-900 dark:text-gray-100">Refuge pour animaux - Soins</h3>
-          <p class="text-gray-600 dark:text-gray-400 text-sm mb-2">Aide aux soins et promenades des animaux...</p>
-          <div class="flex justify-between items-center">
-            <span class="text-xs text-gray-500 dark:text-gray-400">Par Refuge des Amis</span>
-            <button class="text-blue-600 hover:text-blue-800 text-sm font-medium" onclick="event.stopPropagation(); openModal('modal-6')">
-              💬 Postuler
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-
+    <% end %>
   </div>
+  
+  <!-- Pagination -->
+  <% if @volunteer_opportunities.respond_to?(:current_page) %>
+    <div class="flex justify-center mt-8">
+      <%= paginate @volunteer_opportunities %>
+    </div>
+  <% end %>
 </div>
 
-<!-- Detail Modal -->
-<div id="detail-modal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black bg-opacity-50">
-  <div class="bg-white dark:bg-gray-800 max-w-2xl w-full mx-4 rounded-lg overflow-hidden max-h-[80vh] overflow-y-auto">
-    <div class="p-6">
-      <!-- Modal Header -->
-      <div class="flex justify-between items-start mb-6">
-        <div id="modal-category" class="bg-blue-500 text-white px-4 py-2 rounded-full text-sm font-medium"></div>
-        <button onclick="closeModal()" class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 text-2xl font-bold">×</button>
-      </div>
-      
-      <!-- Modal Content -->
-      <div class="flex gap-6 mb-6">
-        <div id="modal-image" class="w-32 h-32 bg-gray-100 dark:bg-gray-700 rounded-lg flex items-center justify-center flex-shrink-0">
-          <span id="modal-emoji" class="text-4xl"></span>
-        </div>
-        <div class="flex-1">
-          <h2 id="modal-title" class="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-4"></h2>
-          <p id="modal-description" class="text-gray-600 dark:text-gray-400 mb-4"></p>
-          <div class="flex justify-between items-center">
-            <div id="modal-author" class="text-sm text-gray-500 dark:text-gray-400"></div>
-            <div id="modal-time" class="text-sm text-gray-500 dark:text-gray-400"></div>
-          </div>
+<!-- Volunteer Detail Modal -->
+<div id="volunteer-modal" class="fixed inset-0 bg-black/80 backdrop-filter backdrop-blur-sm hidden z-50">
+  <div class="flex items-center justify-center min-h-screen p-4">
+    <div class="card-stunning max-w-4xl w-full animate-slide-up max-h-[90vh] overflow-y-auto">
+      <div class="backdrop-filter backdrop-blur-sm px-6 py-4 border-b" style="background: linear-gradient(to right, color-mix(in srgb, var(--emerald-green) 10%, transparent), color-mix(in srgb, var(--vibrant-purple) 10%, transparent)); border-color: var(--glass-border-1);">
+        <div class="flex justify-between items-start">
+          <div id="modal-volunteer-category" class="tag tag-success"></div>
+          <button onclick="closeVolunteerModal()" class="text-2xl font-bold transition-colors" style="color: var(--text-secondary);" onmouseover="this.style.color='var(--text-primary)'" onmouseout="this.style.color='var(--text-secondary)'">×</button>
         </div>
       </div>
       
-      <!-- Application Form -->
-      <div class="border-t dark:border-gray-600 pt-6">
-        <h3 class="text-lg font-bold text-gray-900 dark:text-gray-100 mb-4">Postuler pour cette opportunité</h3>
-        <form class="space-y-4" onsubmit="handleApplicationSubmit(event)">
-          <div>
-            <label class="block text-gray-700 dark:text-gray-300 font-medium mb-2"><%= t('forms.your_name') %></label>
-            <input type="text" class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded-lg focus:border-blue-500 focus:outline-none" placeholder="<%= t('common.your_full_name') %>" required>
+      <div class="p-8">
+        <!-- Volunteer Header -->
+        <div class="flex items-start mb-8">
+          <div class="w-24 h-24 rounded-3xl flex items-center justify-center mr-6 shadow-2xl border-4" style="background: linear-gradient(to bottom right, var(--emerald-green), var(--electric-blue)); border-color: var(--glass-border-1);">
+            <span class="text-white font-bold text-3xl">🤝</span>
           </div>
-          <div>
-            <label class="block text-gray-700 dark:text-gray-300 font-medium mb-2"><%= t('forms.motivation') %></label>
-            <textarea rows="4" class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded-lg focus:border-blue-500 focus:outline-none resize-none" placeholder="<%= t('common.explain_motivation') %>" required></textarea>
+          <div class="flex-1">
+            <h2 id="modal-volunteer-title" class="heading-1 mb-4"></h2>
+            <div class="flex items-center mb-4">
+              <span id="modal-volunteer-organization" class="text-text-secondary font-medium mr-4"></span>
+              <span id="modal-volunteer-urgency" class="tag tag-danger hidden"></span>
+            </div>
+            <div class="flex items-center gap-4">
+              <span id="modal-volunteer-location" class="text-text-secondary font-medium"></span>
+              <span id="modal-volunteer-time" class="text-text-secondary font-medium"></span>
+            </div>
           </div>
-          <div>
-            <label class="block text-gray-700 dark:text-gray-300 font-medium mb-2"><%= t('forms.availability') %></label>
-            <input type="text" class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded-lg focus:border-blue-500 focus:outline-none" placeholder="<%= t('common.availability') %>" required>
+        </div>
+        
+        <!-- Volunteer Description -->
+        <div class="mb-8">
+          <h3 class="heading-3 mb-4">
+            <span class="translation missing: es.volunteer.show.description">Description</span>
+          </h3>
+          <div id="modal-volunteer-description" class="prose-elegant text-text-secondary"></div>
+        </div>
+        
+        <!-- Skills Required -->
+        <div class="glass-surface p-6 rounded-2xl mb-8">
+          <h3 class="heading-3 mb-4">
+            <span class="translation missing: es.volunteer.show.skills_needed">Skills Needed</span>
+          </h3>
+          <div id="modal-volunteer-skills" class="text-text-secondary">
+            <!-- Skills will be populated here -->
           </div>
-          <div class="flex gap-4 pt-4">
-            <button type="submit" class="bg-green-500 hover:bg-green-600 text-white flex-1 py-3 px-6 rounded-lg font-semibold">
-              📤 <%= t('actions.send_application') %>
-            </button>
-            <button type="button" onclick="closeModal()" class="bg-gray-500 hover:bg-gray-600 text-white py-3 px-6 rounded-lg font-semibold">
-              <%= t('actions.close') %>
-            </button>
-          </div>
-        </form>
+        </div>
+        
+        <!-- Action Buttons -->
+        <div class="flex gap-4 pt-6 border-t" style="border-color: var(--glass-border-1);">
+          <button onclick="closeVolunteerModal()" class="btn btn-primary-gradient flex-1">
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+            </svg>
+            <%= t('actions.close', default: 'Close') %>
+          </button>
+        </div>
       </div>
     </div>
   </div>
 </div>
 
 <script>
-// Modal data for volunteer opportunities
-const modalData = {
-  'modal-1': {
-    category: 'Éducation',
-    title: 'Aide aux devoirs - École primaire',
-    description: 'Nous recherchons des bénévoles pour accompagner les enfants de CE1 et CE2 dans leurs devoirs. Séances de 2h, 2 fois par semaine. Formation fournie pour les techniques pédagogiques adaptées. Une expérience enrichissante pour aider les enfants en difficulté.',
-    author: 'Par École Centrale',
-    time: 'Il y a 1h',
-    emoji: '📚'
-  },
-  'modal-2': {
-    category: 'Environnement',
-    title: 'Nettoyage du parc municipal',
-    description: 'Grande journée de nettoyage du parc municipal le samedi 3 août. Équipement fourni : gants, sacs poubelles, pinces ramasse-déchets. Petit-déjeuner et déjeuner offerts. Action citoyenne pour préserver notre environnement local.',
-    author: 'Par Mairie Locale',
-    time: 'Il y a 3h',
-    emoji: '🌱'
-  },
-  'modal-3': {
-    category: 'Social',
-    title: 'Accompagnement personnes âgées',
-    description: 'Visites hebdomadaires à domicile ou en EHPAD pour rompre l\'isolement des personnes âgées. Conversations, jeux de société, petites sorties. Formation d\'accompagnement social proposée. Engagement minimum 6 mois.',
-    author: 'Par Aide Seniors',
-    time: 'Il y a 5h',
-    emoji: '👥'
-  },
-  'modal-4': {
-    category: 'Santé',
-    title: 'Collecte de sang - Urgence',
-    description: 'Aide à l\'organisation de la collecte de sang dans notre centre. Accueil des donneurs, distribution de collations, assistance administrative. Formation sur la sécurité transfusionnelle. Besoin urgent de volontaires qualifiés.',
-    author: 'Par Croix Rouge',
-    time: 'Il y a 8h',
-    emoji: '🩺'
-  },
-  'modal-5': {
-    category: 'Culture',
-    title: 'Festival des Arts - Assistance',
-    description: 'Assistance pour l\'organisation du festival culturel annuel. Montage/démontage des stands, accueil du public, aide aux artistes. Festival de 3 jours avec concerts, expositions et ateliers. Ambiance conviviale garantie !',
-    author: 'Par Centre Culturel',
-    time: 'Il y a 12h',
-    emoji: '🎭'
-  },
-  'modal-6': {
-    category: 'Animaux',
-    title: 'Refuge pour animaux - Soins',
-    description: 'Aide aux soins quotidiens des animaux abandonnés : nettoyage des enclos, nourrissage, promenades des chiens, socialisation des chats. Expérience avec les animaux souhaitée. Formation aux premiers secours animaliers proposée.',
-    author: 'Par Refuge des Amis',
-    time: 'Il y a 1j',
-    emoji: '🐕'
-  }
+// Volunteer modal functionality
+let currentVolunteerId = null;
+
+// Volunteer data from Rails
+const volunteerData = {
+  <% @volunteer_opportunities.each_with_index do |opportunity, index| %>
+    'volunteer-<%= opportunity.id %>': {
+      id: <%= opportunity.id %>,
+      title: '<%= j opportunity.translated_title(I18n.locale) %>',
+      category: '<%= j opportunity.category.humanize %>',
+      description: '<%= j opportunity.translated_description(I18n.locale) %>',
+      skillsRequired: '<%= j opportunity.translated_requirements(I18n.locale) %>',
+      location: '<%= j opportunity.location %>',
+      timeCommitment: '<%= j opportunity.time_commitment %>',
+      urgent: <%= opportunity.urgent? %>,
+      organizationName: '<%= j (opportunity.organization&.name || 'Independent') %>'
+    }<%= ',' unless index == @volunteer_opportunities.count - 1 %>
+  <% end %>
 };
 
-// Modal functions
-function openModal(modalId) {
-  const data = modalData[modalId];
+function openVolunteerModal(volunteerId) {
+  currentVolunteerId = volunteerId;
+  const data = volunteerData[volunteerId];
+  
   if (data) {
-    document.getElementById('modal-category').textContent = data.category;
-    document.getElementById('modal-title').textContent = data.title;
-    document.getElementById('modal-description').textContent = data.description;
-    document.getElementById('modal-author').textContent = data.author;
-    document.getElementById('modal-time').textContent = data.time;
-    document.getElementById('modal-emoji').textContent = data.emoji;
+    // Update modal content
+    document.getElementById('modal-volunteer-category').textContent = data.category;
+    document.getElementById('modal-volunteer-title').textContent = data.title;
+    document.getElementById('modal-volunteer-organization').textContent = `<%= t('volunteer.by', default: 'By') %> ${data.organizationName}`;
+    document.getElementById('modal-volunteer-description').textContent = data.description;
     
-    // Set category color based on type
-    const categoryElement = document.getElementById('modal-category');
-    const categoryColors = {
-      'Éducation': 'bg-green-500',
-      'Environnement': 'bg-blue-500', 
-      'Social': 'bg-purple-500',
-      'Santé': 'bg-red-500',
-      'Culture': 'bg-yellow-500',
-      'Animaux': 'bg-indigo-500'
-    };
+    // Update location and time
+    document.getElementById('modal-volunteer-location').textContent = `📍 ${data.location}`;
+    if (data.timeCommitment) {
+      document.getElementById('modal-volunteer-time').textContent = `⏰ ${data.timeCommitment}`;
+    } else {
+      document.getElementById('modal-volunteer-time').textContent = '⏰ <%= t('volunteer.show.flexible_time', default: 'Flexible timing') %>';
+    }
     
-    // Reset classes and add appropriate color
-    categoryElement.className = `text-white px-4 py-2 rounded-full text-sm font-medium ${categoryColors[data.category] || 'bg-blue-500'}`;
+    // Update skills
+    const skillsElement = document.getElementById('modal-volunteer-skills');
+    if (data.skillsRequired && data.skillsRequired.trim() !== '') {
+      skillsElement.innerHTML = `<p>${data.skillsRequired}</p>`;
+    } else {
+      skillsElement.innerHTML = '<p><%= t('volunteer.show.no_specific_skills', default: 'No specific skills required - enthusiasm welcome!') %></p>';
+    }
     
-    document.getElementById('detail-modal').style.display = 'flex';
-    document.getElementById('detail-modal').classList.remove('hidden');
+    // Show/hide urgency badge
+    const urgencyBadge = document.getElementById('modal-volunteer-urgency');
+    if (data.urgent) {
+      urgencyBadge.textContent = '<%= t('volunteer.show.urgent', default: 'Urgent') %>';
+      urgencyBadge.classList.remove('hidden');
+    } else {
+      urgencyBadge.classList.add('hidden');
+    }
+    
+    // Show modal
+    document.getElementById('volunteer-modal').classList.remove('hidden');
   }
 }
 
-function closeModal() {
-  document.getElementById('detail-modal').style.display = 'none';
-  document.getElementById('detail-modal').classList.add('hidden');
+function closeVolunteerModal() {
+  document.getElementById('volunteer-modal').classList.add('hidden');
+  currentVolunteerId = null;
 }
 
-function handleApplicationSubmit(event) {
-  event.preventDefault();
-  alert('Candidature envoyée! L\'organisation vous répondra bientôt.');
-  closeModal();
-}
 
 // Close modal when clicking outside
-document.getElementById('detail-modal').addEventListener('click', function(e) {
-  if (e.target === document.getElementById('detail-modal')) {
-    closeModal();
+document.getElementById('volunteer-modal').addEventListener('click', function(e) {
+  if (e.target === document.getElementById('volunteer-modal')) {
+    closeVolunteerModal();
+  }
+});
+
+// Close modal with escape key
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape' && currentVolunteerId) {
+    closeVolunteerModal();
   }
 });
 </script>
