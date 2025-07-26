@@ -1,4 +1,4 @@
-<% content_for :title, t('posts.show.title', title: @post.title) %>
+<% content_for :title, t('posts.show.title', title: @post.translated_title(I18n.locale)) %>
 
 <div class="min-h-screen relative overflow-hidden">
   <!-- Stunning Background -->
@@ -8,7 +8,7 @@
     <article class="card-stunning overflow-hidden">
       <% if @post.images.attached? %>
         <div class="relative">
-          <%= image_tag @post.images.first, alt: @post.title, class: "w-full h-48 object-cover" %>
+          <%= image_tag @post.images.first, alt: @post.translated_title(I18n.locale), class: "w-full h-48 object-cover" %>
           <% if @post.featured? %>
             <div class="absolute top-6 right-6 tag tag-success">
               <span class="text-lg mr-2"></span>
@@ -37,7 +37,7 @@
           </div>
         </div>
         
-        <h1 class="heading-1 mb-8"><%= @post.title %></h1>
+        <h1 class="heading-1 mb-8"><%= @post.translated_title(I18n.locale) %></h1>
         
         <div class="flex items-center mb-8 p-6 glass-surface rounded-2xl">
           <div class="w-16 h-16 bg-gradient-to-br from-electric-blue to-vibrant-purple rounded-2xl flex items-center justify-center mr-6">
@@ -51,7 +51,7 @@
         </div>
         
         <div class="prose-elegant max-w-none mb-12">
-          <%= simple_format(@post.content) %>
+          <%= simple_format(@post.translated_content(I18n.locale)) %>
         </div>
         
         <% if user_signed_in? && (@post.user == current_user || current_user.moderator?) %>
@@ -88,7 +88,7 @@
           <% @related_posts.each do |post| %>
             <article class="card-stunning overflow-hidden group hover:scale-105 transition-all duration-500">
               <% if post.images.attached? %>
-                <%= image_tag post.images.first, alt: post.title, class: "w-full h-32 object-cover group-hover:scale-110 transition-transform duration-500" %>
+                <%= image_tag post.images.first, alt: post.translated_title(I18n.locale), class: "w-full h-32 object-cover group-hover:scale-110 transition-transform duration-500" %>
               <% else %>
                 <div class="h-24 bg-gradient-to-br from-electric-blue to-vibrant-purple flex items-center justify-center">
                   <span class="text-xl"></span>
@@ -102,10 +102,10 @@
                   <span class="text-text-muted text-xs"><%= time_ago_in_words(post.created_at) %> <%= t('common.ago') %></span>
                 </div>
                 <h3 class="heading-3 group-hover:text-electric-blue transition-colors mb-3 leading-tight">
-                  <%= link_to post.title, post_path(post) %>
+                  <%= link_to post.translated_title(I18n.locale), post_path(post) %>
                 </h3>
                 <p class="text-text-secondary leading-relaxed">
-                  <%= truncate(post.content, length: 120) %>
+                  <%= truncate(post.translated_content(I18n.locale), length: 120) %>
                 </p>
               </div>
             </article>
