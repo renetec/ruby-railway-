@@ -88,6 +88,8 @@ class Event < ApplicationRecord
   
   # Translation methods
   def translated_title(locale = I18n.locale)
+    return title unless respond_to?(:original_language) && respond_to?(:translations)
+    
     locale = locale.to_s
     return title if locale == original_language
     
@@ -95,6 +97,8 @@ class Event < ApplicationRecord
   end
   
   def translated_description(locale = I18n.locale)
+    return description unless respond_to?(:original_language) && respond_to?(:translations)
+    
     locale = locale.to_s
     return description if locale == original_language
     
@@ -102,6 +106,8 @@ class Event < ApplicationRecord
   end
   
   def translated_location(locale = I18n.locale)
+    return location unless respond_to?(:original_language) && respond_to?(:translations)
+    
     locale = locale.to_s
     return location if locale == original_language
     
@@ -134,6 +140,7 @@ class Event < ApplicationRecord
   end
   
   def enqueue_translation_job
+    return unless respond_to?(:original_language) && respond_to?(:translations)
     EventTranslationJob.perform_later(self)
   end
   
