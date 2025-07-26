@@ -1,3 +1,5 @@
+require_relative '../../services/database_backup_service'
+
 class Admin::DatabaseController < AdminController
   def index
     @backup_files = list_backup_files
