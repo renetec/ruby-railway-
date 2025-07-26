@@ -19,6 +19,10 @@ class Job < ApplicationRecord
   validate :salary_range_validation
   validate :application_deadline_validation
   
+  # Callbacks
+  after_create :enqueue_translation_job
+  after_update :enqueue_translation_job, if: :saved_change_to_title_or_description?
+  
   # Scopes
   scope :active, -> { where(status: 'active') }
   scope :recent, -> { order(created_at: :desc) }
@@ -98,6 +102,38 @@ class Job < ApplicationRecord
     title_changed? || super
   end
   
+  # Translation methods
+  def translated_title(locale = I18n.locale)
+    return title unless respond_to?(:original_language) && respond_to?(:translations)
+    
+    locale = locale.to_s
+    return title if locale == original_language
+    
+    translations.dig(locale, 'title') || title
+  end
+  
+  def translated_description(locale = I18n.locale)
+    return description unless respond_to?(:original_language) && respond_to?(:translations)
+    
+    locale = locale.to_s
+    return description if locale == original_language
+    
+    translations.dig(locale, 'description') || description
+  end
+  
+  def translated_requirements(locale = I18n.locale)
+    return requirements unless respond_to?(:original_language) && respond_to?(:translations)
+    
+    locale = locale.to_s
+    return requirements if locale == original_language
+    
+    translations.dig(locale, 'requirements') || requirements
+  end
+  
+  def translate_content!
+    LibreTranslateService.translate_job_content(self)
+  end
+  
   # Search scope
   scope :search_by_term, ->(term) do
     return all if term.blank?
@@ -124,5 +160,14 @@ class Job < ApplicationRecord
     if application_deadline <= Time.current
       errors.add(:application_deadline, "must be in the future")
     end
+  end
+  
+  def enqueue_translation_job
+    return unless respond_to?(:original_language) && respond_to?(:translations)
+    ContentTranslationJob.perform_later(self)
+  end
+  
+  def saved_change_to_title_or_description?
+    saved_change_to_title? || saved_change_to_description? || saved_change_to_requirements?
   end
 end

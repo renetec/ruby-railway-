@@ -18,6 +18,10 @@ class Business < ApplicationRecord
   validates :website, format: { with: URI::DEFAULT_PARSER.make_regexp }, allow_blank: true
   validates :phone, format: { with: /\A[\+]?[1-9][\d]{0,15}\z/ }, allow_blank: true
   
+  # Callbacks
+  after_create :enqueue_translation_job
+  after_update :enqueue_translation_job, if: :saved_change_to_name_or_description?
+  
   # Scopes
   scope :active, -> { where(status: 'active') }
   scope :by_category, ->(category) { where(category: category) }
@@ -84,6 +88,38 @@ class Business < ApplicationRecord
     name_changed? || super
   end
   
+  # Translation methods
+  def translated_name(locale = I18n.locale)
+    return name unless respond_to?(:original_language) && respond_to?(:translations)
+    
+    locale = locale.to_s
+    return name if locale == original_language
+    
+    translations.dig(locale, 'name') || name
+  end
+  
+  def translated_description(locale = I18n.locale)
+    return description unless respond_to?(:original_language) && respond_to?(:translations)
+    
+    locale = locale.to_s
+    return description if locale == original_language
+    
+    translations.dig(locale, 'description') || description
+  end
+  
+  def translated_address(locale = I18n.locale)
+    return address unless respond_to?(:original_language) && respond_to?(:translations)
+    
+    locale = locale.to_s
+    return address if locale == original_language
+    
+    translations.dig(locale, 'address') || address
+  end
+  
+  def translate_content!
+    LibreTranslateService.translate_business_content(self)
+  end
+  
   # Search scope
   scope :search_by_term, ->(term) do
     return all if term.blank?
@@ -102,4 +138,15 @@ class Business < ApplicationRecord
   end
   
   before_save :validate_website_format
+  
+  private
+  
+  def enqueue_translation_job
+    return unless respond_to?(:original_language) && respond_to?(:translations)
+    ContentTranslationJob.perform_later(self)
+  end
+  
+  def saved_change_to_name_or_description?
+    saved_change_to_name? || saved_change_to_description? || saved_change_to_address?
+  end
 end

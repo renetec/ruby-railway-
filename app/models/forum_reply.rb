@@ -9,6 +9,10 @@ class ForumReply < ApplicationRecord
   validates :content, presence: true, length: { minimum: 3 }
   validates :status, inclusion: { in: %w[published edited deleted] }
   
+  # Callbacks
+  after_create :enqueue_translation_job
+  after_update :enqueue_translation_job, if: :saved_change_to_content?
+  
   # Scopes
   scope :published, -> { where(status: 'published') }
   scope :recent, -> { order(created_at: :desc) }
@@ -50,6 +54,20 @@ class ForumReply < ApplicationRecord
     child_replies.includes(:user, :child_replies)
   end
   
+  # Translation methods
+  def translated_content(locale = I18n.locale)
+    return content unless respond_to?(:original_language) && respond_to?(:translations)
+    
+    locale = locale.to_s
+    return content if locale == original_language
+    
+    translations.dig(locale, 'content') || content
+  end
+  
+  def translate_content!
+    LibreTranslateService.translate_forum_reply_content(self)
+  end
+  
   # Callbacks
   after_create :update_thread_timestamp
   after_destroy :update_thread_timestamp
@@ -58,5 +76,10 @@ class ForumReply < ApplicationRecord
   
   def update_thread_timestamp
     forum_thread.touch
+  end
+  
+  def enqueue_translation_job
+    return unless respond_to?(:original_language) && respond_to?(:translations)
+    ContentTranslationJob.perform_later(self)
   end
 end

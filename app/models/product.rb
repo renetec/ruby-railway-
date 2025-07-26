@@ -14,6 +14,10 @@ class Product < ApplicationRecord
   validates :condition, presence: true
   validates :status, inclusion: { in: %w[draft active sold archived] }
   
+  # Callbacks
+  after_create :enqueue_translation_job
+  after_update :enqueue_translation_job, if: :saved_change_to_name_or_description?
+  
   # Scopes
   scope :active, -> { where(status: 'active') }
   scope :by_category, ->(category) { where(category: category) }
@@ -80,11 +84,45 @@ class Product < ApplicationRecord
     name_changed? || super
   end
   
+  # Translation methods
+  def translated_name(locale = I18n.locale)
+    return name unless respond_to?(:original_language) && respond_to?(:translations)
+    
+    locale = locale.to_s
+    return name if locale == original_language
+    
+    translations.dig(locale, 'name') || name
+  end
+  
+  def translated_description(locale = I18n.locale)
+    return description unless respond_to?(:original_language) && respond_to?(:translations)
+    
+    locale = locale.to_s
+    return description if locale == original_language
+    
+    translations.dig(locale, 'description') || description
+  end
+  
+  def translate_content!
+    LibreTranslateService.translate_product_content(self)
+  end
+  
   # Search scope
   scope :search_by_term, ->(term) do
     return all if term.blank?
     
     where("name ILIKE ? OR description ILIKE ? OR location ILIKE ?", 
           "%#{term}%", "%#{term}%", "%#{term}%")
+  end
+  
+  private
+  
+  def enqueue_translation_job
+    return unless respond_to?(:original_language) && respond_to?(:translations)
+    ContentTranslationJob.perform_later(self)
+  end
+  
+  def saved_change_to_name_or_description?
+    saved_change_to_name? || saved_change_to_description?
   end
 end

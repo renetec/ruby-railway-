@@ -12,6 +12,10 @@ class ForumThread < ApplicationRecord
   validates :content, presence: true, length: { minimum: 10 }
   validates :status, inclusion: { in: %w[draft published locked archived] }
   
+  # Callbacks
+  after_create :enqueue_translation_job
+  after_update :enqueue_translation_job, if: :saved_change_to_title_or_content?
+  
   # Scopes
   scope :published, -> { where(status: 'published') }
   scope :locked, -> { where(locked: true) }
@@ -72,6 +76,29 @@ class ForumThread < ApplicationRecord
     title_changed? || super
   end
   
+  # Translation methods
+  def translated_title(locale = I18n.locale)
+    return title unless respond_to?(:original_language) && respond_to?(:translations)
+    
+    locale = locale.to_s
+    return title if locale == original_language
+    
+    translations.dig(locale, 'title') || title
+  end
+  
+  def translated_content(locale = I18n.locale)
+    return content unless respond_to?(:original_language) && respond_to?(:translations)
+    
+    locale = locale.to_s
+    return content if locale == original_language
+    
+    translations.dig(locale, 'content') || content
+  end
+  
+  def translate_content!
+    LibreTranslateService.translate_forum_thread_content(self)
+  end
+  
   # Search scope
   scope :search_by_term, ->(term) do
     return all if term.blank?
@@ -87,5 +114,14 @@ class ForumThread < ApplicationRecord
   
   def update_category_counters
     forum_category.touch
+  end
+  
+  def enqueue_translation_job
+    return unless respond_to?(:original_language) && respond_to?(:translations)
+    ContentTranslationJob.perform_later(self)
+  end
+  
+  def saved_change_to_title_or_content?
+    saved_change_to_title? || saved_change_to_content?
   end
 end
