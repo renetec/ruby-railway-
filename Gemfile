@@ -78,6 +78,9 @@ gem "aws-sdk-s3", require: false
 # Environment variables
 gem "dotenv-rails", groups: [:development, :test]
 
+# HTTP client for translation API
+gem "httparty", "~> 0.21"
+
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
   gem "debug", platforms: %i[ mri mingw x64_mingw ]

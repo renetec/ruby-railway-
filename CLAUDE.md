@@ -88,11 +88,20 @@ git checkout development # Switch to development
 git checkout main        # Switch to main
 ```
 
+## Translation System ✅ FULLY WORKING
+The application supports automatic multi-language translation using MyMemory API:
+- **Supported Languages**: French (fr), English (en), Spanish (es)
+- **API**: MyMemory - completely free with no API key required
+- **Automatic Translation**: ✅ Event content automatically translates within seconds
+- **Background Processing**: ✅ Sidekiq worker processes translation jobs
+- **Example**: "Cours de Cuisine Française" → "French Cooking Class" (EN) & "Curso de Cocina Francesa" (ES)
+
 ## Troubleshooting
 - If Railway deployment fails, check Railway logs
 - If admin users page shows HTTP 500, the simplified view should prevent this
 - For database issues, check DATABASE_URL environment variable
 - Health check endpoint: /health
+- If translations not working, check MyMemory API connectivity or run manual translation
 
 ---
 *Last updated: $(date)*
