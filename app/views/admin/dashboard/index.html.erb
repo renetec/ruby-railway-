@@ -120,7 +120,7 @@
     </div>
 
     <!-- Quick Actions -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
       <!-- Users Management -->
       <div class="glass-surface-lg rounded-3xl p-6 shadow-soft-xl border border-glass-border-2">
         <h3 class="text-text-primary text-xl font-bold mb-4">👥 Users Management</h3>
@@ -151,6 +151,18 @@
         <p class="text-text-secondary mb-4">Manage forum categories and moderation</p>
         <%= link_to admin_forum_categories_path, class: "btn-hero-accent inline-flex items-center px-4 py-2 rounded-xl font-semibold transition-all duration-300 hover:scale-105" do %>
           <span>Manage Forum</span>
+          <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+          </svg>
+        <% end %>
+      </div>
+
+      <!-- Database Management -->
+      <div class="glass-surface-lg rounded-3xl p-6 shadow-soft-xl border border-glass-border-2">
+        <h3 class="text-text-primary text-xl font-bold mb-4">🗃️ Database Management</h3>
+        <p class="text-text-secondary mb-4">Backup and restore database operations</p>
+        <%= link_to admin_database_index_path, class: "bg-gradient-to-r from-emerald-green to-electric-blue text-white inline-flex items-center px-4 py-2 rounded-xl font-semibold transition-all duration-300 hover:scale-105" do %>
+          <span>Manage Database</span>
           <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
           </svg>

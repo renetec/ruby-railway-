@@ -110,6 +110,13 @@ Rails.application.routes.draw do
     resources :posts
     resources :events
     resources :forum_categories
+    resources :database, only: [:index] do
+      collection do
+        post :backup
+        post :restore
+        get :download_backup
+      end
+    end
     root 'dashboard#index'
   end
 

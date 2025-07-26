@@ -1,0 +1,197 @@
+<div class="min-h-screen bg-gradient-to-br from-primary-bg via-secondary-bg to-primary-bg relative overflow-hidden">
+  <!-- Background Elements -->
+  <div class="absolute inset-0 overflow-hidden">
+    <div class="absolute -top-40 -right-40 w-80 h-80 bg-electric-blue opacity-10 rounded-full blur-3xl animate-pulse"></div>
+    <div class="absolute -bottom-40 -left-40 w-80 h-80 bg-vibrant-purple opacity-10 rounded-full blur-3xl animate-pulse delay-1000"></div>
+  </div>
+
+  <div class="relative z-10 p-8">
+    <!-- Page Header -->
+    <%= render 'shared/page_header_with_logo', title: '🗃️ Database Management' %>
+    
+    <!-- Back to Dashboard -->
+    <div class="mb-6">
+      <%= link_to admin_root_path, class: "inline-flex items-center text-text-secondary hover:text-text-primary transition-colors duration-300" do %>
+        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+        </svg>
+        Back to Dashboard
+      <% end %>
+    </div>
+
+    <!-- Database Info -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+      <div class="glass-surface-lg rounded-3xl p-6 shadow-soft-xl border border-glass-border-2">
+        <h3 class="text-text-primary text-xl font-bold mb-4 flex items-center">
+          <span class="w-8 h-8 bg-gradient-to-r from-electric-blue to-vibrant-purple rounded-lg flex items-center justify-center text-white mr-3">
+            🏛️
+          </span>
+          Database Info
+        </h3>
+        <% if @database_info[:error] %>
+          <p class="text-red-500">Error: <%= @database_info[:error] %></p>
+        <% else %>
+          <div class="space-y-2">
+            <p class="text-text-secondary"><strong>Database:</strong> <%= @database_info[:database] %></p>
+            <p class="text-text-secondary"><strong>Host:</strong> <%= @database_info[:host] %></p>
+            <p class="text-text-secondary"><strong>Adapter:</strong> <%= @database_info[:adapter] %></p>
+          </div>
+        <% end %>
+      </div>
+
+      <div class="glass-surface-lg rounded-3xl p-6 shadow-soft-xl border border-glass-border-2">
+        <h3 class="text-text-primary text-xl font-bold mb-4 flex items-center">
+          <span class="w-8 h-8 bg-gradient-to-r from-emerald-green to-warm-gold rounded-lg flex items-center justify-center text-white mr-3">
+            📊
+          </span>
+          Backup Status
+        </h3>
+        <div class="space-y-2">
+          <p class="text-text-secondary"><strong>Total Backups:</strong> <%= @backup_files.size %></p>
+          <% if @backup_files.any? %>
+            <p class="text-text-secondary"><strong>Latest:</strong> <%= @backup_files.first[:name] %></p>
+            <p class="text-text-secondary"><strong>Created:</strong> <%= time_ago_in_words(@backup_files.first[:created_at]) %> ago</p>
+          <% else %>
+            <p class="text-text-tertiary">No backups found</p>
+          <% end %>
+        </div>
+      </div>
+
+      <div class="glass-surface-lg rounded-3xl p-6 shadow-soft-xl border border-glass-border-2">
+        <h3 class="text-text-primary text-xl font-bold mb-4 flex items-center">
+          <span class="w-8 h-8 bg-gradient-to-r from-warm-gold to-vibrant-purple rounded-lg flex items-center justify-center text-white mr-3">
+            ⚠️
+          </span>
+          Safety Notice
+        </h3>
+        <p class="text-text-secondary text-sm">
+          Always test backups before relying on them. Restoring will overwrite current data.
+        </p>
+      </div>
+    </div>
+
+    <!-- Main Actions -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+      <!-- Create Backup Section -->
+      <div class="glass-surface-lg rounded-3xl p-8 shadow-soft-xl border border-glass-border-2">
+        <div class="text-center mb-6">
+          <div class="w-16 h-16 bg-gradient-to-r from-electric-blue to-emerald-green rounded-2xl mx-auto mb-4 flex items-center justify-center">
+            <span class="text-white text-2xl">💾</span>
+          </div>
+          <h3 class="text-text-primary text-2xl font-bold mb-2">Create Backup</h3>
+          <p class="text-text-secondary">Export your database to a downloadable file</p>
+        </div>
+
+        <%= form_with url: backup_admin_database_index_path, method: :post, local: true, 
+            class: "space-y-4", 
+            data: { confirm: "Are you sure you want to create a database backup? This may take a few minutes." } do |form| %>
+          <%= form.button type: :submit, 
+              class: "w-full btn-hero-primary py-4 text-lg font-semibold rounded-2xl transition-all duration-300 hover:scale-105" do %>
+            <svg class="w-5 h-5 mr-2 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M9 19l3 3m0 0l3-3m-3 3V10"></path>
+            </svg>
+            Create New Backup
+          <% end %>
+        <% end %>
+      </div>
+
+      <!-- Restore Backup Section -->
+      <div class="glass-surface-lg rounded-3xl p-8 shadow-soft-xl border border-glass-border-2">
+        <div class="text-center mb-6">
+          <div class="w-16 h-16 bg-gradient-to-r from-warm-gold to-vibrant-purple rounded-2xl mx-auto mb-4 flex items-center justify-center">
+            <span class="text-white text-2xl">🔄</span>
+          </div>
+          <h3 class="text-text-primary text-2xl font-bold mb-2">Restore Backup</h3>
+          <p class="text-text-secondary">Upload and restore from a backup file</p>
+        </div>
+
+        <%= form_with url: restore_admin_database_index_path, method: :post, local: true, 
+            multipart: true,
+            class: "space-y-4",
+            data: { confirm: "⚠️ WARNING: This will OVERWRITE your current database! Are you absolutely sure?" } do |form| %>
+          
+          <div class="border-2 border-dashed border-glass-border-2 rounded-2xl p-6 text-center">
+            <%= form.file_field :backup_file, 
+                accept: ".sql,.dump",
+                class: "hidden",
+                id: "backup_file_input" %>
+            <label for="backup_file_input" class="cursor-pointer">
+              <div class="text-text-secondary mb-2">
+                <svg class="w-12 h-12 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
+                </svg>
+                <p class="font-medium">Click to select backup file</p>
+                <p class="text-sm">Supports .sql and .dump files</p>
+              </div>
+            </label>
+          </div>
+
+          <%= form.button type: :submit, 
+              class: "w-full bg-gradient-to-r from-red-500 to-red-600 text-white py-4 text-lg font-semibold rounded-2xl transition-all duration-300 hover:scale-105 hover:from-red-600 hover:to-red-700" do %>
+            <svg class="w-5 h-5 mr-2 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path>
+            </svg>
+            Restore Database
+          <% end %>
+        <% end %>
+      </div>
+    </div>
+
+    <!-- Existing Backups -->
+    <% if @backup_files.any? %>
+      <div class="mt-8">
+        <div class="glass-surface-lg rounded-3xl p-8 shadow-soft-xl border border-glass-border-2">
+          <h3 class="text-text-primary text-2xl font-bold mb-6 flex items-center">
+            <span class="w-10 h-10 bg-gradient-to-r from-vibrant-purple to-electric-blue rounded-xl mr-3 flex items-center justify-center text-white">
+              📋
+            </span>
+            Available Backup Files
+          </h3>
+          
+          <div class="overflow-x-auto">
+            <table class="w-full">
+              <thead>
+                <tr class="border-b border-glass-border-1">
+                  <th class="text-left text-text-primary font-semibold py-3">Filename</th>
+                  <th class="text-left text-text-primary font-semibold py-3">Size</th>
+                  <th class="text-left text-text-primary font-semibold py-3">Created</th>
+                  <th class="text-left text-text-primary font-semibold py-3">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% @backup_files.each do |backup| %>
+                  <tr class="border-b border-glass-border-1 hover:bg-glass-surface-1 transition-colors duration-200">
+                    <td class="py-4 text-text-primary font-medium"><%= backup[:name] %></td>
+                    <td class="py-4 text-text-secondary"><%= number_to_human_size(backup[:size]) %></td>
+                    <td class="py-4 text-text-secondary"><%= backup[:created_at].strftime('%Y-%m-%d %H:%M') %></td>
+                    <td class="py-4">
+                      <%= link_to download_backup_admin_database_index_path(filename: backup[:name]), 
+                          class: "inline-flex items-center px-4 py-2 bg-gradient-to-r from-electric-blue to-vibrant-purple text-white rounded-lg font-medium transition-all duration-300 hover:scale-105" do %>
+                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                        </svg>
+                        Download
+                      <% end %>
+                    </td>
+                  </tr>
+                <% end %>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>
+
+<script>
+  // File input styling and feedback
+  document.getElementById('backup_file_input').addEventListener('change', function(e) {
+    const label = e.target.nextElementSibling;
+    const file = e.target.files[0];
+    if (file) {
+      label.querySelector('p').textContent = `Selected: ${file.name}`;
+      label.classList.add('border-electric-blue', 'bg-glass-surface-1');
+    }
+  });
+</script>
