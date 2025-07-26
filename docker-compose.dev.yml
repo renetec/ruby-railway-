@@ -47,6 +47,7 @@ services:
       RAILS_ENV: development
       RAILS_LOG_TO_STDOUT: "true"
       SECRET_KEY_BASE: ${SECRET_KEY_BASE:-development_secret_key_base_1234567890}
+      REDIS_URL: redis://leclub_redis_dev:6379/0
     stdin_open: true
     tty: true
     networks:
