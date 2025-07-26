@@ -1,22 +1,26 @@
 default: &default
   adapter: postgresql
   encoding: unicode
-  host: localhost
-  username: root
-  password: password
-  port: 5432
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
 
 development:
   <<: *default
+  <% if ENV['DATABASE_URL'] %>
+  url: <%= ENV['DATABASE_URL'] %>
+  <% else %>
   database: <%= ENV.fetch("DATABASE_NAME", "pacomien_development") %>
   host: <%= ENV.fetch("DATABASE_HOST", "localhost") %>
   username: <%= ENV.fetch("DATABASE_USERNAME", "root") %>
   password: <%= ENV.fetch("DATABASE_PASSWORD", "password") %>
+  port: <%= ENV.fetch("DATABASE_PORT", "5432") %>
+  <% end %>
 
 test:
   <<: *default
   database: pacomien_test
+  host: localhost
+  username: root
+  password: password
 
 production:
   <<: *default
