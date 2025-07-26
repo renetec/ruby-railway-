@@ -4,7 +4,8 @@
     "builder": "NIXPACKS"
   },
   "deploy": {
-    "startCommand": "bundle exec rails server -b 0.0.0.0 -p $PORT"
+    "startCommand": "bundle exec rails server -b 0.0.0.0 -p $PORT",
+    "releaseCommand": "bundle exec rails db:migrate RAILS_ENV=production"
   },
   "environments": {
     "production": {

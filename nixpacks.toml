@@ -1,0 +1,11 @@
+[phases.build]
+cmds = [
+  "bundle install",
+  "bundle exec rails assets:precompile RAILS_ENV=production"
+]
+
+[phases.setup]
+nixPkgs = ["...", "postgresql"]
+
+[variables]
+RAILS_ENV = "production"
