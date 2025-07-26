@@ -396,6 +396,29 @@ es:
       next: "Siguiente"
       last: "Último"
 
+  # Home page
+  home:
+    hero:
+      building_communities: "Construyendo Comunidades Increíbles"
+      connect_together: "Conectar Juntos"
+      tagline: "Donde los vecinos se convierten en amigos, las ideas se convierten en realidad, y cada voz crea un impacto duradero en nuestra vibrante comunidad digital."
+      start_journey: "Comienza tu Viaje"
+      explore_community: "Explorar Comunidad"
+      discover_events: "Descubrir Eventos"
+      join_discussions: "Unirse a Discusiones"
+    
+    stats:
+      members: "Miembros"
+      posts: "Publicaciones"
+      events: "Eventos"
+      discussions: "Discusiones"
+    
+    sections:
+      recent_posts: "Publicaciones Recientes"
+      upcoming_events: "Próximos Eventos"
+      featured_posts: "Publicaciones Destacadas"
+      forum_categories: "Categorías del Foro"
+
   # Actions
   actions:
     create: "Crear"
@@ -548,6 +571,9 @@ es:
     reply: "Responder"
     locked: "Bloqueado"
     pinned: "Fijado"
+    threads_count:
+      one: "%{count} hilo"
+      other: "%{count} hilos"
     solved: "Resuelto"
 
   # Marketplace

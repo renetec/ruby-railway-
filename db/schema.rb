@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_07_26_080017) do
+ActiveRecord::Schema[7.2].define(version: 2025_07_26_120007) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -77,13 +77,17 @@ ActiveRecord::Schema[7.2].define(version: 2025_07_26_080017) do
     t.integer "reviews_count", default: 0
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "original_language", default: "fr"
+    t.jsonb "translations", default: {}
     t.index ["category"], name: "index_businesses_on_category"
     t.index ["city"], name: "index_businesses_on_city"
     t.index ["featured"], name: "index_businesses_on_featured"
     t.index ["name"], name: "index_businesses_on_name"
+    t.index ["original_language"], name: "index_businesses_on_original_language"
     t.index ["rating"], name: "index_businesses_on_rating"
     t.index ["slug"], name: "index_businesses_on_slug", unique: true
     t.index ["status"], name: "index_businesses_on_status"
+    t.index ["translations"], name: "index_businesses_on_translations", using: :gin
     t.index ["user_id", "created_at"], name: "index_businesses_on_user_id_and_created_at"
     t.index ["user_id"], name: "index_businesses_on_user_id"
   end
@@ -164,11 +168,15 @@ ActiveRecord::Schema[7.2].define(version: 2025_07_26_080017) do
     t.bigint "parent_reply_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "original_language", default: "fr"
+    t.jsonb "translations", default: {}
     t.index ["created_at"], name: "index_forum_replies_on_created_at"
     t.index ["forum_thread_id", "created_at"], name: "index_forum_replies_on_forum_thread_id_and_created_at"
     t.index ["forum_thread_id"], name: "index_forum_replies_on_forum_thread_id"
+    t.index ["original_language"], name: "index_forum_replies_on_original_language"
     t.index ["parent_reply_id"], name: "index_forum_replies_on_parent_reply_id"
     t.index ["status"], name: "index_forum_replies_on_status"
+    t.index ["translations"], name: "index_forum_replies_on_translations", using: :gin
     t.index ["user_id", "created_at"], name: "index_forum_replies_on_user_id_and_created_at"
     t.index ["user_id"], name: "index_forum_replies_on_user_id"
   end
@@ -186,12 +194,16 @@ ActiveRecord::Schema[7.2].define(version: 2025_07_26_080017) do
     t.integer "views_count", default: 0
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "original_language", default: "fr"
+    t.jsonb "translations", default: {}
     t.index ["forum_category_id", "updated_at"], name: "index_forum_threads_on_forum_category_id_and_updated_at"
     t.index ["forum_category_id"], name: "index_forum_threads_on_forum_category_id"
     t.index ["locked"], name: "index_forum_threads_on_locked"
+    t.index ["original_language"], name: "index_forum_threads_on_original_language"
     t.index ["pinned"], name: "index_forum_threads_on_pinned"
     t.index ["slug"], name: "index_forum_threads_on_slug", unique: true
     t.index ["status"], name: "index_forum_threads_on_status"
+    t.index ["translations"], name: "index_forum_threads_on_translations", using: :gin
     t.index ["updated_at"], name: "index_forum_threads_on_updated_at"
     t.index ["user_id", "created_at"], name: "index_forum_threads_on_user_id_and_created_at"
     t.index ["user_id"], name: "index_forum_threads_on_user_id"
@@ -233,6 +245,8 @@ ActiveRecord::Schema[7.2].define(version: 2025_07_26_080017) do
     t.integer "applications_count", default: 0
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "original_language", default: "fr"
+    t.jsonb "translations", default: {}
     t.index ["application_deadline"], name: "index_jobs_on_application_deadline"
     t.index ["business_id", "created_at"], name: "index_jobs_on_business_id_and_created_at"
     t.index ["business_id"], name: "index_jobs_on_business_id"
@@ -240,9 +254,11 @@ ActiveRecord::Schema[7.2].define(version: 2025_07_26_080017) do
     t.index ["experience_level"], name: "index_jobs_on_experience_level"
     t.index ["featured"], name: "index_jobs_on_featured"
     t.index ["job_type"], name: "index_jobs_on_job_type"
+    t.index ["original_language"], name: "index_jobs_on_original_language"
     t.index ["remote"], name: "index_jobs_on_remote"
     t.index ["slug"], name: "index_jobs_on_slug", unique: true
     t.index ["status"], name: "index_jobs_on_status"
+    t.index ["translations"], name: "index_jobs_on_translations", using: :gin
     t.index ["urgent"], name: "index_jobs_on_urgent"
   end
 
@@ -277,11 +293,15 @@ ActiveRecord::Schema[7.2].define(version: 2025_07_26_080017) do
     t.text "excerpt"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "original_language", default: "fr"
+    t.jsonb "translations", default: {}
     t.index ["category"], name: "index_posts_on_category"
     t.index ["created_at"], name: "index_posts_on_created_at"
     t.index ["featured"], name: "index_posts_on_featured"
+    t.index ["original_language"], name: "index_posts_on_original_language"
     t.index ["slug"], name: "index_posts_on_slug", unique: true
     t.index ["status"], name: "index_posts_on_status"
+    t.index ["translations"], name: "index_posts_on_translations", using: :gin
     t.index ["user_id", "created_at"], name: "index_posts_on_user_id_and_created_at"
     t.index ["user_id"], name: "index_posts_on_user_id"
   end
@@ -301,13 +321,17 @@ ActiveRecord::Schema[7.2].define(version: 2025_07_26_080017) do
     t.integer "views_count", default: 0
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "original_language", default: "fr"
+    t.jsonb "translations", default: {}
     t.index ["category"], name: "index_products_on_category"
     t.index ["condition"], name: "index_products_on_condition"
     t.index ["created_at"], name: "index_products_on_created_at"
     t.index ["featured"], name: "index_products_on_featured"
+    t.index ["original_language"], name: "index_products_on_original_language"
     t.index ["price"], name: "index_products_on_price"
     t.index ["slug"], name: "index_products_on_slug", unique: true
     t.index ["status"], name: "index_products_on_status"
+    t.index ["translations"], name: "index_products_on_translations", using: :gin
     t.index ["user_id", "created_at"], name: "index_products_on_user_id_and_created_at"
     t.index ["user_id"], name: "index_products_on_user_id"
   end
@@ -394,16 +418,20 @@ ActiveRecord::Schema[7.2].define(version: 2025_07_26_080017) do
     t.bigint "organization_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "original_language", default: "fr"
+    t.jsonb "translations", default: {}
     t.index ["application_deadline"], name: "index_volunteer_opportunities_on_application_deadline"
     t.index ["category"], name: "index_volunteer_opportunities_on_category"
     t.index ["created_at"], name: "index_volunteer_opportunities_on_created_at"
     t.index ["featured"], name: "index_volunteer_opportunities_on_featured"
     t.index ["organization_id"], name: "index_volunteer_opportunities_on_organization_id"
+    t.index ["original_language"], name: "index_volunteer_opportunities_on_original_language"
     t.index ["remote"], name: "index_volunteer_opportunities_on_remote"
     t.index ["slug"], name: "index_volunteer_opportunities_on_slug", unique: true
     t.index ["start_date"], name: "index_volunteer_opportunities_on_start_date"
     t.index ["status"], name: "index_volunteer_opportunities_on_status"
     t.index ["time_commitment"], name: "index_volunteer_opportunities_on_time_commitment"
+    t.index ["translations"], name: "index_volunteer_opportunities_on_translations", using: :gin
     t.index ["urgent"], name: "index_volunteer_opportunities_on_urgent"
     t.index ["user_id", "created_at"], name: "index_volunteer_opportunities_on_user_id_and_created_at"
     t.index ["user_id"], name: "index_volunteer_opportunities_on_user_id"

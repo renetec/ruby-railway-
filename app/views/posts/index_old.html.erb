@@ -1,0 +1,400 @@
+<!-- Actualités - 2 Column Layout -->
+<div class="max-w-6xl mx-auto px-4 py-8">
+  <!-- Page Header with Logo -->
+  <%= render 'shared/page_header_with_logo', 
+      title: t('posts.latest_stories'),
+      subtitle: t('posts.subtitle') %>
+
+  <!-- Action Buttons -->
+  <% if user_signed_in? %>
+    <div class="flex flex-col sm:flex-row gap-4 mb-8 justify-center">
+      <%= link_to "✍️ #{t('actions.publish_article')}", new_post_path, 
+                  class: "px-6 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg font-semibold" %>
+    </div>
+  <% end %>
+
+  <!-- Filters Section -->
+  <div class="flex flex-col md:flex-row gap-4 mb-8 justify-center">
+    <select class="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100">
+      <option><%= t('dropdowns.category') %></option>
+      <option><%= t('dropdowns.local_news') %></option>
+      <option><%= t('events.title') %></option>
+      <option><%= t('dropdowns.practical_life') %></option>
+      <option><%= t('dropdowns.culture') %></option>
+      <option><%= t('dropdowns.sports') %></option>
+    </select>
+    <input type="text" placeholder="<%= t('actions.search_placeholder') %>" class="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100">
+    <button class="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 dark:bg-blue-600 dark:hover:bg-blue-700">
+      🔄 <%= t('actions.refresh') %>
+    </button>
+  </div>
+
+  <!-- Dynamic Posts Grid -->
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <% @posts.each do |post| %>
+      <%= link_to post_path(post), class: "bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow cursor-pointer block" do %>
+        <div class="flex gap-4">
+          <div class="w-24 h-24 bg-blue-100 dark:bg-blue-900 rounded-lg flex items-center justify-center flex-shrink-0">
+            <% if post.images.attached? %>
+              <%= image_tag post.images.first, class: "w-full h-full object-cover rounded-lg", alt: post.translated_title(I18n.locale) %>
+            <% else %>
+              <span class="text-3xl">📰</span>
+            <% end %>
+          </div>
+          <div class="flex-1">
+            <div class="flex justify-between items-start mb-2">
+              <span class="bg-blue-500 text-white px-2 py-1 rounded text-xs"><%= post.category.humanize %></span>
+              <span class="text-sm text-gray-500 dark:text-gray-400"><%= time_ago_in_words(post.created_at) %> <%= t('common.ago') %></span>
+            </div>
+            <h3 class="font-bold text-lg mb-1 text-gray-900 dark:text-gray-100"><%= post.translated_title(I18n.locale) %></h3>
+            <p class="text-gray-600 dark:text-gray-400 text-sm mb-2"><%= truncate(post.translated_content(I18n.locale), length: 80) %></p>
+            <div class="flex justify-between items-center">
+              <span class="text-xs text-gray-500 dark:text-gray-400"><%= t('posts.by') %> <%= post.user.name %></span>
+              <span class="text-blue-600 hover:text-blue-800 text-sm font-medium">
+                📖 <%= t('actions.read_more') %>
+              </span>
+            </div>
+          </div>
+        </div>
+      <% end %>
+    <% end %>
+
+    
+    <% if @posts.empty? %>
+      <div class="col-span-2 text-center py-12">
+        <p class="text-gray-500 dark:text-gray-400 text-lg"><%= t('posts.no_posts_found', default: 'No posts found.') %></p>
+        <% if user_signed_in? %>
+          <%= link_to new_post_path, class: "mt-4 inline-block px-6 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg font-semibold" do %>
+            ✍️ <%= t('actions.create_first_post', default: 'Create the first post') %>
+          <% end %>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+  
+  <!-- Pagination -->
+  <% if @posts.respond_to?(:current_page) %>
+    <div class="flex justify-center mt-8">
+      <%= paginate @posts, theme: :twitter_bootstrap_4 %>
+    </div>
+  <% end %>
+</div>
+
+<!-- Remove all old modal stuff and scripts since we're using regular links now -->
+      <div class="flex gap-4">
+        <div class="w-24 h-24 bg-green-100 dark:bg-green-900 rounded-lg flex items-center justify-center flex-shrink-0">
+          <span class="text-3xl">🌱</span>
+        </div>
+        <div class="flex-1">
+          <div class="flex justify-between items-start mb-2">
+            <span class="bg-green-500 text-white px-2 py-1 rounded text-xs">Environnement</span>
+            <span class="text-sm text-gray-500 dark:text-gray-400">Il y a 5h</span>
+          </div>
+          <h3 class="font-bold text-lg mb-1 text-gray-900 dark:text-gray-100">Nouveau Parc Écologique Inauguré</h3>
+          <p class="text-gray-600 dark:text-gray-400 text-sm mb-2">Un espace vert de 3 hectares ouvre ses portes au public...</p>
+          <div class="flex justify-between items-center">
+            <span class="text-xs text-gray-500 dark:text-gray-400">Par Eco Reporter</span>
+            <button class="text-blue-600 hover:text-blue-800 text-sm font-medium" onclick="event.stopPropagation(); openModal('modal-2')">
+              📖 Lire plus
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Post 3 -->
+    <div class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow cursor-pointer" onclick="openModal('modal-3')">
+      <div class="flex gap-4">
+        <div class="w-24 h-24 bg-purple-100 dark:bg-purple-900 rounded-lg flex items-center justify-center flex-shrink-0">
+          <span class="text-3xl">🎭</span>
+        </div>
+        <div class="flex-1">
+          <div class="flex justify-between items-start mb-2">
+            <span class="bg-purple-500 text-white px-2 py-1 rounded text-xs">Culture</span>
+            <span class="text-sm text-gray-500 dark:text-gray-400">Il y a 8h</span>
+          </div>
+          <h3 class="font-bold text-lg mb-1 text-gray-900 dark:text-gray-100">Festival de Théâtre ce Weekend</h3>
+          <p class="text-gray-600 dark:text-gray-400 text-sm mb-2">Cinq troupes locales présenteront leurs spectacles...</p>
+          <div class="flex justify-between items-center">
+            <span class="text-xs text-gray-500 dark:text-gray-400">Par Culture Mag</span>
+            <button class="text-blue-600 hover:text-blue-800 text-sm font-medium" onclick="event.stopPropagation(); openModal('modal-3')">
+              📖 Lire plus
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Post 4 -->
+    <div class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow cursor-pointer" onclick="openModal('modal-4')">
+      <div class="flex gap-4">
+        <div class="w-24 h-24 bg-red-100 dark:bg-red-900 rounded-lg flex items-center justify-center flex-shrink-0">
+          <span class="text-3xl">⚽</span>
+        </div>
+        <div class="flex-1">
+          <div class="flex justify-between items-start mb-2">
+            <span class="bg-red-500 text-white px-2 py-1 rounded text-xs">Sports</span>
+            <span class="text-sm text-gray-500 dark:text-gray-400">Il y a 12h</span>
+          </div>
+          <h3 class="font-bold text-lg mb-1 text-gray-900 dark:text-gray-100">Victoire de l'Équipe Locale</h3>
+          <p class="text-gray-600 dark:text-gray-400 text-sm mb-2">Le FC Local remporte le championnat départemental...</p>
+          <div class="flex justify-between items-center">
+            <span class="text-xs text-gray-500 dark:text-gray-400">Par Sports News</span>
+            <button class="text-blue-600 hover:text-blue-800 text-sm font-medium" onclick="event.stopPropagation(); openModal('modal-4')">
+              📖 Lire plus
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Post 5 -->
+    <div class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow cursor-pointer" onclick="openModal('modal-5')">
+      <div class="flex gap-4">
+        <div class="w-24 h-24 bg-yellow-100 dark:bg-yellow-900 rounded-lg flex items-center justify-center flex-shrink-0">
+          <span class="text-3xl">🚌</span>
+        </div>
+        <div class="flex-1">
+          <div class="flex justify-between items-start mb-2">
+            <span class="bg-yellow-500 text-white px-2 py-1 rounded text-xs">Transport</span>
+            <span class="text-sm text-gray-500 dark:text-gray-400">Il y a 1j</span>
+          </div>
+          <h3 class="font-bold text-lg mb-1 text-gray-900 dark:text-gray-100">Nouvelles Lignes de Bus</h3>
+          <p class="text-gray-600 dark:text-gray-400 text-sm mb-2">Trois nouvelles lignes pour améliorer la desserte...</p>
+          <div class="flex justify-between items-center">
+            <span class="text-xs text-gray-500 dark:text-gray-400">Par Transports Info</span>
+            <button class="text-blue-600 hover:text-blue-800 text-sm font-medium" onclick="event.stopPropagation(); openModal('modal-5')">
+              📖 Lire plus
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Post 6 -->
+    <div class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow cursor-pointer" onclick="openModal('modal-6')">
+      <div class="flex gap-4">
+        <div class="w-24 h-24 bg-indigo-100 dark:bg-indigo-900 rounded-lg flex items-center justify-center flex-shrink-0">
+          <span class="text-3xl">🏥</span>
+        </div>
+        <div class="flex-1">
+          <div class="flex justify-between items-start mb-2">
+            <span class="bg-indigo-500 text-white px-2 py-1 rounded text-xs">Santé</span>
+            <span class="text-sm text-gray-500 dark:text-gray-400">Il y a 2j</span>
+          </div>
+          <h3 class="font-bold text-lg mb-1 text-gray-900 dark:text-gray-100">Campagne de Vaccination</h3>
+          <p class="text-gray-600 dark:text-gray-400 text-sm mb-2">Nouvelle campagne de prévention au centre médical...</p>
+          <div class="flex justify-between items-center">
+            <span class="text-xs text-gray-500 dark:text-gray-400">Par Santé Publique</span>
+            <button class="text-blue-600 hover:text-blue-800 text-sm font-medium" onclick="event.stopPropagation(); openModal('modal-6')">
+              📖 Lire plus
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- Detail Modal -->
+<div id="detail-modal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black bg-opacity-50">
+  <div class="bg-white dark:bg-gray-800 max-w-3xl w-full mx-4 rounded-lg overflow-hidden max-h-[80vh] overflow-y-auto">
+    <div class="p-6">
+      <!-- Modal Header -->
+      <div class="flex justify-between items-start mb-6">
+        <div id="modal-category" class="bg-blue-500 text-white px-4 py-2 rounded-full text-sm font-medium"></div>
+        <button onclick="closeModal()" class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 text-2xl font-bold">×</button>
+      </div>
+      
+      <!-- Modal Content -->
+      <div class="flex gap-6 mb-6">
+        <div id="modal-image" class="w-32 h-32 bg-gray-100 dark:bg-gray-700 rounded-lg flex items-center justify-center flex-shrink-0">
+          <span id="modal-emoji" class="text-4xl"></span>
+        </div>
+        <div class="flex-1">
+          <h2 id="modal-title" class="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-4"></h2>
+          <div class="flex justify-between items-center mb-4">
+            <div id="modal-author" class="text-gray-600 dark:text-gray-400"></div>
+            <div id="modal-time" class="text-sm text-gray-500 dark:text-gray-400"></div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Article Content -->
+      <div class="mb-6">
+        <div id="modal-content" class="text-gray-600 dark:text-gray-400 space-y-4 leading-relaxed"></div>
+      </div>
+      
+      <!-- Close Button -->
+      <div class="border-t dark:border-gray-600 pt-6 text-center">
+        <button type="button" onclick="closeModal()" class="bg-gray-500 hover:bg-gray-600 text-white py-3 px-6 rounded-lg font-semibold">
+          <%= t('actions.close') %>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// Modal data for posts
+const modalData = {
+  'modal-1': {
+    category: 'Actualités',
+    title: 'Rénovation de la Place Centrale',
+    author: 'Par Mairie Locale',
+    time: 'Il y a 3h',
+    emoji: '🏛️',
+    content: `
+      <p>La municipalité a annoncé le début des travaux de réaménagement de la Place Centrale pour lundi prochain. Ce projet d'envergure, budgété à 2,5 millions d'euros, transformera complètement l'aspect de notre centre-ville.</p>
+      <p><strong>Les principales améliorations :</strong></p>
+      <ul class="list-disc ml-5">
+        <li>Création d'espaces verts avec plantations d'arbres et massifs fleuris</li>
+        <li>Installation de nouveaux bancs et mobilier urbain moderne</li>
+        <li>Réfection complète du revêtement avec matériaux durables</li>
+        <li>Amélioration de l'éclairage public LED</li>
+        <li>Zone dédiée aux événements communautaires</li>
+      </ul>
+      <p>Les travaux s'étaleront sur 4 mois avec des déviations temporaires pour les transports en commun. Les commerçants seront accompagnés pendant cette période de transition.</p>
+    `
+  },
+  'modal-2': {
+    category: 'Environnement',
+    title: 'Nouveau Parc Écologique Inauguré',
+    author: 'Par Eco Reporter',
+    time: 'Il y a 5h',
+    emoji: '🌱',
+    content: `
+      <p>Un magnifique parc écologique de 3 hectares a été inauguré ce matin par le maire en présence de nombreux habitants. Ce projet pilote s'inscrit dans la démarche environnementale de la ville.</p>
+      <p><strong>Les caractéristiques du parc :</strong></p>
+      <ul class="list-disc ml-5">
+        <li>Sentiers de promenade en matériaux recyclés</li>
+        <li>Zone de compostage collectif pour les résidents</li>
+        <li>Jardin pédagogique pour les écoles locales</li>
+        <li>Observatoire pour la faune locale</li>
+        <li>Aires de pique-nique éco-responsables</li>
+      </ul>
+      <p>Le parc est ouvert tous les jours de 7h à 20h. Des visites guidées seront organisées les weekends pour sensibiliser à la biodiversité urbaine.</p>
+    `
+  },
+  'modal-3': {
+    category: 'Culture',
+    title: 'Festival de Théâtre ce Weekend',
+    author: 'Par Culture Mag',
+    time: 'Il y a 8h',
+    emoji: '🎭',
+    content: `
+      <p>Le Festival de Théâtre Amateur se déroulera ce weekend avec cinq troupes locales qui présenteront leurs créations originales. Un événement culturel majeur pour notre région.</p>
+      <p><strong>Programme du festival :</strong></p>
+      <ul class="list-disc ml-5">
+        <li>Samedi 14h : "Les Voix du Temps" - Troupe Théâtrale Local</li>
+        <li>Samedi 16h30 : "Rires en Cascade" - Les Comédiens Unis</li>
+        <li>Samedi 19h : "Drame en Trois Actes" - Scène Ouverte</li>
+        <li>Dimanche 14h : "Contes Modernes" - Jeune Théâtre</li>
+        <li>Dimanche 16h30 : "Improvisation Live" - Les Spontanés</li>
+      </ul>
+      <p>Entrée libre pour tous les spectacles. Buvette et restauration sur place. Réservation recommandée au 05 12 34 56 78.</p>
+    `
+  },
+  'modal-4': {
+    category: 'Sports',
+    title: 'Victoire de l\'Équipe Locale',
+    author: 'Par Sports News',
+    time: 'Il y a 12h',
+    emoji: '⚽',
+    content: `
+      <p>Le FC Local a remporté hier soir le championnat départemental après une saison exceptionnelle. Cette victoire historique qualifie l'équipe pour les phases régionales.</p>
+      <p><strong>Résultats de la finale :</strong></p>
+      <ul class="list-disc ml-5">
+        <li>FC Local 3 - 1 AS Rival</li>
+        <li>Buts marqués par Martin (15'), Dupont (34'), Thomas (67')</li>
+        <li>Plus de 800 supporters présents</li>
+        <li>Meilleure attaque du championnat avec 89 buts</li>
+        <li>Série de 12 victoires consécutives</li>
+      </ul>
+      <p>Une réception officielle aura lieu vendredi en mairie pour féliciter les joueurs et l'encadrement technique. La ville étudie des investissements pour moderniser le stade.</p>
+    `
+  },
+  'modal-5': {
+    category: 'Transport',
+    title: 'Nouvelles Lignes de Bus',
+    author: 'Par Transports Info',
+    time: 'Il y a 1j',
+    emoji: '🚌',
+    content: `
+      <p>Trois nouvelles lignes de bus entreront en service lundi pour améliorer la desserte des quartiers périphériques. Cette extension répond aux demandes des habitants.</p>
+      <p><strong>Les nouvelles lignes :</strong></p>
+      <ul class="list-disc ml-5">
+        <li>Ligne 15 : Centre-ville ↔ Zone Industrielle (toutes les 20min)</li>
+        <li>Ligne 16 : Gare ↔ Nouveau Lotissement (toutes les 30min)</li>
+        <li>Ligne 17 : Hôpital ↔ Campus Universitaire (toutes les 15min)</li>
+        <li>Horaires étendus jusqu'à 22h en semaine</li>
+        <li>Service le dimanche après-midi</li>
+      </ul>
+      <p>Les tarifs restent inchangés. Distribution gratuite de plans des nouvelles lignes dans tous les arrêts et en mairie.</p>
+    `
+  },
+  'modal-6': {
+    category: 'Santé',
+    title: 'Campagne de Vaccination',
+    author: 'Par Santé Publique',
+    time: 'Il y a 2j',
+    emoji: '🏥',
+    content: `
+      <p>Une nouvelle campagne de vaccination préventive débute au centre médical municipal. Cette initiative gratuite vise à renforcer la couverture vaccinale de la population.</p>
+      <p><strong>Vaccinations proposées :</strong></p>
+      <ul class="list-disc ml-5">
+        <li>Rappels DTP (Diphtérie, Tétanos, Poliomyélite)</li>
+        <li>Vaccin contre la grippe saisonnière</li>
+        <li>Vaccination COVID-19 et rappels</li>
+        <li>Hépatite B pour les professionnels exposés</li>
+        <li>Vaccins voyageurs sur demande</li>
+      </ul>
+      <p>Rendez-vous du lundi au vendredi de 8h à 18h. Inscription obligatoire au 05 23 45 67 89 ou en ligne. Apporter carnet de vaccination et pièce d'identité.</p>
+    `
+  }
+};
+
+// Modal functions
+function openModal(modalId) {
+  const data = modalData[modalId];
+  if (data) {
+    document.getElementById('modal-category').textContent = data.category;
+    document.getElementById('modal-title').textContent = data.title;
+    document.getElementById('modal-author').textContent = data.author;
+    document.getElementById('modal-time').textContent = data.time;
+    document.getElementById('modal-emoji').textContent = data.emoji;
+    document.getElementById('modal-content').innerHTML = data.content;
+    
+    // Set category color based on type
+    const categoryElement = document.getElementById('modal-category');
+    const categoryColors = {
+      'Actualités': 'bg-blue-500',
+      'Environnement': 'bg-green-500',
+      'Culture': 'bg-purple-500',
+      'Sports': 'bg-red-500',
+      'Transport': 'bg-yellow-500',
+      'Santé': 'bg-indigo-500'
+    };
+    
+    // Reset classes and add appropriate color
+    categoryElement.className = `text-white px-4 py-2 rounded-full text-sm font-medium ${categoryColors[data.category] || 'bg-blue-500'}`;
+    
+    document.getElementById('detail-modal').style.display = 'flex';
+    document.getElementById('detail-modal').classList.remove('hidden');
+  }
+}
+
+function closeModal() {
+  document.getElementById('detail-modal').style.display = 'none';
+  document.getElementById('detail-modal').classList.add('hidden');
+}
+
+
+// Close modal when clicking outside
+document.getElementById('detail-modal').addEventListener('click', function(e) {
+  if (e.target === document.getElementById('detail-modal')) {
+    closeModal();
+  }
+});
+</script>

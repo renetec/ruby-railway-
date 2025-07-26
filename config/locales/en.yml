@@ -124,6 +124,18 @@ en:
       discover_events: "Discover Events"
       join_discussions: "Join Discussions"
     
+    stats:
+      members: "Members"
+      posts: "Posts"
+      events: "Events"
+      discussions: "Discussions"
+    
+    sections:
+      recent_posts: "Recent Posts"
+      upcoming_events: "Upcoming Events"
+      featured_posts: "Featured Posts"
+      forum_categories: "Forum Categories"
+    
     services:
       title: "Community Services"
       subtitle: "Everything you need to connect, share, and grow together"
@@ -293,6 +305,8 @@ en:
     subtitle: "Stay informed with the latest news, stories, and announcements from your vibrant community."
     create_new: "Create New Story"
     search_stories: "Search amazing stories..."
+    by: "By"
+    no_posts_found: "No posts found."
     
     categories:
       all_categories: "All Categories"
@@ -314,6 +328,18 @@ en:
       written_by: "Written by"
       ago: "ago"
       read_full_article: "Read Full Article"
+      
+    show:
+      title: "%{title}"
+      featured: "Featured"
+      community_story: "Community Story"
+      written_by: "Written by"
+      manage_post: "Manage Post"
+      edit_post: "Edit Post"
+      delete_post: "Delete Post"
+      related_stories: "Related Stories"
+      related_description: "Discover more stories that might interest you"
+      back_to_news: "Back to News"
       
     empty:
       title: "No Stories Found"
@@ -571,6 +597,9 @@ en:
     your_reply: "Your reply"
     share_thoughts_placeholder: "Share your thoughts..."
     reply: "reply"
+    threads_count:
+      one: "%{count} thread"
+      other: "%{count} threads"
     started_ago: "started %{time} ago"
     replied_ago: "replied %{time} ago"
     in_category: "in"
